@@ -1,0 +1,5 @@
+pick_otus:otu_picking_method usearch61_ref
+pick_otus:max_accepts 16
+pick_otus:max_rejects 64
+pick_otus:enable_rev_strand_match True
+pick_otus:minlen 30
