@@ -35,7 +35,33 @@ $(HE_DISTANCE) : $$(subst unique.dist,fasta, $$@) code/run_he_cluster.sh
 	bash code/run_he_cluster.sh $<
 
 .SECONDEXPANSION:
-$(HE_LIST) : $$(addsuffix .dist $$(basename $$(basename $$@)))
+$(HE_AN_LIST) : $$(subst unique.an.list,fasta, $$@) code/run_he_cluster.sh
+	bash code/run_he_cluster.sh $<
+
+.SECONDEXPANSION:
+$(HE_NN_LIST) : $$(subst unique.nn.list,fasta, $$@) code/run_he_cluster.sh
+	bash code/run_he_cluster.sh $<
+
+.SECONDEXPANSION:
+$(HE_FN_LIST) : $$(subst unique.fn.list,fasta, $$@) code/run_he_cluster.sh
+	bash code/run_he_cluster.sh $<
+
+HE_DGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
+$(HE_DGC_LIST) : $$(subst dgc.list,fasta, $$@) code/run_dgc.sh code/dgc.params.txt
+	bash code/run_dgc.sh $<
+
+HE_AGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
+$(HE_AGC_LIST) : $$(subst agc.list,fasta, $$@) code/run_agc.sh code/agc.params.txt
+	bash code/run_agc.sh $<
+
+HE_CLOSED_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
+$(HE_CLOSED_LIST) : $$(subst closed.list,fasta, $$@) code/run_closed.sh code/closed.ref.params.txt
+	bash code/run_closed.sh $<
+
+HE_OPEN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
+$(HE_OPEN_LIST) : $$(subst open.list,fasta, $$@) code/run_open.sh code/openref.params.txt
+	bash code/run_open.sh $<
+
 
 
 
