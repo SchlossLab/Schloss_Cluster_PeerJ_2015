@@ -37,3 +37,12 @@ Overview
     +- Makefile        # executable Makefile for this study, if applicable
 
 
+
+Dependencies
+------------
+The following need to be installed and in the path...
+* mothur (v.1.36.0)
+* QIIME (v.1.9.1)
+* UCLUST (v.1.6.XXX)
+* R
+
