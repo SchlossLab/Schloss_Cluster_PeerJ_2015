@@ -9,6 +9,6 @@ CLOSED_PATH=$(echo $FASTA | sed 's/fasta/closed/')
 
 rm -rf $CLOSED_PATH/
 pick_closed_reference_otus.py -i $FASTA -o $CLOSED_PATH -p code/closedref.params.txt
-mothur "#set.dir(output=$CLOSED_PATH); biom=$CLOSED_PATH/otu_table.biom)"
+mothur "#set.dir(output=$CLOSED_PATH); make.shared(biom=$CLOSED_PATH/otu_table.biom)"
 R -e "source('code/shared_to_list.R'); shared_to_list('$CLOSED_PATH/otu_table.shared')"
 rm -rf $CLOSED_PATH/
