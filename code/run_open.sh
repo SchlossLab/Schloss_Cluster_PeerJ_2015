@@ -10,6 +10,6 @@ OPEN_PATH=$(echo $FASTA | sed 's/fasta/open/')
 rm -rf $OPEN_PATH/
 pick_open_reference_otus.py -i $FASTA -o $OPEN_PATH -m usearch61 -s 1 -p code/openref.params.txt --min_otu_size 1 --prefilter_percent_id 0.0
 mothur "#set.dir(output=$OPEN_PATH); make.shared(biom=$OPEN_PATH/otu_table_mc1_w_tax_no_pynast_failures.biom)"
-R -e "source('code/shared_to_list.R'); shared_to_list('$OPEN_PATH/otu_table.shared')"
+R -e "source('code/shared_to_list.R'); shared_to_list('$OPEN_PATH/otu_table_mc1_w_tax_no_pynast_failures.shared')"
 rm -rf $OPEN_PATH/
 
