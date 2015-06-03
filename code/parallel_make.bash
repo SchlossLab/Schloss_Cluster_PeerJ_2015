@@ -14,7 +14,7 @@ for X in x??
 do
     cat head.batch $X tail.batch > $X.qsub
     qsub $X.qsub
-    rm $X.qsub $X
+#    rm $X.qsub $X
 done
 
 rm $MAIN_TARGET.temp
