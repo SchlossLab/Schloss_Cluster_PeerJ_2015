@@ -16,7 +16,8 @@ shared_to_list <- function(shared_file_name){
 	list_line <- paste("userLabel", n_otus, list_data, sep="\t")
 
 
-	list_file_name <- gsub("/otu_table.shared", ".list", shared_file_name)
+	list_file_name <- gsub("/[^\\/]*$", ".list", shared_file_name)
+
 	write(list_line, list_file_name)
 
 }
