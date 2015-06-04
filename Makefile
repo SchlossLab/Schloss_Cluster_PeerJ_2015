@@ -27,7 +27,6 @@ HE_DISTANCE = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(RE
 HE_AN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
 HE_NN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
 HE_FN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
-HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST)
 
 
 .SECONDEXPANSION:
@@ -64,16 +63,18 @@ HE_OPEN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(R
 $(HE_OPEN_LIST) : $$(subst open.list,fasta, $$@) code/run_open.sh code/openref.params.txt
 	bash code/run_open.sh $<
 
-open : $(HE_OPEN_LIST)
-closed : $(HE_CLOSED_LIST)
-agc : $(HE_AGC_LIST)
-
-QIIME : $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST)
-
-
+HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST) 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
 
 .SECONDEXPANSION:
 $(HE_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
 	$(eval LIST=$(word 2,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/he)"
+
+HE_QIIME_LIST = $(HE_AGC_LIST) $(HE_DGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST)
+HE_QIIME_SENSSPEC = $(subst list,sensspec, $(HE_QIIME_LIST))
+
+.SECONDEXPANSION:
+$(HE_QIIME_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+	$(eval LIST=$(word 2,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/he)"
