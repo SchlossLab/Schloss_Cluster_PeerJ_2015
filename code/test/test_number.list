@@ -1,0 +1,6 @@
+unique 13 A,B C,D,E F,G H I,J K L M,N O,P Q R S T
+0.01 12 A,B C,D,E F,G H I,J K,L M,N O,P Q R S T
+0.02 10 A,B C,D,E F,G,H I,J,K,L M,N O,P Q R S T
+0.03 9 A,B,C,D,E F,G,H I,J,K,L M,N O,P Q R S T
+0.04 7 A,B,C,D,E F,G,H,I,J,K,L M,N,O,P Q R S T
+0.05 7 A,B,C,D,E,F,G,H,I,J,K,L M,N,O,P Q R S T
