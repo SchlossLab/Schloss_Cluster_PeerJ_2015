@@ -43,6 +43,6 @@ Dependencies
 The following need to be installed and in the path...
 * mothur (v.1.36.0)
 * QIIME (v.1.9.1)
-* UCLUST (v.1.6.XXX)
+* UCLUST (v.6.1.544)
 * R
-
+* SWARM (v.2.1.1 installed in code/)

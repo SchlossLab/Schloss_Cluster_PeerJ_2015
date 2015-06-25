@@ -68,6 +68,11 @@ HE_OPEN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(R
 $(HE_OPEN_LIST) : $$(subst open.list,fasta, $$@) code/run_open.sh code/openref.params.txt
 	bash code/run_open.sh $<
 
+HE_SWARM_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
+$(HE_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,names, $$@) code/cluster_swarm.R
+	$(eval FASTA=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
 
 HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST) 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
@@ -77,11 +82,13 @@ $(HE_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(
 	$(eval LIST=$(word 2,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/he)"
 
-HE_QIIME_LIST = $(HE_AGC_LIST) $(HE_DGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST)
-HE_QIIME_SENSSPEC = $(subst list,sensspec, $(HE_QIIME_LIST))
+HE_GREEDY_LIST = $(HE_AGC_LIST) $(HE_DGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_SWARM_LIST)
+HE_GREEDY_SENSSPEC = $(subst list,sensspec, $(HE_GREEDY_LIST))
+
+HE_SWARM_SENSSPEC = $(subst list,sensspec, $(HE_SWARM_LIST))
 
 .SECONDEXPANSION:
-$(HE_QIIME_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+$(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
 	$(eval LIST=$(word 2,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/he)"
 
@@ -107,4 +114,7 @@ data/he/he.agc.ref_mcc : code/reference_mcc.R $(HE_AGC_LIST) $(HE_NAMES)
 
 data/he/he.dgc.ref_mcc : code/reference_mcc.R $(HE_DGC_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*dgc.list', 'he_1.0.*dgc.list', 'he.*names', 'data/he/he.dgc.ref_mcc')"
+
+data/he/he.swarm.ref_mcc : code/reference_mcc.R $(HE_SWARM_LIST) $(HE_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*swarm.list', 'he_1.0.*swarm.list', 'he.*names', 'data/he/he.swarm.ref_mcc')"
 
