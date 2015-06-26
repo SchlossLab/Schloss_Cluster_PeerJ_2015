@@ -74,14 +74,15 @@ convert_swarm_clust <- function(swarm_fasta_file, swarm_list_file, names_file){
 
 # this function drives the assignment of sequences to OTUs using swarm. takes
 # as input the output of running unique.seqs (*.unique.fasta and *.names) and
-# outputs *.swarm.list using 'swarm' as the label in the list file
+# outputs *.swarm.list using 'userLabel' as the label in the list file
 get_mothur_list <- function(fasta, names){
 	swarm_fasta_file_name <- prep_swarm_clust(names, fasta)
 	swarm_list_file_name <- run_swarm_clust(fasta)
 
 	red_names_list <- convert_swarm_clust(swarm_fasta_file_name, swarm_list_file_name, names)
 	mothur_list_file_name <- gsub("temp_list", "list", swarm_list_file_name)
-	mothur_list_file_content <- paste(c("swarm", length(red_names_list), red_names_list), collapse="\t")
+	mothur_list_file_content <- paste(c("userLabel", length(red_names_list), red_names_list), collapse="\t")
 	write(mothur_list_file_content, mothur_list_file_name)
+	unlink(swarm_list_file_name)
 }
 
