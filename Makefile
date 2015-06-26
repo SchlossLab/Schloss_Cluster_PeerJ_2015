@@ -23,40 +23,48 @@ $(HE_BOOTSTRAP_FASTA) : code/generate_samples.R data/he/canada_soil.good.unique.
 	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/he/canada_soil.good.unique.pick.redundant.fasta', 'data/he/he', $F, '$R')"
 
 
-HE_DISTANCE = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.dist)))
-HE_NAMES = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.names)))
-HE_AN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
-HE_NN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
-HE_FN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
-
 
 .SECONDEXPANSION:
-$(HE_NAMES) : $$(subst names,fasta, $$@)
+HE_UNIQUE_FASTA = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.fasta)))
+$(HE_UNIQUE_FASTA) : $$(subst unique.fasta,fasta, $$@)
 	mothur "#unique.seqs(fasta=$<)"
 
-.SECONDEXPANSION:
-$(HE_DISTANCE) : $$(subst unique.dist,fasta, $$@) code/run_he_cluster.sh
-	bash code/run_he_cluster.sh $<
+HE_NAMES = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.names)))
+$(HE_NAMES) : $$(subst names,unique.fasta, $$@)
 
-.SECONDEXPANSION:
-$(HE_AN_LIST) : $$(subst unique.an.list,fasta, $$@) $$(subst unique.an.list,names, $$@) code/run_he_cluster.sh
-	bash code/run_he_cluster.sh $<
+HE_DISTANCE = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.dist)))
+$(HE_DISTANCE) : $$(subst dist,fasta, $$@)
+	mothur "#pairwise.seqs(fasta=$<, processors=8, cutoff=0.20)"
 
-.SECONDEXPANSION:
-$(HE_NN_LIST) : $$(subst unique.nn.list,fasta, $$@) $$(subst unique.nn.list,names, $$@) code/run_he_cluster.sh
-	bash code/run_he_cluster.sh $<
 
-.SECONDEXPANSION:
-$(HE_FN_LIST) : $$(subst unique.fn.list,fasta, $$@) $$(subst unique.fn.list,names, $$@) code/run_he_cluster.sh
-	bash code/run_he_cluster.sh $<
+
+
+HE_AN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
+$(HE_AN_LIST) : $$(subst .an.list,dist, $$@) $$(subst unique.an.list,names, $$@) code/run_he_cluster.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_he_cluster_an.sh $(DIST) $(NAMES)
+
+HE_NN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+$(HE_NN_LIST) : $$(subst .nn.list,dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_he_cluster.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_he_cluster_nn.sh $(DIST) $(NAMES)
+
+HE_FN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+$(HE_FN_LIST) : $$(subst .fn.list,dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_he_cluster.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_he_cluster_fn.sh $(DIST) $(NAMES)
+
+HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST) 
+
 
 HE_DGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
-.SECONDEXPANSION:
 $(HE_DGC_LIST) : $$(subst dgc.list,fasta, $$@) code/run_dgc.sh code/dgc.params.txt
 	bash code/run_dgc.sh $<
 
 HE_AGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
-.SECONDEXPANSION:
 $(HE_AGC_LIST) : $$(subst agc.list,fasta, $$@) code/run_agc.sh code/agc.params.txt
 	bash code/run_agc.sh $<
 
@@ -74,7 +82,9 @@ $(HE_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,na
 	$(eval NAMES=$(word 2,$^))
 	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
 
-HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST) 
+HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_SWARM_LIST)
+
+
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
 
 .SECONDEXPANSION:
@@ -117,4 +127,29 @@ data/he/he.dgc.ref_mcc : code/reference_mcc.R $(HE_DGC_LIST) $(HE_NAMES)
 
 data/he/he.swarm.ref_mcc : code/reference_mcc.R $(HE_SWARM_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*swarm.list', 'he_1.0.*swarm.list', 'he.*names', 'data/he/he.swarm.ref_mcc')"
+
+
+data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST)) 
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
+
+data/he/he.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_FN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*Fn.sensspec', 'data/he/he.fn.pool_sensspec')"
+
+data/he/he.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_NN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*nn.sensspec', 'data/he/he.nn.pool_sensspec')"
+
+data/he/he.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_DGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*dgc.sensspec', 'data/he/he.dgc.pool_sensspec')"
+
+data/he/he.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*agc.sensspec', 'data/he/he.agc.pool_sensspec')"
+
+data/he/he.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_OPEN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*open.sensspec', 'data/he/he.open.pool_sensspec')"
+
+data/he/he.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_CLOSED_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*closed.sensspec', 'data/he/he.closed.pool_sensspec')"
+
+data/he/he.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_SWARM_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*swarm.sensspec', 'data/he/he.swarm.pool_sensspec')"
 
