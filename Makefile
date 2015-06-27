@@ -13,8 +13,7 @@ NEIGHBOR = an nn fn
 FRACTION = 0.2 0.4 0.6 0.8 1.0
 REP = 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
 
-HE_BOOTSTRAP_FASTA = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.fasta))))
-#data/he/he_0.2_02.fasta
+HE_BOOTSTRAP_FASTA = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.fasta)))
 
 $(HE_BOOTSTRAP_FASTA) : code/generate_samples.R data/he/canada_soil.good.unique.pick.redundant.fasta
 	$(eval BASE=$(patsubst data/he/he_%.fasta,%,$@))
@@ -210,4 +209,173 @@ data/schloss/canada_soil.good.unique.pick.redundant.good.filter.fasta : code/get
 	rm data/schloss/canada_soil.good.unique.pick.redundant.flip.accnos
 	rm data/schloss/canada_soil.good.unique.pick.redundant.align.report
 	rm data/schloss/canada_soil.good.unique.pick.redundant.align
+
+
+SCHL_BOOTSTRAP_FASTA = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.fasta)))
+$(SCHL_BOOTSTRAP_FASTA) : code/generate_samples.R data/schloss/canada_soil.good.unique.pick.redundant.good.filter.fasta
+	$(eval BASE=$(patsubst data/schloss/schloss_%.fasta,%,$@))
+	$(eval R=$(lastword $(subst _, ,$(BASE))))
+	$(eval F=$(firstword $(subst _, ,$(BASE))))
+	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/schloss/canada_soil.good.unique.pick.redundant.good.filter.fasta', 'data/schloss/schloss', $F, '$R')"
+
+
+SCHL_UNIQUE_FASTA = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.fasta)))
+.SECONDEXPANSION:
+$(SCHL_UNIQUE_FASTA) : $$(subst unique.fasta,fasta, $$@)
+	mothur "#unique.seqs(fasta=$<)"
+
+SCHL_NAMES = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.names)))
+.SECONDEXPANSION:
+$(SCHL_NAMES) : $$(subst names,unique.fasta, $$@)
+
+SCHL_DISTANCE = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.dist)))
+.SECONDEXPANSION:
+$(SCHL_DISTANCE) : $$(subst dist,fasta, $$@)
+	mothur "#dist.seqs(fasta=$<, processors=8, cutoff=0.20)"
+
+
+
+SCHL_AN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
+.SECONDEXPANSION:
+$(SCHL_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@) code/run_an.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_an.sh $(DIST) $(NAMES)
+
+SCHL_NN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+.SECONDEXPANSION:
+$(SCHL_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_nn.sh $(DIST) $(NAMES)
+
+SCHL_FN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+.SECONDEXPANSION:
+$(SCHL_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_fn.sh $(DIST) $(NAMES)
+
+SCHL_NEIGHBOR_LIST = $(SCHL_AN_LIST) $(SCHL_NN_LIST) $(SCHL_FN_LIST) 
+
+
+SCHL_DGC_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
+.SECONDEXPANSION:
+$(SCHL_DGC_LIST) : $$(subst dgc.list,fasta, $$@) code/run_dgc.sh code/dgc.params.txt
+	bash code/run_dgc.sh $<
+
+SCHL_AGC_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
+.SECONDEXPANSION:
+$(SCHL_AGC_LIST) : $$(subst agc.list,fasta, $$@) code/run_agc.sh code/agc.params.txt
+	bash code/run_agc.sh $<
+
+SCHL_CLOSED_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
+.SECONDEXPANSION:
+$(SCHL_CLOSED_LIST) : $$(subst closed.list,fasta, $$@) code/run_closed.sh code/closedref.params.txt
+	bash code/run_closed.sh $<
+
+SCHL_OPEN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
+.SECONDEXPANSION:
+$(SCHL_OPEN_LIST) : $$(subst open.list,fasta, $$@) code/run_open.sh code/openref.params.txt
+	bash code/run_open.sh $<
+
+SCHL_SWARM_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
+.SECONDEXPANSION:
+$(SCHL_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,names, $$@) code/cluster_swarm.R
+	$(eval FASTA=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
+
+SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CLOSED_LIST) $(SCHL_SWARM_LIST)
+
+
+SCHL_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(SCHL_NEIGHBOR_LIST))
+.SECONDEXPANSION:
+$(SCHL_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+	$(eval LIST=$(word 2,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/schloss)"
+
+SCHL_GREEDY_SENSSPEC = $(subst list,sensspec, $(SCHL_GREEDY_LIST))
+.SECONDEXPANSION:
+$(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+	$(eval LIST=$(word 2,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
+
+
+SCHL_REF_MCC = data/schloss/schloss.fn.ref_mcc data/schloss/schloss.nn.ref_mcc data/schloss/schloss.an.ref_mcc data/schloss/schloss.agc.ref_mcc data/schloss/schloss.dgc.ref_mcc data/schloss/schloss.closed.ref_mcc data/schloss/schloss.open.ref_mcc data/schloss/schloss.swarm.ref_mcc
+data/schloss/schloss.an.ref_mcc : code/reference_mcc.R $(SCHL_AN_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*unique.an.list', 'schloss_1.0.*unique.an.list', 'schloss.*names', 'data/schloss/schloss.an.ref_mcc')"
+
+data/schloss/schloss.fn.ref_mcc : code/reference_mcc.R $(SCHL_FN_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*unique.fn.list', 'schloss_1.0.*unique.fn.list', 'schloss.*names', 'data/schloss/schloss.fn.ref_mcc')"
+
+data/schloss/schloss.nn.ref_mcc : code/reference_mcc.R $(SCHL_NN_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*unique.nn.list', 'schloss_1.0.*unique.nn.list', 'schloss.*names', 'data/schloss/schloss.nn.ref_mcc')"
+
+data/schloss/schloss.closed.ref_mcc : code/reference_mcc.R $(SCHL_CLOSED_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*closed.list', 'schloss_1.0.*closed.list', 'schloss.*names', 'data/schloss/schloss.closed.ref_mcc')"
+
+data/schloss/schloss.open.ref_mcc : code/reference_mcc.R $(SCHL_OPEN_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*open.list', 'schloss_1.0.*open.list', 'schloss.*names', 'data/schloss/schloss.open.ref_mcc')"
+
+data/schloss/schloss.agc.ref_mcc : code/reference_mcc.R $(SCHL_AGC_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*agc.list', 'schloss_1.0.*agc.list', 'schloss.*names', 'data/schloss/schloss.agc.ref_mcc')"
+
+data/schloss/schloss.dgc.ref_mcc : code/reference_mcc.R $(SCHL_DGC_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*dgc.list', 'schloss_1.0.*dgc.list', 'schloss.*names', 'data/schloss/schloss.dgc.ref_mcc')"
+
+data/schloss/schloss.swarm.ref_mcc : code/reference_mcc.R $(SCHL_SWARM_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*swarm.list', 'schloss_1.0.*swarm.list', 'schloss.*names', 'data/schloss/schloss.swarm.ref_mcc')"
+
+
+data/schloss/schloss.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AN_LIST)) 
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*an.sensspec', 'data/schloss/schloss.an.pool_sensspec')"
+
+data/schloss/schloss.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_FN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*Fn.sensspec', 'data/schloss/schloss.fn.pool_sensspec')"
+
+data/schloss/schloss.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_NN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*nn.sensspec', 'data/schloss/schloss.nn.pool_sensspec')"
+
+data/schloss/schloss.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_DGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*dgc.sensspec', 'data/schloss/schloss.dgc.pool_sensspec')"
+
+data/schloss/schloss.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*agc.sensspec', 'data/schloss/schloss.agc.pool_sensspec')"
+
+data/schloss/schloss.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_OPEN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*open.sensspec', 'data/schloss/schloss.open.pool_sensspec')"
+
+data/schloss/schloss.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_CLOSED_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*closed.sensspec', 'data/schloss/schloss.closed.pool_sensspec')"
+
+data/schloss/schloss.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_SWARM_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*swarm.sensspec', 'data/schloss/schloss.swarm.pool_sensspec')"
+
+
+SCHL_RAREFACTION = data/schloss/schloss.an.rarefaction data/schloss/schloss.nn.rarefaction data/schloss/schloss.fn.rarefaction data/schloss/schloss.agc.rarefaction data/schloss/schloss.dgc.rarefaction data/schloss/schloss.closed.rarefaction data/schloss/schloss.open.rarefaction data/schloss/schloss.swarm.rarefaction
+
+data/schloss/schloss.an.rarefaction : $(SCHL_AN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/schloss')"
+
+data/schloss/schloss.nn.rarefaction : $(SCHL_NN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/schloss')"
+
+data/schloss/schloss.fn.rarefaction : $(SCHL_FN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/schloss')"
+
+data/schloss/schloss.agc.rarefaction : $(SCHL_AGC_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/schloss')"
+
+data/schloss/schloss.dgc.rarefaction : $(SCHL_DGC_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/schloss')"
+
+data/schloss/schloss.closed.rarefaction : $(SCHL_CLOSED_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/schloss')"
+
+data/schloss/schloss.open.rarefaction : $(SCHL_OPEN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/schloss')"
+
+data/schloss/schloss.swarm.rarefaction : $(SCHL_SWARM_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/schloss')"
 
