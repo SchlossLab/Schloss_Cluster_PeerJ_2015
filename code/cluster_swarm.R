@@ -21,6 +21,7 @@ prep_swarm_clust <- function(names, fasta){
 
 	fasta_data <- scan(fasta, what="")
 	sequence_data <- fasta_data[grepl("^[ATGCatgc]", fasta_data)]
+	sequence_data <- gsub("[-.]", "", sequence_data)
 	names(sequence_data) <- gsub(">", "", fasta_data[grepl("^>", fasta_data)], 2, )
 
 	seq_with_freq <- paste0(">", names(sequence_data), "_", n_seqs[names(sequence_data)], "\n", sequence_data)
