@@ -1,0 +1,4 @@
+align.seqs(fasta=data/schloss/canada_soil.good.unique.pick.redundant.fasta, reference=data/references/silva.bacteria.align, processors=8)
+screen.seqs(fasta=data/schloss/canada_soil.good.unique.pick.redundant.align, optimize=start, criteria=95, end=43116)
+filter.seqs(fasta=current, vertical=T, trump=.)
+

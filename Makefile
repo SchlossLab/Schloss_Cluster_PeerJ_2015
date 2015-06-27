@@ -185,3 +185,29 @@ data/he/he.open.rarefaction : $(HE_OPEN_LIST) code/rarefy_data.R
 data/he/he.swarm.rarefaction : $(HE_SWARM_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/he')"
 
+
+
+
+#get the silva reference alignment
+REFS = data/references/
+$(REFS)silva.bacteria.align :
+	wget -N -P $(REFS) http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
+	tar xvzf $(REFS)Silva.nr_v119.tgz -C $(REFS);
+	mothur "#get.lineage(fasta=$(REFS)silva.nr_v119.align, taxonomy=$(REFS)silva.nr_v119.tax, taxon=Bacteria)";
+	mv $(REFS)silva.nr_v119.pick.align $(REFS)silva.bacteria.align; \
+	rm $(REFS)README.html; \
+	rm $(REFS)README.Rmd; \
+	rm $(REFS)silva.nr_v119.*
+
+data/schloss/canada_soil.good.unique.pick.redundant.fasta : data/he/canada_soil.good.unique.pick.redundant.fasta
+	cp $< $@
+
+data/schloss/canada_soil.good.unique.pick.redundant.good.filter.fasta : code/get_schloss_data.batch data/schloss/canada_soil.good.unique.pick.redundant.fasta
+	mothur code/get_schloss_data.batch
+	rm data/schloss/canada_soil.filter
+	rm data/schloss/canada_soil.good.unique.pick.redundant.bad.accnos
+	rm data/schloss/canada_soil.good.unique.pick.redundant.good.align
+	rm data/schloss/canada_soil.good.unique.pick.redundant.flip.accnos
+	rm data/schloss/canada_soil.good.unique.pick.redundant.align.report
+	rm data/schloss/canada_soil.good.unique.pick.redundant.align
+
