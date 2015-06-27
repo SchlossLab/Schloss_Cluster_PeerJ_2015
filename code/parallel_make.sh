@@ -12,9 +12,9 @@ split -l $LINES $MAIN_TARGET.temp
 
 for X in x??
 do
-    cat head.batch $X tail.batch > $X.qsub
-    qsub $X.qsub
-    rm $X.qsub $X
+    cat head.batch $X tail.batch > $MAIN_TARGET.$X.qsub
+    qsub $MAIN_TARGET.$X.qsub
+    rm $MAIN_TARGET.$X.qsub $X
 done
 
 rm $MAIN_TARGET.temp
