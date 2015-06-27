@@ -108,7 +108,7 @@ $(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))
 	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/he)"
 
 
-HE_REF_MCC = data/he/he.fn.ref_mcc data/he/he.nn.ref_mcc data/he/he.an.ref_mcc data/he/he.agc.ref_mcc data/he/he.dgc.ref_mcc data/he/he.closed.ref_mcc data/he/he.open.ref_mcc
+HE_REF_MCC = data/he/he.fn.ref_mcc data/he/he.nn.ref_mcc data/he/he.an.ref_mcc data/he/he.agc.ref_mcc data/he/he.dgc.ref_mcc data/he/he.closed.ref_mcc data/he/he.open.ref_mcc data/he/he.swarm.ref_mcc
 data/he/he.an.ref_mcc : code/reference_mcc.R $(HE_AN_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*unique.an.list', 'he_1.0.*unique.an.list', 'he.*names', 'data/he/he.an.ref_mcc')"
 
@@ -157,4 +157,31 @@ data/he/he.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sens
 
 data/he/he.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_SWARM_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*swarm.sensspec', 'data/he/he.swarm.pool_sensspec')"
+
+
+HE_RAREFACTION = data/he/he.an.rarefaction data/he/he.nn.rarefaction data/he/he.fn.rarefaction data/he/he.agc.rarefaction data/he/he.dgc.rarefaction data/he/he.closed.rarefaction data/he/he.open.rarefaction data/he/he.swarm.rarefaction
+
+data/he/he.an.rarefaction : $(HE_AN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/he')"
+
+data/he/he.nn.rarefaction : $(HE_NN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/he')"
+
+data/he/he.fn.rarefaction : $(HE_FN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/he')"
+
+data/he/he.agc.rarefaction : $(HE_AGC_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/he')"
+
+data/he/he.dgc.rarefaction : $(HE_DGC_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/he')"
+
+data/he/he.closed.rarefaction : $(HE_CLOSED_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/he')"
+
+data/he/he.open.rarefaction : $(HE_OPEN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/he')"
+
+data/he/he.swarm.rarefaction : $(HE_SWARM_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/he')"
 
