@@ -20,7 +20,7 @@ prep_swarm_clust <- function(names, fasta){
 	n_seqs <- nchar(names_data) - nchar(gsub(",", "", names_data)) + 1
 
 	fasta_data <- scan(fasta, what="")
-	sequence_data <- fasta_data[grepl("^[ATGCatgc]", fasta_data)]
+	sequence_data <- fasta_data[grepl("^[ATGCatgc.-]", fasta_data)]
 	sequence_data <- gsub("[-.]", "", sequence_data)
 	names(sequence_data) <- gsub(">", "", fasta_data[grepl("^>", fasta_data)], 2, )
 
