@@ -1,10 +1,11 @@
 print-%:
 	@echo '$*=$($*)'
 
-data/raw/canada_soil.fasta : code/get_roesch_data.R
+RAW = data/raw/
+$(RAW)canada_soil.fasta : code/get_roesch_data.R
 	R -e "source('code/get_roesch_data.R')"
 
-data/he/canada_soil.good.unique.pick.redundant.fasta : code/get_he_data.batch data/raw/canada_soil.fasta
+data/he/canada_soil.good.unique.pick.redundant.fasta : code/get_he_data.batch $(RAW)canada_soil.fasta
 	mothur code/get_he_data.batch
 
 
@@ -133,6 +134,7 @@ data/he/he.swarm.ref_mcc : code/reference_mcc.R $(HE_SWARM_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*swarm.list', 'he_1.0.*swarm.list', 'he.*names', 'data/he/he.swarm.ref_mcc')"
 
 
+HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.swarm.pool_sensspec
 data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST)) 
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
 
@@ -391,4 +393,23 @@ data/schloss/schloss.open.rarefaction : $(SCHL_OPEN_LIST) code/rarefy_data.R
 
 data/schloss/schloss.swarm.rarefaction : $(SCHL_SWARM_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/schloss')"
+
+
+
+
+
+data/miseq/mouse.files : code/get_contigsfile.R
+	wget -N -P data/miseq http://www.mothur.org/MiSeqDevelopmentData/StabilityNoMetaG.tar; \
+	tar xvf data/miseq/StabilityNoMetaG.tar -C data/miseq/; \
+	gunzip -f data/miseq/*gz; \
+	rm data/miseq/StabilityNoMetaG.tar; \
+	R -e 'source("code/get_contigsfile.R");get_contigsfile("data/miseq")'
+
+
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files
+	bash code/process_mice.sh data/miseq/miseq.files
+
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table : code/process_mice.sh data/miseq/miseq.files
+	bash code/process_mice.sh data/miseq/miseq.files
+
 
