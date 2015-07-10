@@ -396,7 +396,12 @@ data/schloss/schloss.swarm.rarefaction : $(SCHL_SWARM_LIST) code/rarefy_data.R
 
 
 
-
+#get the rdp training set data
+$(REFS)trainset10_082014.pds.tax $(REFS)trainset10_082014.pds.fasta :
+	wget -N -P $(REFS) http://www.mothur.org/w/images/2/24/Trainset10_082014.pds.tgz; \
+	tar xvzf $(REFS)Trainset10_082014.pds.tgz -C $(REFS);\
+	mv $(REFS)trainset10_082014.pds/trainset10_082014.* $(REFS);\
+	rm -rf $(REFS)trainset10_082014.pds
 
 data/miseq/mouse.files : code/get_contigsfile.R
 	wget -N -P data/miseq http://www.mothur.org/MiSeqDevelopmentData/StabilityNoMetaG.tar; \
@@ -406,10 +411,244 @@ data/miseq/mouse.files : code/get_contigsfile.R
 	R -e 'source("code/get_contigsfile.R");get_contigsfile("data/miseq")'
 
 
-data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files
+
+
+
+
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
 	bash code/process_mice.sh data/miseq/miseq.files
 
-data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table : code/process_mice.sh data/miseq/miseq.files
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
 	bash code/process_mice.sh data/miseq/miseq.files
 
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
+	bash code/process_mice.sh data/miseq/miseq.files
+
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table
+	mothur "#deunique.seqs(fasta=data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta,  count=data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table)"
+	rm data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.redundant.groups
+
+MISEQ_BOOTSTRAP_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.fasta)))
+$(MISEQ_BOOTSTRAP_FASTA) : code/generate_samples.R data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta
+	$(eval BASE=$(patsubst data/miseq/miseq_%.fasta,%,$@))
+	$(eval R=$(lastword $(subst _, ,$(BASE))))
+	$(eval F=$(firstword $(subst _, ,$(BASE))))
+	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta', 'data/miseq/miseq', $F, '$R')"
+
+
+MISEQ_UNIQUE_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.fasta)))
+.SECONDEXPANSION:
+$(MISEQ_UNIQUE_FASTA) : $$(subst unique.fasta,fasta, $$@)
+	mothur "#unique.seqs(fasta=$<)"
+
+MISEQ_NAMES = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.names)))
+.SECONDEXPANSION:
+$(MISEQ_NAMES) : $$(subst names,unique.fasta, $$@)
+
+MISEQ_DISTANCE = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.dist)))
+.SECONDEXPANSION:
+$(MISEQ_DISTANCE) : $$(subst dist,fasta, $$@)
+	mothur "#dist.seqs(fasta=$<, processors=8, cutoff=0.20)"
+
+
+
+MISEQ_AN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
+.SECONDEXPANSION:
+$(MISEQ_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@) code/run_an.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_an.sh $(DIST) $(NAMES)
+
+MISEQ_NN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+.SECONDEXPANSION:
+$(MISEQ_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_nn.sh $(DIST) $(NAMES)
+
+MISEQ_FN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+.SECONDEXPANSION:
+$(MISEQ_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_fn.sh $(DIST) $(NAMES)
+
+MISEQ_NEIGHBOR_LIST = $(MISEQ_AN_LIST) $(MISEQ_NN_LIST) $(MISEQ_FN_LIST) 
+
+
+MISEQ_DEGAP_FASTA = $(subst fasta,ng.fasta,$(MISEQ_BOOTSTRAP_FASTA))
+$(MISEQ_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
+	mothur "#degap.seqs(fasta=$<)"
+
+MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
+.SECONDEXPANSION:
+$(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt
+	bash code/run_dgc.sh $<
+	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
+	mv $(NG_LIST) $@
+
+MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
+.SECONDEXPANSION:
+$(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt
+	bash code/run_agc.sh $<
+	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
+	mv $(NG_LIST) $@
+
+MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
+.SECONDEXPANSION:
+$(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt
+	bash code/run_closed.sh $<
+	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
+	mv $(NG_LIST) $@
+
+MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
+.SECONDEXPANSION:
+$(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt
+	bash code/run_open.sh $<
+	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
+	mv $(NG_LIST) $@
+
+MISEQ_SWARM_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
+.SECONDEXPANSION:
+$(MISEQ_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,names, $$@) code/cluster_swarm.R
+	$(eval FASTA=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
+
+MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_SWARM_LIST)
+
+
+MISEQ_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(MISEQ_NEIGHBOR_LIST))
+.SECONDEXPANSION:
+$(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+	$(eval LIST=$(word 2,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/miseq)"
+
+MISEQ_GREEDY_SENSSPEC = $(subst list,sensspec, $(MISEQ_GREEDY_LIST))
+.SECONDEXPANSION:
+$(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+	$(eval LIST=$(word 2,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
+
+
+MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc
+data/miseq/miseq.an.ref_mcc : code/reference_mcc.R $(MISEQ_AN_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.an.list', 'miseq_1.0.*unique.an.list', 'miseq.*names', 'data/miseq/miseq.an.ref_mcc')"
+
+data/miseq/miseq.fn.ref_mcc : code/reference_mcc.R $(MISEQ_FN_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.fn.list', 'miseq_1.0.*unique.fn.list', 'miseq.*names', 'data/miseq/miseq.fn.ref_mcc')"
+
+data/miseq/miseq.nn.ref_mcc : code/reference_mcc.R $(MISEQ_NN_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.nn.list', 'miseq_1.0.*unique.nn.list', 'miseq.*names', 'data/miseq/miseq.nn.ref_mcc')"
+
+data/miseq/miseq.closed.ref_mcc : code/reference_mcc.R $(MISEQ_CLOSED_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*closed.list', 'miseq_1.0.*closed.list', 'miseq.*names', 'data/miseq/miseq.closed.ref_mcc')"
+
+data/miseq/miseq.open.ref_mcc : code/reference_mcc.R $(MISEQ_OPEN_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*open.list', 'miseq_1.0.*open.list', 'miseq.*names', 'data/miseq/miseq.open.ref_mcc')"
+
+data/miseq/miseq.agc.ref_mcc : code/reference_mcc.R $(MISEQ_AGC_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*agc.list', 'miseq_1.0.*agc.list', 'miseq.*names', 'data/miseq/miseq.agc.ref_mcc')"
+
+data/miseq/miseq.dgc.ref_mcc : code/reference_mcc.R $(MISEQ_DGC_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*dgc.list', 'miseq_1.0.*dgc.list', 'miseq.*names', 'data/miseq/miseq.dgc.ref_mcc')"
+
+data/miseq/miseq.swarm.ref_mcc : code/reference_mcc.R $(MISEQ_SWARM_LIST) $(MISEQ_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*swarm.list', 'miseq_1.0.*swarm.list', 'miseq.*names', 'data/miseq/miseq.swarm.ref_mcc')"
+
+
+MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.swarm.pool_sensspec
+data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST)) 
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
+
+data/miseq/miseq.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_FN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*Fn.sensspec', 'data/miseq/miseq.fn.pool_sensspec')"
+
+data/miseq/miseq.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_NN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*nn.sensspec', 'data/miseq/miseq.nn.pool_sensspec')"
+
+data/miseq/miseq.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_DGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*dgc.sensspec', 'data/miseq/miseq.dgc.pool_sensspec')"
+
+data/miseq/miseq.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*agc.sensspec', 'data/miseq/miseq.agc.pool_sensspec')"
+
+data/miseq/miseq.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_OPEN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*open.sensspec', 'data/miseq/miseq.open.pool_sensspec')"
+
+data/miseq/miseq.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_CLOSED_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*closed.sensspec', 'data/miseq/miseq.closed.pool_sensspec')"
+
+data/miseq/miseq.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_SWARM_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*swarm.sensspec', 'data/miseq/miseq.swarm.pool_sensspec')"
+
+
+MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction
+
+data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq')"
+
+data/miseq/miseq.nn.rarefaction : $(MISEQ_NN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq')"
+
+data/miseq/miseq.fn.rarefaction : $(MISEQ_FN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq')"
+
+data/miseq/miseq.agc.rarefaction : $(MISEQ_AGC_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq')"
+
+data/miseq/miseq.dgc.rarefaction : $(MISEQ_DGC_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq')"
+
+data/miseq/miseq.closed.rarefaction : $(MISEQ_CLOSED_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq')"
+
+data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq')"
+
+data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R 
+	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq')"
+
+
+
+
+
+
+
+$(REFS)gg_13_5.fasta : 
+	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5.fasta.gz
+	gunzip -c $(REFS)gg_13_5.fasta.gz > $(REFS)gg_13_5.fasta
+
+$(REFS)gg_13_5_otus/otus/97_otu_map.txt $(REFS)gg_13_5_otus/otus/99_otu_map.txt : 
+	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_otus.tar.gz
+	tar xvzf $(REFS)gg_13_5_otus.tar.gz -C $(REFS);
+
+$(REFS)gg_13_5.taxonomy : 
+	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_taxonomy.txt.gz
+	gunzip -c $(REFS)gg_13_5_taxonomy.txt.gz > $(REFS)gg_13_5_taxonomy.txt
+	sed 's/; /;/g' data/references/gg_13_5_taxonomy.txt | sed 's/$$/\;/' | sed 's/ /_/g' > $(REFS)gg_13_5.taxonomy
+	rm $(REFS)gg_13_5_taxonomy.txt.gz $(REFS)gg_13_5_taxonomy.txt
+
+data/gg_13_5/gg_13_5_otus.ref.list : $(REFS)gg_13_5_otus/otus/97_otu_map.txt $(REFS)gg_13_5_otus/otus/99_otu_map.txt
+	R -e "source('code/build_gg_list.R')"
+
+data/gg_13_5/gg_13_5.align : data/references/gg_13_5.fasta data/references/silva.bacteria.align
+	mothur "#align.seqs(fasta=data/references/gg_13_5.fasta, reference=data/references/silva.bacteria.align, processors=4, outputdir=data/gg_13_5);
+	rm data/gg_13_5/gg_13_5.align.report data/gg_13_5/gg_13_5.flip.accnos
+
+
+data/gg_13_5/gg_13_5.v19.align : data/gg_13_5/gg_13_5.align
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F);
+			filter.seqs(vertical=T)"
+	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v19.align
+
+data/gg_13_5/gg_13_5.v4.align : data/gg_13_5/gg_13_5.align
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F);
+			filter.seqs(vertical=T)"
+	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v4.align
+
+data/gg_13_5/gg_13_5.v9.align : data/gg_13_5/gg_13_5.align
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F);
+			filter.seqs(vertical=T)"
+	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v9.align
 

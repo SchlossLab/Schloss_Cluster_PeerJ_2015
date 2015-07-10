@@ -10,6 +10,9 @@
 #
 # Dependencies...
 # * data/miseq/miseq.files
+# * data/references/silva.bacteria.align
+# * data/references/trainset10_082014.pds.fasta
+# * data/references/trainset10_082014.pds.tax
 #
 # Produces...
 # * *.precluster.pick.pick.fasta
@@ -29,14 +32,14 @@ mothur "#set.dir(output=$MISEQ_PATH);
 	screen.seqs(fasta=current, group=current, maxambig=0, maxlength=275, maxhomop=8);
 	unique.seqs();
 	count.seqs(name=current, group=current);
-	align.seqs(fasta=current, reference=$MISEQ_PATH/silva.v4.align);
+	align.seqs(fasta=current, reference=$MISEQ_PATH/silva.v4.align, processors=2);
 	screen.seqs(fasta=current, count=current, start=1968, end=11550);
 	filter.seqs(fasta=current, vertical=T, trump=.);
 	unique.seqs(fasta=current, count=current);
 	pre.cluster(fasta=current, count=current, diffs=2);
 	chimera.uchime(fasta=current, count=current, dereplicate=T);
 	remove.seqs(fasta=current, accnos=current);
-	classify.seqs(fasta=current, count=current, reference=data/references/trainset9_032012.pds.fasta, taxonomy=data/references/trainset9_032012.pds.tax, cutoff=80);
+	classify.seqs(fasta=current, count=current, reference=data/references/trainset10_082014.pds.fasta, taxonomy=data/references/trainset10_082014.pds.tax, cutoff=80);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);"
 
 
@@ -44,10 +47,11 @@ mothur "#set.dir(output=$MISEQ_PATH);
 # Garbage collection
 rm $MISEQ_PATH/silva.v4.8mer
 rm $MISEQ_PATH/silva.v4.align
-rm $MISEQ_PATH/silva.v4.summary
 rm $MISEQ_PATH/*.contigs.good.groups
 rm $MISEQ_PATH/*.contigs.groups
 rm $MISEQ_PATH/*.contigs.report
+rm $MISEQ_PATH/*.trim.contigs.qual
+rm $MISEQ_PATH/*.scrap.contigs.qual
 rm $MISEQ_PATH/*.scrap.contigs.fasta
 rm $MISEQ_PATH/*.trim.contigs.bad.accnos
 rm $MISEQ_PATH/*.trim.contigs.fasta
@@ -67,15 +71,15 @@ rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.fasta
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.count_table
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.fasta
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique*map
-rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.count_table
-rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.chimeras
-rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.accnos
+rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table
+rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.chimeras
+rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.accnos
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
-rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy
 rm $MISEQ_PATH/*.filter
 
 #keeping...
-#	$MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta
-#	$MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table
+# $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta
+# $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table
+# $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy
