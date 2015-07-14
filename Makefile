@@ -633,22 +633,22 @@ data/gg_13_5/gg_13_5_otus.ref.list : $(REFS)gg_13_5_otus/otus/97_otu_map.txt $(R
 	R -e "source('code/build_gg_list.R')"
 
 data/gg_13_5/gg_13_5.align : data/references/gg_13_5.fasta data/references/silva.bacteria.align
-	mothur "#align.seqs(fasta=data/references/gg_13_5.fasta, reference=data/references/silva.bacteria.align, processors=4, outputdir=data/gg_13_5);
+	mothur "#align.seqs(fasta=data/references/gg_13_5.fasta, reference=data/references/silva.bacteria.align, processors=2, outputdir=data/gg_13_5);"
 	rm data/gg_13_5/gg_13_5.align.report data/gg_13_5/gg_13_5.flip.accnos
 
 
 data/gg_13_5/gg_13_5.v19.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F);
-			filter.seqs(vertical=T)"
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v19.align
+	rm data/gg_13_5/gg_13_5.pcr.*.align
 
 data/gg_13_5/gg_13_5.v4.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F);
-			filter.seqs(vertical=T)"
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v4.align
+	rm data/gg_13_5/gg_13_5.pcr.*.align
 
 data/gg_13_5/gg_13_5.v9.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F);
-			filter.seqs(vertical=T)"
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v9.align
+	rm data/gg_13_5/gg_13_5.pcr.*.align
 
