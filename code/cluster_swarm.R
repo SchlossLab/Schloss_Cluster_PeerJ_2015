@@ -14,12 +14,13 @@
 # of the sequence name with a _ separating the sequence name and frequency.
 
 prep_swarm_clust <- function(names, fasta){
-	names_file <- read.table(file=names, stringsAsFactors=FALSE)
-	names_data <- names_file[,2]
-	names(names_data) <- names_file[,1]
+
+	names_file <- scan(file=names, what="", quiet=TRUE)
+	names_data <- names_file[(1:length(names_file)) %% 2 == 0]
+	names(names_data) <- names_file[(1:length(names_file)) %% 2 == 1]
 	n_seqs <- nchar(names_data) - nchar(gsub(",", "", names_data)) + 1
 
-	fasta_data <- scan(fasta, what="")
+	fasta_data <- scan(fasta, what="", quiet=TRUE)
 	sequence_data <- fasta_data[grepl("^[ATGCatgc.-]", fasta_data)]
 	sequence_data <- gsub("[-.]", "", sequence_data)
 	names(sequence_data) <- gsub(">", "", fasta_data[grepl("^>", fasta_data)], 2, )
@@ -59,17 +60,16 @@ map_names <- function(otu_list, names_mapping){
 # this function will convert the swarm mothur-based list file and converts it
 # to a true mothur-based list file. basically, for each unique sequence name
 # from the swarm file, it inserts the names of the redundant sequence names.
-convert_swarm_clust <- function(swarm_fasta_file, swarm_list_file, names_file){
-	names_mapping <- read.table(file=names_file, stringsAsFactors=FALSE)
-	temp <- names_mapping[,1]
-	names_mapping <- names_mapping[,-1]
-	names(names_mapping) <- temp
+convert_swarm_clust <- function(swarm_fasta_file, swarm_list_file, names){
+	names_file <- scan(file=names, what="", quiet=TRUE)
+	names_data <- names_file[(1:length(names_file)) %% 2 == 0]
+	names(names_data) <- names_file[(1:length(names_file)) %% 2 == 1]
 
-	swarm_list <- scan(swarm_list_file, what="")
+	swarm_list <- scan(swarm_list_file, what="", quiet=TRUE)
 	swarm_list <- swarm_list[-c(1,2)]
 	swarm_list <- gsub("_\\d*", "", swarm_list)
 
-	sapply(swarm_list, map_names, names_mapping)
+	sapply(swarm_list, map_names, names_data)
 }
 
 
@@ -86,4 +86,3 @@ get_mothur_list <- function(fasta, names){
 	write(mothur_list_file_content, mothur_list_file_name)
 	unlink(swarm_list_file_name)
 }
-
