@@ -638,17 +638,17 @@ data/gg_13_5/gg_13_5.align : data/references/gg_13_5.fasta data/references/silva
 
 
 data/gg_13_5/gg_13_5.v19.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F);filter.seqs(vertical=T)"
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F, processors=4);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v19.align
-	rm data/gg_13_5/gg_13_5.pcr.*.align
+	rm data/gg_13_5/gg_13_5.*pcr.align gg_13_5.filter
 
 data/gg_13_5/gg_13_5.v4.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F);filter.seqs(vertical=T)"
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F, processors=4);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v4.align
-	rm data/gg_13_5/gg_13_5.pcr.*.align
+	rm data/gg_13_5/gg_13_5.*pcr.*.align gg_13_5.filter
 
 data/gg_13_5/gg_13_5.v9.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F);filter.seqs(vertical=T)"
+	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F, processors=4);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v9.align
-	rm data/gg_13_5/gg_13_5.pcr.*.align
+	rm data/gg_13_5/gg_13_5.*pcr.*.align gg_13_5.filter
 
