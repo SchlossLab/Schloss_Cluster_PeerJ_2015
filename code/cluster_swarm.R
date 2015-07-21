@@ -67,7 +67,8 @@ convert_swarm_clust <- function(swarm_fasta_file, swarm_list_file, names){
 
 	swarm_list <- scan(swarm_list_file, what="", quiet=TRUE)
 	swarm_list <- swarm_list[-c(1,2)]
-	swarm_list <- gsub("_\\d*", "", swarm_list)
+	swarm_list <- gsub("_\\d*,", ",", swarm_list)
+	swarm_list <- gsub("_\\d*$", "", swarm_list)
 
 	sapply(swarm_list, map_names, names_data)
 }
