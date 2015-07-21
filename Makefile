@@ -200,6 +200,17 @@ $(REFS)silva.bacteria.align :
 	rm $(REFS)README.Rmd; \
 	rm $(REFS)silva.nr_v119.*
 
+$(REFS)silva.bact_archaea.align : $(REFS)silva.bacteria.align
+	wget -N -P $(REFS) http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
+	tar xvzf $(REFS)Silva.nr_v119.tgz -C $(REFS); 
+	mothur "#get.lineage(fasta=$(REFS)silva.nr_v119.align, taxonomy=$(REFS)silva.nr_v119.tax, taxon=Archaea)";
+	cp $(REFS)silva.bacteria.align $(REFS)silva.bact_archaea.align;
+	cat $(REFS)silva.nr_v119.pick.align >> $(REFS)silva.bact_archaea.align; \
+	rm $(REFS)README.html; \
+	rm $(REFS)README.Rmd; \
+	rm $(REFS)silva.nr_v119.*
+
+
 data/schloss/canada_soil.good.unique.pick.redundant.fasta : data/he/canada_soil.good.unique.pick.redundant.fasta
 	cp $< $@
 
@@ -483,30 +494,42 @@ $(MISEQ_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
 MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
 $(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt
-	bash code/run_dgc.sh $<
 	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
+	$(eval TEMP=$(subst .ng.,.dgc.,$<))
+	sed s/_/-/g < $< > $(TEMP)
+	bash code/run_dgc.sh $(TEMP)
 	mv $(NG_LIST) $@
+	rm $(TEMP)
 
 MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
 $(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt
-	bash code/run_agc.sh $<
 	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
+	$(eval TEMP=$(subst .ng.,.agc.,$<))
+	sed s/_/-/g < $< > $(TEMP)
+	bash code/run_agc.sh $(TEMP)
 	mv $(NG_LIST) $@
+	rm $(TEMP)
 
 MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
 $(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt
-	bash code/run_closed.sh $<
 	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
+	$(eval TEMP=$(subst .ng.,.closed.,$<))
+	sed s/_/-/g < $< > $(TEMP)
+	bash code/run_closed.sh $(TEMP)
 	mv $(NG_LIST) $@
+	rm $(TEMP)
 
 MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
 $(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt
-	bash code/run_open.sh $<
 	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
+	$(eval TEMP=$(subst .ng.,.open.,$<))
+	sed s/_/-/g < $< > $(TEMP)
+	bash code/run_open.sh $(TEMP)
 	mv $(NG_LIST) $@
+	rm $(TEMP)
 
 MISEQ_SWARM_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
 .SECONDEXPANSION:
@@ -536,7 +559,7 @@ data/miseq/miseq.an.ref_mcc : code/reference_mcc.R $(MISEQ_AN_LIST) $(MISEQ_NAME
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.an.list', 'miseq_1.0.*unique.an.list', 'miseq.*names', 'data/miseq/miseq.an.ref_mcc')"
 
 data/miseq/miseq.fn.ref_mcc : code/reference_mcc.R $(MISEQ_FN_LIST) $(MISEQ_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.fn.list', 'miseq_1.0.*unique.fn.list', 'miseq.*names', 'data/miseq/miseq.fn.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.fn.list', 'miseq_1.0_.*unique.fn.list', 'miseq.*names', 'data/miseq/miseq.fn.ref_mcc')"
 
 data/miseq/miseq.nn.ref_mcc : code/reference_mcc.R $(MISEQ_NN_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.nn.list', 'miseq_1.0.*unique.nn.list', 'miseq.*names', 'data/miseq/miseq.nn.ref_mcc')"
@@ -562,7 +585,7 @@ data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,se
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
 
 data/miseq/miseq.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_FN_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*Fn.sensspec', 'data/miseq/miseq.fn.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*fn.sensspec', 'data/miseq/miseq.fn.pool_sensspec')"
 
 data/miseq/miseq.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_NN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*nn.sensspec', 'data/miseq/miseq.nn.pool_sensspec')"
@@ -632,23 +655,36 @@ $(REFS)gg_13_5.taxonomy :
 data/gg_13_5/gg_13_5_otus.ref.list : $(REFS)gg_13_5_otus/otus/97_otu_map.txt $(REFS)gg_13_5_otus/otus/99_otu_map.txt
 	R -e "source('code/build_gg_list.R')"
 
-data/gg_13_5/gg_13_5.align : data/references/gg_13_5.fasta data/references/silva.bacteria.align
-	mothur "#align.seqs(fasta=data/references/gg_13_5.fasta, reference=data/references/silva.bacteria.align, processors=2, outputdir=data/gg_13_5);"
+data/gg_13_5/gg_13_5.align : data/references/gg_13_5.fasta data/references/silva.bact_archaea.align
+	mothur "#align.seqs(fasta=data/references/gg_13_5.fasta, reference=data/references/silva.bact_archaea.align, processors=2, outputdir=data/gg_13_5);"
 	rm data/gg_13_5/gg_13_5.align.report data/gg_13_5/gg_13_5.flip.accnos
 
 
 data/gg_13_5/gg_13_5.v19.align : data/gg_13_5/gg_13_5.align
 	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F, processors=4);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v19.align
-	rm data/gg_13_5/gg_13_5.*pcr.align gg_13_5.filter
+	rm data/gg_13_5/gg_13_5.filter data/gg_13_5/gg_13_5.pcr.align
 
 data/gg_13_5/gg_13_5.v4.align : data/gg_13_5/gg_13_5.align
 	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F, processors=4);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v4.align
-	rm data/gg_13_5/gg_13_5.*pcr.*.align gg_13_5.filter
+	rm data/gg_13_5/gg_13_5.filter data/gg_13_5/gg_13_5.pcr.align
 
 data/gg_13_5/gg_13_5.v9.align : data/gg_13_5/gg_13_5.align
 	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F, processors=4);filter.seqs(vertical=T)"
 	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v9.align
-	rm data/gg_13_5/gg_13_5.*pcr.*.align gg_13_5.filter
+	rm data/gg_13_5/gg_13_5.filter data/gg_13_5/gg_13_5.pcr.align
+
+data/gg_13_5/gg_13_5.%.dist : data/gg_13_5/gg_13_5.%.align
+	mothur "#dist.seqs(fasta=$<, cutoff=0.03, processors=8)"
+
+
+data/gg_13_5/gg_13_5.rep.accnos : data/references/gg_13_5_otus/rep_set/97_otus.fasta
+	grep ">" $<  | cut -c 2- > $@
+
+data/gg_13_5/gg_13_5.%.rep.align :  data/gg_13_5/gg_13_5.%.align data/gg_13_5/gg_13_5.rep.accnos
+	mothur "#get.seqs(accnos=data/gg_13_5/gg_13_5.rep.accnos, fasta=$<)"
+	$(eval PICK = $(subst rep,pick,$@))
+	mv $(PICK) $@
+
 
