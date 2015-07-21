@@ -10,16 +10,25 @@ get_list_data <- function(list_file){
         otu_line <- file[1]
     }
 
-    split_data <- unlist(strsplit(otu_line, split="\\s"))
+    split_data <- unlist(strsplit(otu_line, split="\\s", fixed=FALSE))
     otu_assignments <- split_data[-c(1,2)]
 
     return(otu_assignments)
 }
 
 
+# read in a mothur-formatted names file and return the unique sequence names
+# from the first column of the file
+get_names <- function(names_file){
+  	file <- scan(names_file, what="", quiet=TRUE)
+	unique_names <- file[(1:length(file))%%2 == 1]
+	return(unique_names)
+}
+
+
 # for each sequence in an OTU assign it the number of that OTU
 map_reads <- function(otu_sequences, index){
-    sequences <- unlist(strsplit(otu_sequences, split=","))
+    sequences <- unlist(strsplit(otu_sequences, split=",", fixed=TRUE))
 
     otu_assignment <- rep(index, length(sequences))
     names(otu_assignment) <- sequences
@@ -32,15 +41,6 @@ get_map <- function(otu_assignments){
     n_otus <- length(otu_assignments)
     otu_map <- unlist(unname(mapply(map_reads, otu_assignments, 1:length(otu_assignments))))
     return(otu_map)
-}
-
-
-# read in a mothur-formatted names file and return the unique sequence names
-# from the first column of the file
-get_names <- function(names_file){
-  	file <- scan(names_file, what="", quiet=TRUE)
-	unique_names <- file[(1:length(file))%%2 == 1]
-	return(unique_names)
 }
 
 
@@ -98,6 +98,7 @@ cppFunction('NumericVector cpp_confusion_matrix(NumericVector test_map, NumericV
     return out;
 }')
 
+
 # this is an R wrapper for the above cpp code. the first thing it does is to
 # make sure that we have a list of sequences that are shared between the
 # test and reference datasets. then it calls cpp_confusion_matrix to get back
@@ -136,28 +137,31 @@ mcc <- function(confusion){
 # dataset and the XX is the replicate being analyzed. it goes through all of the
 # reference files and calculates the MCC for each test set relative to each
 # reference set for each fraction value.
-get_all_v_all_mcc <- function(test_files, reference_files, names_files){
+get_all_v_all_mcc <- function(tests, references, unique_names){
 
-    fractions <- unique(gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", test_files))
+    fractions <- unique(gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", names(tests)))
     n_fractions <- length(fractions)
-    n_reps <- length(reference_files)
-    stopifnot(n_reps * n_fractions == length(test_files))
+    n_reps <- length(references)
+    stopifnot(n_reps * n_fractions == length(tests))
 
     mcc_curve <- data.frame(matrix(rep(0, n_reps*n_reps*(n_fractions)), ncol=n_fractions))
     colnames(mcc_curve) <- fractions
 
-    for(i in 1:length(reference_files)){
-        print(i)
-        ref_map_full <- get_map(get_list_data(reference_files[i]))
+    ref_map_full <- lapply(references, get_map)
+    test_map_full <- lapply(tests, get_map)
 
-        for(j in 1:length(test_files)){
-            test_names <- get_names(names_files[j])
-            test_map_prune <- prune_map(get_map(get_list_data(test_files[j])), test_names)
-            ref_map_prune <- prune_map(ref_map_full, test_names)
+    for(i in 1:length(references)){
+        print(i)
+
+        for(j in 1:length(tests)){
+
+            test_names <- unique_names[[j]]
+            test_map_prune <- prune_map(test_map_full[[j]], test_names)
+            ref_map_prune <- prune_map(ref_map_full[[i]], test_names)
 
             confusion <- get_confusion_matrix(test_map_prune, ref_map_prune)
-            f <- gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", test_files[j])
-            r <- as.numeric(gsub(".*_\\d\\.\\d_(\\d\\d).*", "\\1", test_files[j]))
+            f <- gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", names(tests[j]))
+            r <- as.numeric(gsub(".*_\\d\\.\\d_(\\d\\d).*", "\\1", names(tests[j])))
             mcc_curve[(i-1)*n_reps+r, f] <- mcc(confusion)
         }
     }
@@ -173,31 +177,17 @@ get_all_v_all_mcc <- function(test_files, reference_files, names_files){
 # file names. it writes the output to the user defined output filename.
 run_reference_mcc <- function(folder, test_pattern, reference_pattern, names_pattern, output_file_name){
     test_list_files <- list.files(path=folder, pattern=test_pattern, full.names=TRUE)
-    reference_list_files <- list.files(path=folder, pattern=reference_pattern, full.names=TRUE)
-    names_files <- list.files(path=folder, pattern=names_pattern, full.names=TRUE)
+    test_lists <- lapply(test_list_files, get_list_data)
+    names(test_lists) <- test_list_files
 
-    mcc_data <- get_all_v_all_mcc(test_list_files, reference_list_files, names_files)
+    reference_list_files <- list.files(path=folder, pattern=reference_pattern, full.names=TRUE)
+    reference_lists <- lapply(reference_list_files, get_list_data)
+    names(reference_lists) <- reference_list_files
+
+    names_data_files <- list.files(path=folder, pattern=names_pattern, full.names=TRUE)
+    names_data <- lapply(names_data_files, get_names)
+    names(names_data) <- names_data_files
+
+    mcc_data <- get_all_v_all_mcc(test_lists, reference_lists, names_data)
     write.table(file=output_file_name, x=mcc_data, sep="\t", row.names=F, quote=F)
 }
-
-
-# example code
-#
-#test_file <- "list_files/he_0.2_01.unique.an.list"
-#test_list <- get_list_data(test_file)
-#test_map <- get_map(test_list)
-#
-#ref_file <- "list_files/he_1.0_01.unique.an.list"
-#ref_list <- get_list_data(ref_file)
-#ref_map <- get_map(ref_list)
-#
-#names_file <- "list_files/he_0.2_01.names"
-#test_names <- get_names(names_file)
-#
-#test_map_prune <- prune_map(test_map, test_names)
-#ref_map_prune <- prune_map(ref_map, test_names)
-#
-#confusion <- get_confusion_matrix(test_map_prune, ref_map_prune)
-#mcc(confusion)
-#
-
