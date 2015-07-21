@@ -38,9 +38,9 @@ get_map <- function(otu_assignments){
 # read in a mothur-formatted names file and return the unique sequence names
 # from the first column of the file
 get_names <- function(names_file){
-    file <- read.table(file=names_file, stringsAsFactors=FALSE)
-    unique_names <- file$V1
-    return(unique_names)
+  	file <- scan(names_file, what="", quiet=TRUE)
+	unique_names <- file[(1:length(file))%%2 == 1]
+	return(unique_names)
 }
 
 
@@ -141,7 +141,6 @@ get_all_v_all_mcc <- function(test_files, reference_files, names_files){
     fractions <- unique(gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", test_files))
     n_fractions <- length(fractions)
     n_reps <- length(reference_files)
-
     stopifnot(n_reps * n_fractions == length(test_files))
 
     mcc_curve <- data.frame(matrix(rep(0, n_reps*n_reps*(n_fractions)), ncol=n_fractions))
