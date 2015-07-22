@@ -494,7 +494,7 @@ $(MISEQ_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
 MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
 $(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt
-	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
+	$(eval NG_LIST=$(subst dgc.list,dgc.dgc.list,$@))
 	$(eval TEMP=$(subst .ng.,.dgc.,$<))
 	sed s/_/-/g < $< > $(TEMP)
 	bash code/run_dgc.sh $(TEMP)
@@ -504,7 +504,7 @@ $(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.pa
 MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
 $(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt
-	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
+	$(eval NG_LIST=$(subst agc.list,agc.agc.list,$@))
 	$(eval TEMP=$(subst .ng.,.agc.,$<))
 	sed s/_/-/g < $< > $(TEMP)
 	bash code/run_agc.sh $(TEMP)
@@ -514,7 +514,7 @@ $(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.pa
 MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
 $(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt
-	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
+	$(eval NG_LIST=$(subst closed.list,closed.closed.list,$@))
 	$(eval TEMP=$(subst .ng.,.closed.,$<))
 	sed s/_/-/g < $< > $(TEMP)
 	bash code/run_closed.sh $(TEMP)
@@ -524,7 +524,7 @@ $(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh co
 MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
 $(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt
-	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
+	$(eval NG_LIST=$(subst open.list,open.open.list,$@))
 	$(eval TEMP=$(subst .ng.,.open.,$<))
 	sed s/_/-/g < $< > $(TEMP)
 	bash code/run_open.sh $(TEMP)
