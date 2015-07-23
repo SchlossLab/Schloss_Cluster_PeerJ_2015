@@ -67,22 +67,22 @@ HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST)
 
 HE_DGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
-$(HE_DGC_LIST) : $$(subst dgc.list,fasta, $$@) code/run_dgc.sh code/dgc.params.txt
+$(HE_DGC_LIST) : $$(subst dgc.list,fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
 	bash code/run_dgc.sh $<
 
 HE_AGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
-$(HE_AGC_LIST) : $$(subst agc.list,fasta, $$@) code/run_agc.sh code/agc.params.txt
+$(HE_AGC_LIST) : $$(subst agc.list,fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
 	bash code/run_agc.sh $<
 
 HE_CLOSED_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
-$(HE_CLOSED_LIST) : $$(subst closed.list,fasta, $$@) code/run_closed.sh code/closedref.params.txt
+$(HE_CLOSED_LIST) : $$(subst closed.list,fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
 	bash code/run_closed.sh $<
 
 HE_OPEN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
-$(HE_OPEN_LIST) : $$(subst open.list,fasta, $$@) code/run_open.sh code/openref.params.txt
+$(HE_OPEN_LIST) : $$(subst open.list,fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
 	bash code/run_open.sh $<
 
 HE_SWARM_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
@@ -278,28 +278,28 @@ $(SCHL_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
 
 SCHL_DGC_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
-$(SCHL_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt
+$(SCHL_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
 	bash code/run_dgc.sh $<
 	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
 	mv $(NG_LIST) $@
 
 SCHL_AGC_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
-$(SCHL_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt
+$(SCHL_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
 	bash code/run_agc.sh $<
 	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
 	mv $(NG_LIST) $@
 
 SCHL_CLOSED_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
-$(SCHL_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt
+$(SCHL_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
 	bash code/run_closed.sh $<
 	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
 	mv $(NG_LIST) $@
 
 SCHL_OPEN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
-$(SCHL_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt
+$(SCHL_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
 	bash code/run_open.sh $<
 	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
 	mv $(NG_LIST) $@
@@ -493,7 +493,7 @@ $(MISEQ_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
 
 MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
-$(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt
+$(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst dgc.list,dgc.dgc.list,$@))
 	$(eval TEMP=$(subst .ng.,.dgc.,$<))
 	sed s/_/-/g < $< > $(TEMP)
@@ -503,7 +503,7 @@ $(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.pa
 
 MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
-$(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt
+$(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst agc.list,agc.agc.list,$@))
 	$(eval TEMP=$(subst .ng.,.agc.,$<))
 	sed s/_/-/g < $< > $(TEMP)
@@ -513,7 +513,7 @@ $(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.pa
 
 MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
-$(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt
+$(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst closed.list,closed.closed.list,$@))
 	$(eval TEMP=$(subst .ng.,.closed.,$<))
 	sed s/_/-/g < $< > $(TEMP)
@@ -523,7 +523,7 @@ $(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh co
 
 MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
-$(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt
+$(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst open.list,open.open.list,$@))
 	$(eval TEMP=$(subst .ng.,.open.,$<))
 	sed s/_/-/g < $< > $(TEMP)
