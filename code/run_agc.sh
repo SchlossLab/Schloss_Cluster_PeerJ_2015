@@ -8,6 +8,6 @@ AGC_PATH=$(echo $FASTA | sed 's/fasta/agc/')
 
 rm -rf $AGC_PATH/
 pick_de_novo_otus.py -i $FASTA -o $AGC_PATH -p code/agc.params.txt
-R -e "source('code/biom_to_list.R'); shared_to_list('$AGC_PATH/otu_table.biom')"
+R -e "source('code/biom_to_list.R'); biom_to_list('$AGC_PATH/otu_table.biom')"
 rm -rf $AGC_PATH/
 
