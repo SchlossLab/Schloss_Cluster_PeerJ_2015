@@ -45,4 +45,6 @@ The following need to be installed and in the path...
 * QIIME (v.1.9.1)
 * UCLUST (v.6.1.544)
 * R
+	+ jsonlite
+
 * SWARM (v.2.1.1 installed in code/)
