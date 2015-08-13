@@ -97,15 +97,17 @@ HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST)
 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
 .SECONDEXPANSION:
-$(HE_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+$(HE_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
 	$(eval LIST=$(word 2,$^))
-	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/he)"
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/he)"
 
 HE_GREEDY_SENSSPEC = $(subst list,sensspec, $(HE_GREEDY_LIST))
 .SECONDEXPANSION:
-$(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
+$(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
 	$(eval LIST=$(word 2,$^))
-	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/he)"
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/he)"
 
 
 HE_REF_MCC = data/he/he.fn.ref_mcc data/he/he.nn.ref_mcc data/he/he.an.ref_mcc data/he/he.agc.ref_mcc data/he/he.dgc.ref_mcc data/he/he.closed.ref_mcc data/he/he.open.ref_mcc data/he/he.swarm.ref_mcc
@@ -316,15 +318,17 @@ SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CL
 
 SCHL_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(SCHL_NEIGHBOR_LIST))
 .SECONDEXPANSION:
-$(SCHL_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
-	$(eval LIST=$(word 2,$^))
-	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/schloss)"
+$(SCHL_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
+        $(eval LIST=$(word 2,$^))
+        $(eval NAMES=$(word 3,$^))
+        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/schloss)"
 
 SCHL_GREEDY_SENSSPEC = $(subst list,sensspec, $(SCHL_GREEDY_LIST))
 .SECONDEXPANSION:
-$(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
-	$(eval LIST=$(word 2,$^))
-	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
+$(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
+        $(eval LIST=$(word 2,$^))
+        $(eval NAMES=$(word 3,$^))
+        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
 
 
 SCHL_REF_MCC = data/schloss/schloss.fn.ref_mcc data/schloss/schloss.nn.ref_mcc data/schloss/schloss.an.ref_mcc data/schloss/schloss.agc.ref_mcc data/schloss/schloss.dgc.ref_mcc data/schloss/schloss.closed.ref_mcc data/schloss/schloss.open.ref_mcc data/schloss/schloss.swarm.ref_mcc
@@ -439,12 +443,15 @@ data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pic
 	mothur "#deunique.seqs(fasta=data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta,  count=data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table)"
 	rm data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.redundant.groups
 
+data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta
+	sed "s/_/-/g" < $< > $@
+
 MISEQ_BOOTSTRAP_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.fasta)))
-$(MISEQ_BOOTSTRAP_FASTA) : code/generate_samples.R data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta
+$(MISEQ_BOOTSTRAP_FASTA) : code/generate_samples.R data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta
 	$(eval BASE=$(patsubst data/miseq/miseq_%.fasta,%,$@))
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
 	$(eval F=$(firstword $(subst _, ,$(BASE))))
-	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta', 'data/miseq/miseq', $F, '$R')"
+	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta', 'data/miseq/miseq', $F, '$R')"
 
 
 MISEQ_UNIQUE_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.fasta)))
@@ -543,15 +550,24 @@ MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MIS
 
 MISEQ_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(MISEQ_NEIGHBOR_LIST))
 .SECONDEXPANSION:
-$(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
-	$(eval LIST=$(word 2,$^))
-	mothur "#sens.spec(column=$<, list=$(LIST), label=0.03, outputdir=data/miseq)"
+$(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
+        $(eval LIST=$(word 2,$^))
+        $(eval NAMES=$(word 3,$^))
+        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/miseq)"
 
 MISEQ_GREEDY_SENSSPEC = $(subst list,sensspec, $(MISEQ_GREEDY_LIST))
+
+MISEQ_AGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_AGC_LIST))
+MISEQ_DGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_DGC_LIST))
+MISEQ_OPEN_SENSSPEC = $(subst list,sensspec, $(MISEQ_OPEN_LIST))
+MISEQ_CLOSED_SENSSPEC = $(subst list,sensspec, $(MISEQ_CLOSED_LIST))
+MISEQ_SWARM_SENSSPEC = $(subst list,sensspec, $(MISEQ_SWARM_LIST))
+
 .SECONDEXPANSION:
-$(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@)
-	$(eval LIST=$(word 2,$^))
-	mothur "#sens.spec(column=$<, list=$(LIST), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
+$(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
+        $(eval LIST=$(word 2,$^))
+        $(eval NAMES=$(word 3,$^))
+        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
 
 
 MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc
