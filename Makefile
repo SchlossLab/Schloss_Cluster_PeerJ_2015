@@ -319,16 +319,16 @@ SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CL
 SCHL_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(SCHL_NEIGHBOR_LIST))
 .SECONDEXPANSION:
 $(SCHL_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
-        $(eval LIST=$(word 2,$^))
-        $(eval NAMES=$(word 3,$^))
-        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/schloss)"
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/schloss)"
 
 SCHL_GREEDY_SENSSPEC = $(subst list,sensspec, $(SCHL_GREEDY_LIST))
 .SECONDEXPANSION:
 $(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
-        $(eval LIST=$(word 2,$^))
-        $(eval NAMES=$(word 3,$^))
-        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
 
 
 SCHL_REF_MCC = data/schloss/schloss.fn.ref_mcc data/schloss/schloss.nn.ref_mcc data/schloss/schloss.an.ref_mcc data/schloss/schloss.agc.ref_mcc data/schloss/schloss.dgc.ref_mcc data/schloss/schloss.closed.ref_mcc data/schloss/schloss.open.ref_mcc data/schloss/schloss.swarm.ref_mcc
@@ -501,42 +501,30 @@ $(MISEQ_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
 MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
 $(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
-	$(eval NG_LIST=$(subst dgc.list,dgc.dgc.list,$@))
-	$(eval TEMP=$(subst .ng.,.dgc.,$<))
-	sed s/_/-/g < $< > $(TEMP)
-	bash code/run_dgc.sh $(TEMP)
+	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
+	bash code/run_dgc.sh $<
 	mv $(NG_LIST) $@
-	rm $(TEMP)
 
 MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
 $(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
-	$(eval NG_LIST=$(subst agc.list,agc.agc.list,$@))
-	$(eval TEMP=$(subst .ng.,.agc.,$<))
-	sed s/_/-/g < $< > $(TEMP)
-	bash code/run_agc.sh $(TEMP)
+	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
+	bash code/run_agc.sh $<
 	mv $(NG_LIST) $@
-	rm $(TEMP)
 
 MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
 $(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
-	$(eval NG_LIST=$(subst closed.list,closed.closed.list,$@))
-	$(eval TEMP=$(subst .ng.,.closed.,$<))
-	sed s/_/-/g < $< > $(TEMP)
-	bash code/run_closed.sh $(TEMP)
+	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
+	bash code/run_closed.sh $<
 	mv $(NG_LIST) $@
-	rm $(TEMP)
 
 MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
 $(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
-	$(eval NG_LIST=$(subst open.list,open.open.list,$@))
-	$(eval TEMP=$(subst .ng.,.open.,$<))
-	sed s/_/-/g < $< > $(TEMP)
-	bash code/run_open.sh $(TEMP)
+	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
+	bash code/run_open.sh $<
 	mv $(NG_LIST) $@
-	rm $(TEMP)
 
 MISEQ_SWARM_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
 .SECONDEXPANSION:
@@ -551,9 +539,9 @@ MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MIS
 MISEQ_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(MISEQ_NEIGHBOR_LIST))
 .SECONDEXPANSION:
 $(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
-        $(eval LIST=$(word 2,$^))
-        $(eval NAMES=$(word 3,$^))
-        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/miseq)"
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/miseq)"
 
 MISEQ_GREEDY_SENSSPEC = $(subst list,sensspec, $(MISEQ_GREEDY_LIST))
 
@@ -565,9 +553,9 @@ MISEQ_SWARM_SENSSPEC = $(subst list,sensspec, $(MISEQ_SWARM_LIST))
 
 .SECONDEXPANSION:
 $(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
-        $(eval LIST=$(word 2,$^))
-        $(eval NAMES=$(word 3,$^))
-        mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
 
 
 MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc
