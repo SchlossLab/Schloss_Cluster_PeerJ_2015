@@ -428,7 +428,7 @@ data/miseq/mouse.files : code/get_contigsfile.R
 
 
 
-
+M_FRACTION = 0.05 0.1 0.15 0.2 1.0
 
 data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
 	bash code/process_mice.sh data/miseq/miseq.files
@@ -446,7 +446,7 @@ data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pic
 data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fasta
 	sed "s/_/-/g" < $< > $@
 
-MISEQ_BOOTSTRAP_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.fasta)))
+MISEQ_BOOTSTRAP_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP), $F_$R.fasta)))
 $(MISEQ_BOOTSTRAP_FASTA) : code/generate_samples.R data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta
 	$(eval BASE=$(patsubst data/miseq/miseq_%.fasta,%,$@))
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
@@ -454,37 +454,37 @@ $(MISEQ_BOOTSTRAP_FASTA) : code/generate_samples.R data/miseq/miseq.trim.contigs
 	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta', 'data/miseq/miseq', $F, '$R')"
 
 
-MISEQ_UNIQUE_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.fasta)))
+MISEQ_UNIQUE_FASTA = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP), $F_$R.unique.fasta)))
 .SECONDEXPANSION:
 $(MISEQ_UNIQUE_FASTA) : $$(subst unique.fasta,fasta, $$@)
 	mothur "#unique.seqs(fasta=$<)"
 
-MISEQ_NAMES = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.names)))
+MISEQ_NAMES = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP), $F_$R.names)))
 .SECONDEXPANSION:
 $(MISEQ_NAMES) : $$(subst names,unique.fasta, $$@)
 
-MISEQ_DISTANCE = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP), $F_$R.unique.dist)))
+MISEQ_DISTANCE = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP), $F_$R.unique.dist)))
 .SECONDEXPANSION:
 $(MISEQ_DISTANCE) : $$(subst dist,fasta, $$@)
 	mothur "#dist.seqs(fasta=$<, processors=8, cutoff=0.20)"
 
 
 
-MISEQ_AN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
+MISEQ_AN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.an.list)))
 .SECONDEXPANSION:
 $(MISEQ_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@) code/run_an.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_an.sh $(DIST) $(NAMES)
 
-MISEQ_NN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+MISEQ_NN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
 .SECONDEXPANSION:
 $(MISEQ_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_nn.sh $(DIST) $(NAMES)
 
-MISEQ_FN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+MISEQ_FN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
 .SECONDEXPANSION:
 $(MISEQ_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
 	$(eval DIST=$(word 1,$^))
@@ -498,35 +498,35 @@ MISEQ_DEGAP_FASTA = $(subst fasta,ng.fasta,$(MISEQ_BOOTSTRAP_FASTA))
 $(MISEQ_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
 	mothur "#degap.seqs(fasta=$<)"
 
-MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
+MISEQ_DGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
 .SECONDEXPANSION:
 $(MISEQ_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
 	bash code/run_dgc.sh $<
 	mv $(NG_LIST) $@
 
-MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
+MISEQ_AGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.agc.list)))
 .SECONDEXPANSION:
 $(MISEQ_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
 	bash code/run_agc.sh $<
 	mv $(NG_LIST) $@
 
-MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
+MISEQ_CLOSED_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.closed.list)))
 .SECONDEXPANSION:
 $(MISEQ_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
 	bash code/run_closed.sh $<
 	mv $(NG_LIST) $@
 
-MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
+MISEQ_OPEN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.open.list)))
 .SECONDEXPANSION:
 $(MISEQ_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
 	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
 	bash code/run_open.sh $<
 	mv $(NG_LIST) $@
 
-MISEQ_SWARM_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
+MISEQ_SWARM_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.swarm.list)))
 .SECONDEXPANSION:
 $(MISEQ_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,names, $$@) code/cluster_swarm.R
 	$(eval FASTA=$(word 1,$^))
@@ -544,13 +544,6 @@ $(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/miseq)"
 
 MISEQ_GREEDY_SENSSPEC = $(subst list,sensspec, $(MISEQ_GREEDY_LIST))
-
-MISEQ_AGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_AGC_LIST))
-MISEQ_DGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_DGC_LIST))
-MISEQ_OPEN_SENSSPEC = $(subst list,sensspec, $(MISEQ_OPEN_LIST))
-MISEQ_CLOSED_SENSSPEC = $(subst list,sensspec, $(MISEQ_CLOSED_LIST))
-MISEQ_SWARM_SENSSPEC = $(subst list,sensspec, $(MISEQ_SWARM_LIST))
-
 .SECONDEXPANSION:
 $(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
 	$(eval LIST=$(word 2,$^))
