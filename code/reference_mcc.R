@@ -139,7 +139,7 @@ mcc <- function(confusion){
 # reference set for each fraction value.
 get_all_v_all_mcc <- function(tests, references, unique_names){
 
-    fractions <- unique(gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", names(tests)))
+    fractions <- unique(gsub(".*_(\\d\\.\\d{1,2})_\\d\\d.*", "\\1", names(tests)))
     n_fractions <- length(fractions)
     n_reps <- length(references)
     stopifnot(n_reps * n_fractions == length(tests))
@@ -160,8 +160,8 @@ get_all_v_all_mcc <- function(tests, references, unique_names){
             ref_map_prune <- prune_map(ref_map_full[[i]], test_names)
 
             confusion <- get_confusion_matrix(test_map_prune, ref_map_prune)
-            f <- gsub(".*_(\\d\\.\\d)_\\d\\d.*", "\\1", names(tests[j]))
-            r <- as.numeric(gsub(".*_\\d\\.\\d_(\\d\\d).*", "\\1", names(tests[j])))
+            f <- gsub(".*_(\\d\\.\\d{1,2})_\\d\\d.*", "\\1", names(tests[j]))
+            r <- as.numeric(gsub(".*_\\d\\.\\d{1,2}_(\\d\\d).*", "\\1", names(tests[j])))
             mcc_curve[(i-1)*n_reps+r, f] <- mcc(confusion)
         }
     }
