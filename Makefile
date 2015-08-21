@@ -141,7 +141,7 @@ data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
 
 data/he/he.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_FN_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*Fn.sensspec', 'data/he/he.fn.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*fn.sensspec', 'data/he/he.fn.pool_sensspec')"
 
 data/he/he.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_NN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*nn.sensspec', 'data/he/he.nn.pool_sensspec')"
@@ -362,7 +362,7 @@ data/schloss/schloss.an.pool_sensspec : code/merge_sensspec_files.R $$(subst lis
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*an.sensspec', 'data/schloss/schloss.an.pool_sensspec')"
 
 data/schloss/schloss.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_FN_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*Fn.sensspec', 'data/schloss/schloss.fn.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*fn.sensspec', 'data/schloss/schloss.fn.pool_sensspec')"
 
 data/schloss/schloss.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_NN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*nn.sensspec', 'data/schloss/schloss.nn.pool_sensspec')"
@@ -635,53 +635,53 @@ data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R
 
 
 
-$(REFS)gg_13_5.fasta : 
-	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5.fasta.gz
-	gunzip -c $(REFS)gg_13_5.fasta.gz > $(REFS)gg_13_5.fasta
-
-$(REFS)gg_13_5_otus/otus/97_otu_map.txt $(REFS)gg_13_5_otus/otus/99_otu_map.txt : 
+$(REFS)gg_13_5_otus/rep_set/97_otus.fasta : 
 	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_otus.tar.gz
 	tar xvzf $(REFS)gg_13_5_otus.tar.gz -C $(REFS);
 
-$(REFS)gg_13_5.taxonomy : 
-	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_taxonomy.txt.gz
-	gunzip -c $(REFS)gg_13_5_taxonomy.txt.gz > $(REFS)gg_13_5_taxonomy.txt
-	sed 's/; /;/g' data/references/gg_13_5_taxonomy.txt | sed 's/$$/\;/' | sed 's/ /_/g' > $(REFS)gg_13_5.taxonomy
-	rm $(REFS)gg_13_5_taxonomy.txt.gz $(REFS)gg_13_5_taxonomy.txt
+data/gg_13_5/gg_13_5_97.v19.align : $(REFS)gg_13_5_otus/rep_set/97_otus.fasta $(REFS)silva.bact_archaea.align
+	mothur "#align.seqs(fasta=$(REFS)gg_13_5_otus/rep_set/97_otus.fasta, reference=$(REFS)silva.bact_archaea.align, processors=2, outputdir=data/gg_13_5);pcr.seqs(fasta=data/gg_13_5/97_otus.align, start=1044, end=43116, keepdots=F, processors=8);filter.seqs(vertical=T)"
+	rm data/gg_13_5/97_otus.align.report data/gg_13_5/97_otus.flip.accnos data/gg_13_5/97_otus.pcr.align data/gg_13_5/97_otus.filter
+	mv data/gg_13_5/97_otus.pcr.filter.fasta data/gg_13_5/gg_13_5_97.v19.align
 
-data/gg_13_5/gg_13_5_otus.ref.list : $(REFS)gg_13_5_otus/otus/97_otu_map.txt $(REFS)gg_13_5_otus/otus/99_otu_map.txt
-	R -e "source('code/build_gg_list.R')"
+data/gg_13_5/gg_13_5_97.v19_ref.unique.align data/gg_13_5/gg_13_5_97.v19_ref.names data/gg_13_5/gg_13_5_97.v19.bad.accnos : data/gg_13_5/gg_13_5_97.v19.align
+	mothur "#screen.seqs(fasta=data/gg_13_5/gg_13_5_97.v19.align, start=3967, end=6116, processors=8); unique.seqs()"
+	mv data/gg_13_5/gg_13_5_97.v19.good.unique.align data/gg_13_5/gg_13_5_97.v19_ref.unique.align
+	mv data/gg_13_5/gg_13_5_97.v19.good.names data/gg_13_5/gg_13_5_97.v19_ref.names
 
-data/gg_13_5/gg_13_5.align : data/references/gg_13_5.fasta data/references/silva.bact_archaea.align
-	mothur "#align.seqs(fasta=data/references/gg_13_5.fasta, reference=data/references/silva.bact_archaea.align, processors=2, outputdir=data/gg_13_5);"
-	rm data/gg_13_5/gg_13_5.align.report data/gg_13_5/gg_13_5.flip.accnos
+data/gg_13_5/gg_13_5_97.v4_ref.unique.align data/gg_13_5/gg_13_5_97.v4_ref.names : data/gg_13_5/gg_13_5_97.v19.bad.accnos data/gg_13_5/gg_13_5_97.v19.align
+	mothur "#remove.seqs(fasta=data/gg_13_5/gg_13_5_97.v19.align, accnos=data/gg_13_5/gg_13_5_97.v19.bad.accnos); pcr.seqs(fasta=data/gg_13_5/gg_13_5_97.v19.pick.align, keepdots=F, start=3967, end=6116, processors=4); unique.seqs()"
+	mv data/gg_13_5/gg_13_5_97.v19.pick.pcr.unique.align data/gg_13_5/gg_13_5_97.v4_ref.unique.align
+	mv data/gg_13_5/gg_13_5_97.v19.pick.pcr.names data/gg_13_5/gg_13_5_97.v4_ref.names
+	rm data/gg_13_5/gg_13_5_97.v19.pick.align
+
+GG_DIST = data/gg_13_5/gg_13_5_97.v4_ref.unique.dist data/gg_13_5/gg_13_5_97.v19_ref.unique.dist
+data/gg_13_5/gg_13_5_97.%.dist : data/gg_13_5/gg_13_5_97.%.align
+	mothur "#dist.seqs(fasta=$<, cutoff=0.15, processors=8)"
+
+GG_DIST_V4 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v4_ref.$R.unique.dist)
+data/gg_13_5/gg_13_5_97.v4_ref.%.unique.dist : data/gg_13_5/gg_13_5_97.v4_ref.unique.dist
+	cp $< $@
+
+GG_NAMES_V4 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v4_ref.$R.names)
+data/gg_13_5/gg_13_5_97.v4_ref.%.names : data/gg_13_5/gg_13_5_97.v4_ref.names
+	cp $< $@
+
+GG_DIST_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.unique.dist)
+data/gg_13_5/gg_13_5_97.v19_ref.%.unique.dist : data/gg_13_5/gg_13_5_97.v19_ref.unique.dist
+	cp $< $@
+
+GG_NAMES_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.names)
+data/gg_13_5/gg_13_5_97.v19_ref.%.names : data/gg_13_5/gg_13_5_97.v19_ref.names
+	cp $< $@
 
 
-data/gg_13_5/gg_13_5.v19.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=1044, end=43116, keepdots=F, processors=4);filter.seqs(vertical=T)"
-	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v19.align
-	rm data/gg_13_5/gg_13_5.filter data/gg_13_5/gg_13_5.pcr.align
-
-data/gg_13_5/gg_13_5.v4.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=11895, end=25319, keepdots=F, processors=4);filter.seqs(vertical=T)"
-	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v4.align
-	rm data/gg_13_5/gg_13_5.filter data/gg_13_5/gg_13_5.pcr.align
-
-data/gg_13_5/gg_13_5.v9.align : data/gg_13_5/gg_13_5.align
-	mothur "#pcr.seqs(fasta=data/gg_13_5/gg_13_5.align, start=40930, end=43116, keepdots=F, processors=4);filter.seqs(vertical=T)"
-	mv data/gg_13_5/gg_13_5.pcr.filter.fasta data/gg_13_5/gg_13_5.v9.align
-	rm data/gg_13_5/gg_13_5.filter data/gg_13_5/gg_13_5.pcr.align
-
-data/gg_13_5/gg_13_5.%.dist : data/gg_13_5/gg_13_5.%.align
-	mothur "#dist.seqs(fasta=$<, cutoff=0.03, processors=8)"
-
-
-data/gg_13_5/gg_13_5.rep.accnos : data/references/gg_13_5_otus/rep_set/97_otus.fasta
-	grep ">" $<  | cut -c 2- > $@
-
-data/gg_13_5/gg_13_5.%.rep.align :  data/gg_13_5/gg_13_5.%.align data/gg_13_5/gg_13_5.rep.accnos
-	mothur "#get.seqs(accnos=data/gg_13_5/gg_13_5.rep.accnos, fasta=$<)"
-	$(eval PICK = $(subst rep,pick,$@))
-	mv $(PICK) $@
-
+GG_CLUST_V4 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v4_ref.$R.unique.an.list)
+GG_CLUST_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.unique.an.list)
+data/gg_13_5/gg_13_5_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@)
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	mothur "#cluster(column=$(DIST), name=$(NAMES))"
+	rm $(subst list,sabund,$@)
+	rm $(subst list,rabund,$@)
 
