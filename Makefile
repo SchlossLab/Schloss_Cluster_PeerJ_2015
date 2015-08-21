@@ -606,28 +606,28 @@ data/miseq/miseq.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list
 MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction
 
 data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.nn.rarefaction : $(MISEQ_NN_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.fn.rarefaction : $(MISEQ_FN_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.agc.rarefaction : $(MISEQ_AGC_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.dgc.rarefaction : $(MISEQ_DGC_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.closed.rarefaction : $(MISEQ_CLOSED_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R 
-	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq')"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 
 

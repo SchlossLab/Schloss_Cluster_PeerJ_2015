@@ -8,7 +8,7 @@ summary_single <- function(list_file, label){
 
 
 rarefy_single <- function(list_file, nseqs, label){
-	fraction <- gsub(".*(\\d\\.\\d).*", "\\1", list_file)
+	fraction <- gsub(".*(\\d\\.\\d{1,2}).*", "\\1", list_file)
 	rep <- gsub(".*(\\d\\d).*", "\\1", list_file)
 
 	subsample_size <- nseqs[fraction]
@@ -22,12 +22,11 @@ rarefy_single <- function(list_file, nseqs, label){
 	read.table(file=summary_string, header=T)[1,3]
 }
 
-rarefy_sobs <- function(cluster_method, path){
+rarefy_sobs <- function(cluster_method, path, fraction=c("0.2", "0.4", "0.6", "0.8", "1.0")){
 	label <- ifelse(grepl("unique", cluster_method), "0.03", "userLabel")
 
 	path <- gsub("([^/])$", "\\1/", path)
-    
-	fraction <- format(seq(0.2,1.0,0.2), nsmall=1L)
+	write(fraction, "")    
 	reps <- c(paste0("0", 1:9), 10:30)
 	method <- gsub(".*/(.*)/", "\\1_", path)
 	file_names <- paste0(path, method, as.vector(outer(fraction, reps, paste, sep="_")), ".", cluster_method, ".list")
@@ -35,7 +34,7 @@ rarefy_sobs <- function(cluster_method, path){
 	observed <- data.frame(t(sapply(file_names, summary_single, label)))
 	rownames(observed) <- gsub(path, "", rownames(observed))
 
-	sample_size <- aggregate(unlist(observed$nseqs), by=list(gsub(".*(\\d\\.\\d).*", "\\1", rownames(observed))), min)$x
+	sample_size <- aggregate(unlist(observed$nseqs), by=list(gsub(".*(\\d\\.\\d{1,2}).*", "\\1", rownames(observed))), min)$x
 	names(sample_size) <- fraction
 
 	rarefied <- data.frame(t(sapply(file_names, rarefy_single, sample_size, label)))
@@ -43,7 +42,7 @@ rarefy_sobs <- function(cluster_method, path){
 
 	observed$rarefied <- t(rarefied[rownames(observed)])
 	observed$replicate <- gsub(".*(\\d\\d).*", "\\1", names(rarefied))
-	observed$fraction <- gsub(".*(\\d\\.\\d).*", "\\1", names(rarefied))
+	observed$fraction <- gsub(".*(\\d\\.\\d{1,2}).*", "\\1", names(rarefied))
 
 	cluster_method <- gsub("unique.", "", cluster_method)	
 	method <- gsub("_", ".", method)	
