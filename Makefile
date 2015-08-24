@@ -685,3 +685,7 @@ data/gg_13_5/gg_13_5_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst 
 	rm $(subst list,sabund,$@)
 	rm $(subst list,rabund,$@)
 
+# allows us to compare how well the length of the region is represented
+data/gg_13_5/gg_13_5_97.v19.summary : data/gg_13_5/gg_13_5_97.v19.align
+	mothur "#summary.seqs(fasta=$<, processors=8)"
+
