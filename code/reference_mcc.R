@@ -191,3 +191,68 @@ run_reference_mcc <- function(folder, test_pattern, reference_pattern, names_pat
     mcc_data <- get_all_v_all_mcc(test_lists, reference_lists, names_data)
     write.table(file=output_file_name, x=mcc_data, sep="\t", row.names=F, quote=F)
 }
+
+
+
+
+# here we take in a list of test files which contains the names of the files
+# that we want to calculate the MCC for. It also takes in the list of reference
+# files, which is what all of the test list files will be compared against. 
+# Specifically, we want to compare the clustering of one region versus another
+# region. the names file is used so that we are only working with the unique
+# sequences. this assumes that the sequences are defined as
+# "something.v#*##*list" where the v# is the variable region of the test dataset
+# relative to the reference dataset and the XX is the replicate being analyzed.
+# it goes through all of the reference files and calculates the MCC for each
+# test set relative to each reference set for each fraction value.
+get_reg_v_fl_mcc <- function(tests, references){
+
+    regions <- unique(gsub(".*\\.(v\\d{1,2}).*", "\\1", names(tests)))
+    n_regions <- length(regions)
+    n_reps <- length(references)
+    stopifnot(n_reps * n_regions == length(tests))
+
+    mcc_curve <- data.frame(matrix(rep(0, n_reps*n_reps*(n_regions)), ncol=n_regions))
+    colnames(mcc_curve) <- regions
+
+    ref_map_full <- lapply(references, get_map)
+    test_map_full <- lapply(tests, get_map)
+
+    for(i in 1:length(references)){
+        print(i)
+
+        for(j in 1:length(tests)){
+		print(paste(i,j))
+            test_map_prune <- test_map_full[[j]]
+            ref_map_prune <- ref_map_full[[i]]
+
+            confusion <- get_confusion_matrix(test_map_prune, ref_map_prune)
+            f <- gsub(".*\\.(v\\d{1,2}).*", "\\1", names(tests[j]))
+            r <- as.numeric(gsub(".*\\.(\\d\\d)\\..*", "\\1", names(tests[j])))
+		print(confusion)
+            mcc_curve[(i-1)*n_reps+r, f] <- mcc(confusion)
+        }
+    }
+    colnames(mcc_curve) <- unique(regions)
+    mcc_curve$query <- rep(1:n_reps, n_reps)
+    mcc_curve$reference <- rep(1:n_reps, each=n_reps)
+    return(mcc_curve)
+}
+
+
+# this function drives the analysis and takes in a folder, output filename,
+# and filename patterns that can be used to scrape up all of the list and names
+# file names. it writes the output to the user defined output filename.
+run_reference_mcc2 <- function(folder, test_pattern, reference_pattern, output_file_name){
+    test_list_files <- list.files(path=folder, pattern=test_pattern, full.names=TRUE)
+    test_lists <- lapply(test_list_files, get_list_data)
+    names(test_lists) <- test_list_files
+
+    reference_list_files <- list.files(path=folder, pattern=reference_pattern, full.names=TRUE)
+    reference_lists <- lapply(reference_list_files, get_list_data)
+    names(reference_lists) <- reference_list_files
+
+    mcc_data <- get_reg_v_fl_mcc(test_lists, reference_lists)
+    write.table(file=output_file_name, x=mcc_data, sep="\t", row.names=F, quote=F)
+}
+
