@@ -681,9 +681,15 @@ GG_CLUST_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.unique.an.l
 data/gg_13_5/gg_13_5_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
-	mothur "#cluster(column=$(DIST), name=$(NAMES))"
+	$(eval REP=$(subst .,,$(suffix $(subst .names,,$(NAMES)))))
+	@echo $(REP)
+	mothur "#cluster(column=$(DIST), name=$(NAMES), seed=$(REP))"
 	rm $(subst list,sabund,$@)
 	rm $(subst list,rabund,$@)
+
+data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
+	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_5/', 'gg_13_5_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_5_97.v19_ref.\\\d\\\d.unique.an.list', 'gg_13_5_97.v4_ref.\\\d\\\d.names', 'data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc')"
+
 
 # allows us to compare how well the length of the region is represented
 data/gg_13_5/gg_13_5_97.v19.summary : data/gg_13_5/gg_13_5_97.v19.align
