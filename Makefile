@@ -688,7 +688,7 @@ data/gg_13_5/gg_13_5_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst 
 	rm $(subst list,rabund,$@)
 
 data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
-	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_5/', 'gg_13_5_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_5_97.v19_ref.\\\d\\\d.unique.an.list', 'gg_13_5_97.v4_ref.\\\d\\\d.names', 'data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_5/', 'gg_13_5_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_5_97.v19_ref.\\\d\\\d.unique.an.list', 'data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc')"
 
 
 # allows us to compare how well the length of the region is represented
