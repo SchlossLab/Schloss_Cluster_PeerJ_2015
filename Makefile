@@ -92,7 +92,13 @@ $(HE_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,na
 	$(eval NAMES=$(word 2,$^))
 	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
 
-HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_SWARM_LIST)
+HE_VSEARCH_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.vsearch.list)))
+.SECONDEXPANSION:
+$(HE_VSEARCH_LIST) : $$(subst vsearch.list,fasta, $$@) code/run_vsearch_clust.sh code/uc_to_list.R
+	bash code/run_vsearch_clust.sh $<
+
+
+HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_SWARM_LIST) $(HE_VSEARCH_LIST)
 
 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
@@ -110,7 +116,7 @@ $(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/he)"
 
 
-HE_REF_MCC = data/he/he.fn.ref_mcc data/he/he.nn.ref_mcc data/he/he.an.ref_mcc data/he/he.agc.ref_mcc data/he/he.dgc.ref_mcc data/he/he.closed.ref_mcc data/he/he.open.ref_mcc data/he/he.swarm.ref_mcc
+HE_REF_MCC = data/he/he.fn.ref_mcc data/he/he.nn.ref_mcc data/he/he.an.ref_mcc data/he/he.agc.ref_mcc data/he/he.dgc.ref_mcc data/he/he.closed.ref_mcc data/he/he.open.ref_mcc data/he/he.swarm.ref_mcc data/he/he.vsearch.ref_mcc
 data/he/he.an.ref_mcc : code/reference_mcc.R $(HE_AN_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*unique.an.list', 'he_1.0.*unique.an.list', 'he.*names', 'data/he/he.an.ref_mcc')"
 
@@ -135,8 +141,11 @@ data/he/he.dgc.ref_mcc : code/reference_mcc.R $(HE_DGC_LIST) $(HE_NAMES)
 data/he/he.swarm.ref_mcc : code/reference_mcc.R $(HE_SWARM_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*swarm.list', 'he_1.0.*swarm.list', 'he.*names', 'data/he/he.swarm.ref_mcc')"
 
+data/he/he.vsearch.ref_mcc : code/reference_mcc.R $(HE_VSEARCH_LIST) $(HE_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*vsearch.list', 'he_1.0.*vsearch.list', 'he.*names', 'data/he/he.vsearch.ref_mcc')"
 
-HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.swarm.pool_sensspec
+
+HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.swarm.pool_sensspec data/he/he.vsearch.pool_sensspec
 data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST)) 
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
 
@@ -161,8 +170,11 @@ data/he/he.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sens
 data/he/he.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_SWARM_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*swarm.sensspec', 'data/he/he.swarm.pool_sensspec')"
 
+data/he/he.vsearch.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_VSEARCH_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*vsearch.sensspec', 'data/he/he.vsearch.pool_sensspec')"
 
-HE_RAREFACTION = data/he/he.an.rarefaction data/he/he.nn.rarefaction data/he/he.fn.rarefaction data/he/he.agc.rarefaction data/he/he.dgc.rarefaction data/he/he.closed.rarefaction data/he/he.open.rarefaction data/he/he.swarm.rarefaction
+
+HE_RAREFACTION = data/he/he.an.rarefaction data/he/he.nn.rarefaction data/he/he.fn.rarefaction data/he/he.agc.rarefaction data/he/he.dgc.rarefaction data/he/he.closed.rarefaction data/he/he.open.rarefaction data/he/he.swarm.rarefaction data/he/he.vsearch.rarefaction
 
 data/he/he.an.rarefaction : $(HE_AN_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/he')"
@@ -188,6 +200,8 @@ data/he/he.open.rarefaction : $(HE_OPEN_LIST) code/rarefy_data.R
 data/he/he.swarm.rarefaction : $(HE_SWARM_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/he')"
 
+data/he/he.vsearch.rarefaction : $(HE_VSEARCH_LIST) code/rarefy_data.R
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vsearch', 'data/he')"
 
 
 
@@ -313,7 +327,12 @@ $(SCHL_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,
 	$(eval NAMES=$(word 2,$^))
 	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
 
-SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CLOSED_LIST) $(SCHL_SWARM_LIST)
+SCHL_VSEARCH_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.vsearch.list)))
+.SECONDEXPANSION:
+$(SCHL_VSEARCH_LIST) : $$(subst vsearch.list,ng.fasta, $$@) code/run_vsearch_clust.sh code/uc_to_list.R
+	bash code/run_vsearch_clust.sh $<
+
+SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CLOSED_LIST) $(SCHL_SWARM_LIST) $(SCHL_VSEARCH_LIST)
 
 
 SCHL_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(SCHL_NEIGHBOR_LIST))
@@ -331,7 +350,7 @@ $(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
 
 
-SCHL_REF_MCC = data/schloss/schloss.fn.ref_mcc data/schloss/schloss.nn.ref_mcc data/schloss/schloss.an.ref_mcc data/schloss/schloss.agc.ref_mcc data/schloss/schloss.dgc.ref_mcc data/schloss/schloss.closed.ref_mcc data/schloss/schloss.open.ref_mcc data/schloss/schloss.swarm.ref_mcc
+SCHL_REF_MCC = data/schloss/schloss.fn.ref_mcc data/schloss/schloss.nn.ref_mcc data/schloss/schloss.an.ref_mcc data/schloss/schloss.agc.ref_mcc data/schloss/schloss.dgc.ref_mcc data/schloss/schloss.closed.ref_mcc data/schloss/schloss.open.ref_mcc data/schloss/schloss.swarm.ref_mcc data/schloss/schloss.vsearch.ref_mcc
 data/schloss/schloss.an.ref_mcc : code/reference_mcc.R $(SCHL_AN_LIST) $(SCHL_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*unique.an.list', 'schloss_1.0.*unique.an.list', 'schloss.*names', 'data/schloss/schloss.an.ref_mcc')"
 
@@ -356,8 +375,11 @@ data/schloss/schloss.dgc.ref_mcc : code/reference_mcc.R $(SCHL_DGC_LIST) $(SCHL_
 data/schloss/schloss.swarm.ref_mcc : code/reference_mcc.R $(SCHL_SWARM_LIST) $(SCHL_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*swarm.list', 'schloss_1.0.*swarm.list', 'schloss.*names', 'data/schloss/schloss.swarm.ref_mcc')"
 
+data/schloss/schloss.vsearch.ref_mcc : code/reference_mcc.R $(SCHL_VSEARCH_LIST) $(SCHL_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*vsearch.list', 'schloss_1.0.*vsearch.list', 'schloss.*names', 'data/schloss/schloss.vsearch.ref_mcc')"
 
-SCHL_POOL_SENSSPEC = data/schloss/schloss.an.pool_sensspec data/schloss/schloss.fn.pool_sensspec data/schloss/schloss.nn.pool_sensspec data/schloss/schloss.dgc.pool_sensspec data/schloss/schloss.agc.pool_sensspec data/schloss/schloss.open.pool_sensspec data/schloss/schloss.closed.pool_sensspec data/schloss/schloss.swarm.pool_sensspec
+
+SCHL_POOL_SENSSPEC = data/schloss/schloss.an.pool_sensspec data/schloss/schloss.fn.pool_sensspec data/schloss/schloss.nn.pool_sensspec data/schloss/schloss.dgc.pool_sensspec data/schloss/schloss.agc.pool_sensspec data/schloss/schloss.open.pool_sensspec data/schloss/schloss.closed.pool_sensspec data/schloss/schloss.swarm.pool_sensspec data/schloss/schloss.vsearch.pool_sensspec
 data/schloss/schloss.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AN_LIST)) 
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*an.sensspec', 'data/schloss/schloss.an.pool_sensspec')"
 
@@ -382,8 +404,11 @@ data/schloss/schloss.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst
 data/schloss/schloss.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_SWARM_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*swarm.sensspec', 'data/schloss/schloss.swarm.pool_sensspec')"
 
+data/schloss/schloss.vsearch.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_VSEARCH_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*vsearch.sensspec', 'data/schloss/schloss.vsearch.pool_sensspec')"
 
-SCHL_RAREFACTION = data/schloss/schloss.an.rarefaction data/schloss/schloss.nn.rarefaction data/schloss/schloss.fn.rarefaction data/schloss/schloss.agc.rarefaction data/schloss/schloss.dgc.rarefaction data/schloss/schloss.closed.rarefaction data/schloss/schloss.open.rarefaction data/schloss/schloss.swarm.rarefaction
+
+SCHL_RAREFACTION = data/schloss/schloss.an.rarefaction data/schloss/schloss.nn.rarefaction data/schloss/schloss.fn.rarefaction data/schloss/schloss.agc.rarefaction data/schloss/schloss.dgc.rarefaction data/schloss/schloss.closed.rarefaction data/schloss/schloss.open.rarefaction data/schloss/schloss.swarm.rarefaction data/schloss/schloss.vsearch.rarefaction
 
 data/schloss/schloss.an.rarefaction : $(SCHL_AN_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/schloss')"
@@ -408,6 +433,9 @@ data/schloss/schloss.open.rarefaction : $(SCHL_OPEN_LIST) code/rarefy_data.R
 
 data/schloss/schloss.swarm.rarefaction : $(SCHL_SWARM_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/schloss')"
+
+data/schloss/schloss.vsearch.rarefaction : $(SCHL_VSEARCH_LIST) code/rarefy_data.R
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vsearch', 'data/schloss')"
 
 
 
@@ -533,7 +561,12 @@ $(MISEQ_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list
 	$(eval NAMES=$(word 2,$^))
 	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
 
-MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_SWARM_LIST)
+MISEQ_VSEARCH_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.vsearch.list)))
+.SECONDEXPANSION:
+$(MISEQ_VSEARCH_LIST) : $$(subst vsearch.list,ng.fasta, $$@) code/run_vsearch_clust.sh code/uc_to_list.R
+	bash code/run_vsearch_clust.sh $<
+
+MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_SWARM_LIST) $(MISEQ_VSEARCH_LIST)
 
 
 MISEQ_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(MISEQ_NEIGHBOR_LIST))
@@ -551,7 +584,7 @@ $(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
 
 
-MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc
+MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc data/miseq/miseq.vsearch.ref_mcc
 data/miseq/miseq.an.ref_mcc : code/reference_mcc.R $(MISEQ_AN_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*unique.an.list', 'miseq_1.0.*unique.an.list', 'miseq.*names', 'data/miseq/miseq.an.ref_mcc')"
 
@@ -576,8 +609,11 @@ data/miseq/miseq.dgc.ref_mcc : code/reference_mcc.R $(MISEQ_DGC_LIST) $(MISEQ_NA
 data/miseq/miseq.swarm.ref_mcc : code/reference_mcc.R $(MISEQ_SWARM_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*swarm.list', 'miseq_1.0.*swarm.list', 'miseq.*names', 'data/miseq/miseq.swarm.ref_mcc')"
 
+data/miseq/miseq.vsearch.ref_mcc : code/reference_mcc.R $(miseq_VSEARCH_LIST) $(miseq_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*vsearch.list', 'miseq_1.0.*vsearch.list', 'miseq.*names', 'data/miseq/miseq.vsearch.ref_mcc')"
 
-MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.swarm.pool_sensspec
+
+MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.swarm.pool_sensspec data/miseq/miseq.vsearch.pool_sensspec
 data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST)) 
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
 
@@ -603,7 +639,7 @@ data/miseq/miseq.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*swarm.sensspec', 'data/miseq/miseq.swarm.pool_sensspec')"
 
 
-MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction
+MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction data/miseq/miseq.vsearch.rarefaction
 
 data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
@@ -629,6 +665,8 @@ data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R
 data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R 
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
+data/miseq/miseq.vsearch.rarefaction : $(MISEQ_VSEARCH_LIST) code/rarefy_data.R
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vsearch', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 
 
