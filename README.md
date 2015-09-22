@@ -41,10 +41,12 @@ Overview
 Dependencies
 ------------
 The following need to be installed and in the path...
-* mothur (v.1.36.0)
+* mothur (v.1.37.0)
 * QIIME (v.1.9.1)
 * UCLUST (v.6.1.544)
 * R
 	+ jsonlite
 
-* SWARM (v.2.1.1 installed in code/)
+These should be installed the specified folders
+* SWARM (v.2.1.1 installed in code/swarm)
+* vsearch (v.1.1.3 installed in code/vsearch)
