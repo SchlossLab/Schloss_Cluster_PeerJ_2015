@@ -674,7 +674,9 @@ data/miseq/miseq.vdgc.rarefaction : $(MISEQ_VSEARCH_LIST) code/rarefy_data.R
 
 
 
-
+# QIIME's default reference is gg_13_8; however, this does not appear to be available on the second genome/greengenes
+# website. when I compared the checksums of gg_13_5_otus/rep_set/97_otus.fasta and gg_13_8_otus/rep_set/97_otus.fasta
+# they were identical. 
 
 $(REFS)gg_13_5_otus/rep_set/97_otus.fasta : 
 	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_otus.tar.gz
