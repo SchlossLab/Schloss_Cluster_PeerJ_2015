@@ -735,6 +735,9 @@ data/gg_13_8/gg_13_8_97.v19.summary : data/gg_13_8/gg_13_8_97.v19.align
 	mothur "#summary.seqs(fasta=$<, processors=8)"
 
 
+# see how many taxa are represented in duplicate sequences
+data/gg_13_8/duplicate.analysis : code/run_duplicate_analysis.R data/gg_13_8/gg_13_8_97.v4_ref.names ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt
+	R -e "source('code/run_duplicate_analysis.R')"
 
 
 
@@ -760,5 +763,11 @@ $(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh cod
 RAND_REF_VCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.vclosed.vc)) data/rand_ref/original.vclosed.vc
 $(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh code/closedref.params.txt
 	bash code/run_rand_vref.sh $<
+
+data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
+	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('u')"
+
+data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary : code/summarize_rand_ref.R $(RAND_REF_VCLUSTER)
+	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('v')"
 
 
