@@ -738,3 +738,31 @@ data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
 data/gg_13_5/gg_13_5_97.v19.summary : data/gg_13_5/gg_13_5_97.v19.align
 	mothur "#summary.seqs(fasta=$<, processors=8)"
 
+
+
+
+
+data/rand_ref/original.fasta : $(REFS)gg_13_5_otus/rep_set/97_otus.fasta
+	cp $< $@
+
+REF_BOOTSTRAP_FASTA = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP), 1.0_$R.fasta))
+
+$(REF_BOOTSTRAP_FASTA) : code/generate_samples.R data/rand_ref/original.fasta 	
+	$(eval BASE=$(patsubst data/rand_ref/rand_ref%.fasta,%,$@))
+	$(eval R=$(lastword $(subst _, ,$(BASE))))
+	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/references/gg_13_5_otus/rep_set/97_otus.fasta', 'data/rand_ref/rand_ref', 1.0, '$R')"
+
+data/rand_ref/miseq.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta
+	mothur "#degap.seqs(fasta=$<, outputdir=data/rand_ref)"
+	mv data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.ng.fasta $@
+
+
+RAND_REF_UCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.uclosed.uc)) data/rand_ref/original.uclosed.uc
+$(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh code/closedref.params.txt 
+	bash code/run_rand_uref.sh $<
+
+RAND_REF_VCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.vclosed.vc)) data/rand_ref/original.vclosed.vc
+$(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh code/closedref.params.txt
+	bash code/run_rand_vref.sh $<
+
+
