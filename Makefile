@@ -208,7 +208,7 @@ data/he/he.vdgc.rarefaction : $(HE_VSEARCH_LIST) code/rarefy_data.R
 #get the silva reference alignment
 REFS = data/references/
 $(REFS)silva.bacteria.align :
-	wget -N -P $(REFS) http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
+	wget -N -P $(REFS) http:/www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
 	tar xvzf $(REFS)Silva.nr_v119.tgz -C $(REFS);
 	mothur "#get.lineage(fasta=$(REFS)silva.nr_v119.align, taxonomy=$(REFS)silva.nr_v119.tax, taxon=Bacteria)";
 	mv $(REFS)silva.nr_v119.pick.align $(REFS)silva.bacteria.align; \
@@ -217,7 +217,7 @@ $(REFS)silva.bacteria.align :
 	rm $(REFS)silva.nr_v119.*
 
 $(REFS)silva.bact_archaea.align : $(REFS)silva.bacteria.align
-	wget -N -P $(REFS) http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
+	wget -N -P $(REFS) http:/www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
 	tar xvzf $(REFS)Silva.nr_v119.tgz -C $(REFS); 
 	mothur "#get.lineage(fasta=$(REFS)silva.nr_v119.align, taxonomy=$(REFS)silva.nr_v119.tax, taxon=Archaea)";
 	cp $(REFS)silva.bacteria.align $(REFS)silva.bact_archaea.align;
@@ -441,13 +441,13 @@ data/schloss/schloss.vdgc.rarefaction : $(SCHL_VSEARCH_LIST) code/rarefy_data.R
 
 #get the rdp training set data
 $(REFS)trainset10_082014.pds.tax $(REFS)trainset10_082014.pds.fasta :
-	wget -N -P $(REFS) http://www.mothur.org/w/images/2/24/Trainset10_082014.pds.tgz; \
+	wget -N -P $(REFS) http:/www.mothur.org/w/images/2/24/Trainset10_082014.pds.tgz; \
 	tar xvzf $(REFS)Trainset10_082014.pds.tgz -C $(REFS);\
 	mv $(REFS)trainset10_082014.pds/trainset10_082014.* $(REFS);\
 	rm -rf $(REFS)trainset10_082014.pds
 
 data/miseq/mouse.files : code/get_contigsfile.R
-	wget -N -P data/miseq http://www.mothur.org/MiSeqDevelopmentData/StabilityNoMetaG.tar; \
+	wget -N -P data/miseq http:/www.mothur.org/MiSeqDevelopmentData/StabilityNoMetaG.tar; \
 	tar xvf data/miseq/StabilityNoMetaG.tar -C data/miseq/; \
 	gunzip -f data/miseq/*gz; \
 	rm data/miseq/StabilityNoMetaG.tar; \
@@ -674,54 +674,50 @@ data/miseq/miseq.vdgc.rarefaction : $(MISEQ_VSEARCH_LIST) code/rarefy_data.R
 
 
 
-# QIIME's default reference is gg_13_8; however, this does not appear to be available on the second genome/greengenes
-# website. when I compared the checksums of gg_13_5_otus/rep_set/97_otus.fasta and gg_13_8_otus/rep_set/97_otus.fasta
-# they were identical. 
 
-$(REFS)gg_13_5_otus/rep_set/97_otus.fasta : 
-	wget -N -P $(REFS) ftp://anonymous@greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_otus.tar.gz
-	tar xvzf $(REFS)gg_13_5_otus.tar.gz -C $(REFS);
+$(REFS)97_otus.fasta : ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+	cp -p $< $@
 
-data/gg_13_5/gg_13_5_97.v19.align : $(REFS)gg_13_5_otus/rep_set/97_otus.fasta $(REFS)silva.bact_archaea.align
-	mothur "#align.seqs(fasta=$(REFS)gg_13_5_otus/rep_set/97_otus.fasta, reference=$(REFS)silva.bact_archaea.align, processors=2, outputdir=data/gg_13_5);pcr.seqs(fasta=data/gg_13_5/97_otus.align, start=1044, end=43116, keepdots=F, processors=8);filter.seqs(vertical=T)"
-	rm data/gg_13_5/97_otus.align.report data/gg_13_5/97_otus.flip.accnos data/gg_13_5/97_otus.pcr.align data/gg_13_5/97_otus.filter
-	mv data/gg_13_5/97_otus.pcr.filter.fasta data/gg_13_5/gg_13_5_97.v19.align
+data/gg_13_8/gg_13_8_97.v19.align : $(REFS)/97_otus.fasta $(REFS)silva.bact_archaea.align
+	mothur "#align.seqs(fasta=$(REFS)/97_otus.fasta, reference=$(REFS)silva.bact_archaea.align, processors=2, outputdir=data/gg_13_8);pcr.seqs(fasta=data/gg_13_8/97_otus.align, start=1044, end=43116, keepdots=F, processors=8);filter.seqs(vertical=T)"
+	rm data/gg_13_8/97_otus.align.report data/gg_13_8/97_otus.flip.accnos data/gg_13_8/97_otus.pcr.align data/gg_13_8/97_otus.filter
+	mv data/gg_13_8/97_otus.pcr.filter.fasta data/gg_13_8/gg_13_8_97.v19.align
 
-data/gg_13_5/gg_13_5_97.v19_ref.unique.align data/gg_13_5/gg_13_5_97.v19_ref.names data/gg_13_5/gg_13_5_97.v19.bad.accnos : data/gg_13_5/gg_13_5_97.v19.align
-	mothur "#screen.seqs(fasta=data/gg_13_5/gg_13_5_97.v19.align, start=3967, end=6116, processors=8); unique.seqs()"
-	mv data/gg_13_5/gg_13_5_97.v19.good.unique.align data/gg_13_5/gg_13_5_97.v19_ref.unique.align
-	mv data/gg_13_5/gg_13_5_97.v19.good.names data/gg_13_5/gg_13_5_97.v19_ref.names
+data/gg_13_8/gg_13_8_97.v19_ref.unique.align data/gg_13_8/gg_13_8_97.v19_ref.names data/gg_13_8/gg_13_8_97.v19.bad.accnos : data/gg_13_8/gg_13_8_97.v19.align
+	mothur "#screen.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.align, start=3967, end=6116, processors=8); unique.seqs()"
+	mv data/gg_13_8/gg_13_8_97.v19.good.unique.align data/gg_13_8/gg_13_8_97.v19_ref.unique.align
+	mv data/gg_13_8/gg_13_8_97.v19.good.names data/gg_13_8/gg_13_8_97.v19_ref.names
 
-data/gg_13_5/gg_13_5_97.v4_ref.unique.align data/gg_13_5/gg_13_5_97.v4_ref.names : data/gg_13_5/gg_13_5_97.v19.bad.accnos data/gg_13_5/gg_13_5_97.v19.align
-	mothur "#remove.seqs(fasta=data/gg_13_5/gg_13_5_97.v19.align, accnos=data/gg_13_5/gg_13_5_97.v19.bad.accnos); pcr.seqs(fasta=data/gg_13_5/gg_13_5_97.v19.pick.align, keepdots=F, start=3967, end=6116, processors=4); unique.seqs()"
-	mv data/gg_13_5/gg_13_5_97.v19.pick.pcr.unique.align data/gg_13_5/gg_13_5_97.v4_ref.unique.align
-	mv data/gg_13_5/gg_13_5_97.v19.pick.pcr.names data/gg_13_5/gg_13_5_97.v4_ref.names
-	rm data/gg_13_5/gg_13_5_97.v19.pick.align
+data/gg_13_8/gg_13_8_97.v4_ref.unique.align data/gg_13_8/gg_13_8_97.v4_ref.names : data/gg_13_8/gg_13_8_97.v19.bad.accnos data/gg_13_8/gg_13_8_97.v19.align
+	mothur "#remove.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.align, accnos=data/gg_13_8/gg_13_8_97.v19.bad.accnos); pcr.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.pick.align, keepdots=F, start=3967, end=6116, processors=4); unique.seqs()"
+	mv data/gg_13_8/gg_13_8_97.v19.pick.pcr.unique.align data/gg_13_8/gg_13_8_97.v4_ref.unique.align
+	mv data/gg_13_8/gg_13_8_97.v19.pick.pcr.names data/gg_13_8/gg_13_8_97.v4_ref.names
+	rm data/gg_13_8/gg_13_8_97.v19.pick.align
 
-GG_DIST = data/gg_13_5/gg_13_5_97.v4_ref.unique.dist data/gg_13_5/gg_13_5_97.v19_ref.unique.dist
-data/gg_13_5/gg_13_5_97.%.dist : data/gg_13_5/gg_13_5_97.%.align
+GG_DIST = data/gg_13_8/gg_13_8_97.v4_ref.unique.dist data/gg_13_8/gg_13_8_97.v19_ref.unique.dist
+data/gg_13_8/gg_13_8_97.%.dist : data/gg_13_8/gg_13_8_97.%.align
 	mothur "#dist.seqs(fasta=$<, cutoff=0.15, processors=8)"
 
-GG_DIST_V4 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v4_ref.$R.unique.dist)
-data/gg_13_5/gg_13_5_97.v4_ref.%.unique.dist : data/gg_13_5/gg_13_5_97.v4_ref.unique.dist
+GG_DIST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.dist)
+data/gg_13_8/gg_13_8_97.v4_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v4_ref.unique.dist
 	cp $< $@
 
-GG_NAMES_V4 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v4_ref.$R.names)
-data/gg_13_5/gg_13_5_97.v4_ref.%.names : data/gg_13_5/gg_13_5_97.v4_ref.names
+GG_NAMES_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.names)
+data/gg_13_8/gg_13_8_97.v4_ref.%.names : data/gg_13_8/gg_13_8_97.v4_ref.names
 	cp $< $@
 
-GG_DIST_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.unique.dist)
-data/gg_13_5/gg_13_5_97.v19_ref.%.unique.dist : data/gg_13_5/gg_13_5_97.v19_ref.unique.dist
+GG_DIST_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.unique.dist)
+data/gg_13_8/gg_13_8_97.v19_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v19_ref.unique.dist
 	cp $< $@
 
-GG_NAMES_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.names)
-data/gg_13_5/gg_13_5_97.v19_ref.%.names : data/gg_13_5/gg_13_5_97.v19_ref.names
+GG_NAMES_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.names)
+data/gg_13_8/gg_13_8_97.v19_ref.%.names : data/gg_13_8/gg_13_8_97.v19_ref.names
 	cp $< $@
 
 
-GG_CLUST_V4 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v4_ref.$R.unique.an.list)
-GG_CLUST_V19 = $(foreach R,$(REP),data/gg_13_5/gg_13_5_97.v19_ref.$R.unique.an.list)
-data/gg_13_5/gg_13_5_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@)
+GG_CLUST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.an.list)
+GG_CLUST_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.unique.an.list)
+data/gg_13_8/gg_13_8_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@)
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	$(eval REP=$(subst .,,$(suffix $(subst .names,,$(NAMES)))))
@@ -730,19 +726,19 @@ data/gg_13_5/gg_13_5_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst 
 	rm $(subst list,sabund,$@)
 	rm $(subst list,rabund,$@)
 
-data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
-	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_5/', 'gg_13_5_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_5_97.v19_ref.\\\d\\\d.unique.an.list', 'data/gg_13_5/gg_13_5_97.v4_v19.ref_mcc')"
+data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
+	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_8/', 'gg_13_8_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_8_97.v19_ref.\\\d\\\d.unique.an.list', 'data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc')"
 
 
 # allows us to compare how well the length of the region is represented
-data/gg_13_5/gg_13_5_97.v19.summary : data/gg_13_5/gg_13_5_97.v19.align
+data/gg_13_8/gg_13_8_97.v19.summary : data/gg_13_8/gg_13_8_97.v19.align
 	mothur "#summary.seqs(fasta=$<, processors=8)"
 
 
 
 
 
-data/rand_ref/original.fasta : $(REFS)gg_13_5_otus/rep_set/97_otus.fasta
+data/rand_ref/original.fasta : $(REFS)/97_otus.fasta
 	cp $< $@
 
 REF_BOOTSTRAP_FASTA = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP), 1.0_$R.fasta))
@@ -750,7 +746,7 @@ REF_BOOTSTRAP_FASTA = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP), 1
 $(REF_BOOTSTRAP_FASTA) : code/generate_samples.R data/rand_ref/original.fasta 	
 	$(eval BASE=$(patsubst data/rand_ref/rand_ref%.fasta,%,$@))
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
-	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/references/gg_13_5_otus/rep_set/97_otus.fasta', 'data/rand_ref/rand_ref', 1.0, '$R')"
+	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/references/97_otus.fasta', 'data/rand_ref/rand_ref', 1.0, '$R')"
 
 data/rand_ref/miseq.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta
 	mothur "#degap.seqs(fasta=$<, outputdir=data/rand_ref)"
