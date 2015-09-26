@@ -801,11 +801,11 @@ data/rand_ref/miseq.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filte
 	mv data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.ng.fasta $@
 
 RAND_REF_UCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.uclosed.uc)) data/rand_ref/original.uclosed.uc
-$(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh code/closedref.params.txt
+$(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh code/closedref.params.txt data/rand_ref/miseq.fasta
 	bash code/run_rand_uref.sh $<
 
 RAND_REF_VCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.vclosed.vc)) data/rand_ref/original.vclosed.vc
-$(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh code/closedref.params.txt
+$(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh code/closedref.params.txt data/rand_ref/miseq.fasta
 	bash code/run_rand_vref.sh $<
 
 data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
