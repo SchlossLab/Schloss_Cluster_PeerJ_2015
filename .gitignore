@@ -3,6 +3,7 @@
 .RData
 
 
+scratch/
 data/*/*
 !data/process/*
 !README.md
