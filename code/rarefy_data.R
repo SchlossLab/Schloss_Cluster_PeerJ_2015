@@ -19,12 +19,14 @@ rarefy_single <- function(list_file, nseqs, label){
 	system(command_string)
 
 	summary_string <- gsub("list$", "ave-std.summary", reference_list_file)
-	read.table(file=summary_string, header=T)[1,3]
+	mean <- read.table(file=summary_string, header=T)[1,3]
+	sd <- read.table(file=summary_string, header=T)[2,3]
+	c(mean, mean-1.95*sd, mean+1.95*sd)
 }
 
 rarefy_sobs <- function(cluster_method, path, fraction=c("0.2", "0.4", "0.6", "0.8", "1.0")){
-	label <- ifelse(grepl("unique", cluster_method), "0.03", "userLabel")
 
+	label <- ifelse(grepl("unique", cluster_method), "0.03", "userLabel")
 	path <- gsub("([^/])$", "\\1/", path)
 	write(fraction, "")    
 	reps <- c(paste0("0", 1:9), 10:30)
@@ -38,11 +40,13 @@ rarefy_sobs <- function(cluster_method, path, fraction=c("0.2", "0.4", "0.6", "0
 	names(sample_size) <- fraction
 
 	rarefied <- data.frame(t(sapply(file_names, rarefy_single, sample_size, label)))
-	names(rarefied) <- gsub(gsub("/", ".", path), "", names(rarefied))
+	rownames(rarefied) <- gsub(gsub("/", ".", path), "", rownames(rarefied))
 
-	observed$rarefied <- t(rarefied[rownames(observed)])
-	observed$replicate <- gsub(".*(\\d\\d).*", "\\1", names(rarefied))
-	observed$fraction <- gsub(".*(\\d\\.\\d{1,2}).*", "\\1", names(rarefied))
+	observed$rarefied <- rarefied$X1
+	observed$lci <- rarefied$X2
+	observed$uci <- rarefied$X3
+	observed$replicate <- gsub(".*(\\d\\d).*", "\\1", rownames(rarefied))
+	observed$fraction <- gsub(".*(\\d\\.\\d{1,2}).*", "\\1", rownames(rarefied))
 
 	cluster_method <- gsub("unique.", "", cluster_method)	
 	method <- gsub("_", ".", method)	

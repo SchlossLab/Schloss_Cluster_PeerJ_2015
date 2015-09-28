@@ -10,8 +10,8 @@ get_line <- function(file_name){
 	to_match <- c("0.03", "userLabel")
 	line <- all_lines[grepl(paste(to_match, collapse="|"), all_lines)]
 	
-	fraction <- gsub(".*_(\\d.\\d)_\\d\\d.*", "\\1", file_name)
-	replicate <- gsub(".*_\\d.\\d_(\\d\\d).*", "\\1", file_name)
+	fraction <- gsub(".*_(\\d.\\d*)_\\d\\d*.*", "\\1", file_name)
+	replicate <- gsub(".*_\\d.\\d*_(\\d\\d*).*", "\\1", file_name)
 	
 	paste(fraction, replicate, line, sep="\t")
 }
