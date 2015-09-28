@@ -153,6 +153,8 @@ data/he/he.vagc.ref_mcc : code/reference_mcc.R $(HE_VAGC_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*vagc.list', 'he_1.0.*vagc.list', 'he.*names', 'data/he/he.vagc.ref_mcc')"
 
 
+
+
 HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.swarm.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.vagc.pool_sensspec
 data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST)) 
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
@@ -813,4 +815,16 @@ data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary : code/
 
 data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary : code/summarize_rand_ref.R $(RAND_REF_VCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('v')"
+
+
+
+
+data/process/he.mcc_ref.summary : code/summarize_mcc_ref.R $(HE_REF_MCC)
+	R -e "source('code/summarize_mcc_ref.R'); summarize_mcc_ref('he')"
+
+data/process/schloss.mcc_ref.summary : code/summarize_mcc_ref.R $(SCHL_REF_MCC)
+	R -e "source('code/summarize_mcc_ref.R'); summarize_mcc_ref('schloss')"
+
+data/process/miseq.mcc_ref.summary : code/summarize_mcc_ref.R $(MISEQ_REF_MCC)
+	R -e "source('code/summarize_mcc_ref.R'); summarize_mcc_ref('miseq')"
 
