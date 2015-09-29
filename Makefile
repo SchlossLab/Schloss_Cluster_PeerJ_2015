@@ -881,10 +881,10 @@ results/figures/figure_2_miseq.pdf : code/build_figure2.R data/process/miseq.rar
 
 
 results/figures/figure_3.pdf : code/build_figure3.R data/process/he.mcc.summary
-	R -e "source('code/build_figure3.R'); build_mcc_plot('he', '$@')"
+	R -e "source('code/build_figure3.R'); build_mcc_plot('he', '$@', threshold=1.0)"
 
 results/figures/figure_3_schl.pdf : code/build_figure3.R data/process/schloss.mcc.summary
-	R -e "source('code/build_figure3.R'); build_mcc_plot('schloss', '$@')"
+	R -e "source('code/build_figure3.R'); build_mcc_plot('schloss', '$@', threshold=1.0)"
 
 results/figures/figure_3_miseq.pdf : code/build_figure3.R data/process/miseq.mcc.summary
-	R -e "source('code/build_figure3.R'); build_mcc_plot('miseq', '$@')"
+	R -e "source('code/build_figure3.R'); build_mcc_plot('miseq', '$@', threshold=1.0)"
