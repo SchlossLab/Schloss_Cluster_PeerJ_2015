@@ -860,13 +860,13 @@ data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_POOL_SENSSPEC)
 
 
 
-results/figures/figure_1.pdf : code/build_figure2.R data/process/he.mcc_ref.summary
+results/figures/figure_1.pdf : code/build_figure1.R data/process/he.mcc_ref.summary
 	R -e "source('code/build_figure1.R'); build_figure1('he', $@)"
 
-results/figures/figure_1_schl.pdf : code/build_figure2.R data/process/schloss.mcc_ref.summary
+results/figures/figure_1_schl.pdf : code/build_figure1.R data/process/schloss.mcc_ref.summary
 	R -e "source('code/build_figure1.R'); build_figure1('schloss', $@)"
 
-results/figures/figure_1_miseq.pdf : code/build_figure2.R data/process/miseq.mcc_ref.summary
+results/figures/figure_1_miseq.pdf : code/build_figure1.R data/process/miseq.mcc_ref.summary
 	R -e "source('code/build_figure1.R'); build_figure1('miseq', $@)"
 
 
@@ -878,3 +878,13 @@ results/figures/figure_2_schl.pdf : code/build_figure2.R data/process/schloss.ra
 
 results/figures/figure_2_miseq.pdf : code/build_figure2.R data/process/miseq.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('miseq', $@)"
+
+
+results/figures/figure_3.pdf : code/build_figure3.R data/process/he.mcc.summary
+	R -e "source('code/build_figure3.R'); build_figure3('he', $@)"
+
+results/figures/figure_3_schl.pdf : code/build_figure3.R data/process/schloss.mcc.summary
+	R -e "source('code/build_figure3.R'); build_figure3('schloss', $@)"
+
+results/figures/figure_3_miseq.pdf : code/build_figure3.R data/process/miseq.mcc.summary
+	R -e "source('code/build_figure3.R'); build_figure3('miseq', $@)"

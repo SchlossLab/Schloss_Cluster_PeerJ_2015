@@ -1,6 +1,6 @@
-build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
+build_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
-	data <- read.table(file=paste0("data/process/", dataset, ".mcc_ref.summary"), header=T, stringsAsFactors=F)
+	data <- read.table(file=paste0("data/process/", dataset, ".mcc.summary"), header=T, stringsAsFactors=F)
 
 	methods <- c("fn", "nn", "an", "dgc", "agc", "closed", "open")
 	n_methods <- length(methods)
@@ -12,7 +12,7 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	par(mar=c(5.5, 5, 0.5, 0.5))
 
-	plot(NA, ylim=c(0.5,1), xlim=c(0.1,1), axes=F, ylab="", xlab="")
+	plot(NA, ylim=c(0,1), xlim=c(0.1,1), axes=F, ylab="", xlab="")
 	clrs <- rainbow(n_methods)
 	abline(v=threshold, col="gray", lwd=2)
 
@@ -36,8 +36,8 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	sixty <- orig_methods[orig_methods$fraction==threshold,]
 	sixty$method <- factor(sixty$method, levels=methods)
-	sixty[sixty$method=="closed", c("lci", "uci")] <- c(0.999, 1.001)
-	plot(NA, ylim=c(0.5,1), xlim=c(0.75,7.25), axes=F, ylab="", xlab="")
+
+	plot(NA, ylim=c(0.0,1), xlim=c(0.75,7.25), axes=F, ylab="", xlab="")
 
 	for(m in 1:n_methods){
 		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=19, col=clrs[m])
@@ -49,8 +49,6 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 	axis(1, at=1:7, label=c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref"), las=2)
 	#axis(2, las=1)
 	box()
-
-#	schloss <- read.table(file="data/process/schloss.mcc_ref.summary", header=T, stringsAsFactors=F)
 
 	text(x=0.87, y=0.98, label="B", cex=1.5, font=2)
 
