@@ -433,7 +433,7 @@ data/schloss/schloss.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst l
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*vdgc.sensspec', 'data/schloss/schloss.vdgc.pool_sensspec')"
 
 data/schloss/schloss.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_VAGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*vadc.sensspec', 'data/schloss/schloss.vagc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*vagc.sensspec', 'data/schloss/schloss.vagc.pool_sensspec')"
 
 
 SCHL_RAREFACTION = data/schloss/schloss.an.rarefaction data/schloss/schloss.nn.rarefaction data/schloss/schloss.fn.rarefaction data/schloss/schloss.agc.rarefaction data/schloss/schloss.dgc.rarefaction data/schloss/schloss.closed.rarefaction data/schloss/schloss.open.rarefaction data/schloss/schloss.swarm.rarefaction data/schloss/schloss.vdgc.rarefaction data/schloss/schloss.vagc.rarefaction
@@ -848,13 +848,13 @@ data/process/miseq.rarefaction.summary : code/summarize_rarefaction.R $(MISEQ_RA
 	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('miseq')"
 
 
-data/process/he.mcc.summary : code/summarize_mcc.R $(HE_GREEDY_SENSSPEC) $(HE_NEIGHBOR_SENSSPEC)
+data/process/he.mcc.summary : code/summarize_mcc.R $(HE_POOL_SENSSPEC)
 	R -e "source('code/summarize_mcc.R'); summarize_mcc('he')"
 
-data/process/schloss.mcc.summary : code/summarize_mcc.R $(SCHL_GREEDY_SENSSPEC) $(SCHL_NEIGHBOR_SENSSPEC)
+data/process/schloss.mcc.summary : code/summarize_mcc.R $(SCHL_POOL_SENSSPEC)
 	R -e "source('code/summarize_mcc.R'); summarize_mcc('schloss')"
 
-data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_GREEDY_SENSSPEC) $(MISEQ_NEIGHBOR_SENSSPEC)
+data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_POOL_SENSSPEC)
 	R -e "source('code/summarize_mcc.R'); summarize_mcc('miseq')"
 
 
