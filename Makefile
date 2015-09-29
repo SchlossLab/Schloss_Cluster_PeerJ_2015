@@ -48,21 +48,21 @@ $(HE_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_an.sh $(DIST) $(NAMES)
 
-HE_NN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+HE_NN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list)))
 .SECONDEXPANSION:
 $(HE_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_nn.sh $(DIST) $(NAMES)
 
-HE_FN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+HE_FN_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list)))
 .SECONDEXPANSION:
 $(HE_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_fn.sh $(DIST) $(NAMES)
 
-HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST) 
+HE_NEIGHBOR_LIST = $(HE_AN_LIST) $(HE_NN_LIST) $(HE_FN_LIST)
 
 
 HE_DGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.dgc.list)))
@@ -156,7 +156,7 @@ data/he/he.vagc.ref_mcc : code/reference_mcc.R $(HE_VAGC_LIST) $(HE_NAMES)
 
 
 HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.swarm.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.vagc.pool_sensspec
-data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST)) 
+data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
 
 data/he/he.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_FN_LIST))
@@ -189,28 +189,28 @@ data/he/he.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,senssp
 
 HE_RAREFACTION = data/he/he.an.rarefaction data/he/he.nn.rarefaction data/he/he.fn.rarefaction data/he/he.agc.rarefaction data/he/he.dgc.rarefaction data/he/he.closed.rarefaction data/he/he.open.rarefaction data/he/he.swarm.rarefaction data/he/he.vdgc.rarefaction data/he/he.vagc.rarefaction
 
-data/he/he.an.rarefaction : $(HE_AN_LIST) code/rarefy_data.R 
+data/he/he.an.rarefaction : $(HE_AN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/he')"
 
-data/he/he.nn.rarefaction : $(HE_NN_LIST) code/rarefy_data.R 
+data/he/he.nn.rarefaction : $(HE_NN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/he')"
 
-data/he/he.fn.rarefaction : $(HE_FN_LIST) code/rarefy_data.R 
+data/he/he.fn.rarefaction : $(HE_FN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/he')"
 
-data/he/he.agc.rarefaction : $(HE_AGC_LIST) code/rarefy_data.R 
+data/he/he.agc.rarefaction : $(HE_AGC_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/he')"
 
-data/he/he.dgc.rarefaction : $(HE_DGC_LIST) code/rarefy_data.R 
+data/he/he.dgc.rarefaction : $(HE_DGC_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/he')"
 
-data/he/he.closed.rarefaction : $(HE_CLOSED_LIST) code/rarefy_data.R 
+data/he/he.closed.rarefaction : $(HE_CLOSED_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/he')"
 
-data/he/he.open.rarefaction : $(HE_OPEN_LIST) code/rarefy_data.R 
+data/he/he.open.rarefaction : $(HE_OPEN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/he')"
 
-data/he/he.swarm.rarefaction : $(HE_SWARM_LIST) code/rarefy_data.R 
+data/he/he.swarm.rarefaction : $(HE_SWARM_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/he')"
 
 data/he/he.vdgc.rarefaction : $(HE_VDGC_LIST) code/rarefy_data.R
@@ -234,7 +234,7 @@ $(REFS)silva.bacteria.align :
 
 $(REFS)silva.bact_archaea.align : $(REFS)silva.bacteria.align
 	wget -N -P $(REFS) http:/www.mothur.org/w/images/2/27/Silva.nr_v119.tgz; \
-	tar xvzf $(REFS)Silva.nr_v119.tgz -C $(REFS); 
+	tar xvzf $(REFS)Silva.nr_v119.tgz -C $(REFS);
 	mothur "#get.lineage(fasta=$(REFS)silva.nr_v119.align, taxonomy=$(REFS)silva.nr_v119.tax, taxon=Archaea)";
 	cp $(REFS)silva.bacteria.align $(REFS)silva.bact_archaea.align;
 	cat $(REFS)silva.nr_v119.pick.align >> $(REFS)silva.bact_archaea.align; \
@@ -287,21 +287,21 @@ $(SCHL_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_an.sh $(DIST) $(NAMES)
 
-SCHL_NN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+SCHL_NN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list)))
 .SECONDEXPANSION:
 $(SCHL_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_nn.sh $(DIST) $(NAMES)
 
-SCHL_FN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+SCHL_FN_LIST = $(addprefix data/schloss/schloss_, $(foreach F,$(FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list)))
 .SECONDEXPANSION:
 $(SCHL_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_fn.sh $(DIST) $(NAMES)
 
-SCHL_NEIGHBOR_LIST = $(SCHL_AN_LIST) $(SCHL_NN_LIST) $(SCHL_FN_LIST) 
+SCHL_NEIGHBOR_LIST = $(SCHL_AN_LIST) $(SCHL_NN_LIST) $(SCHL_FN_LIST)
 
 
 SCHL_DEGAP_FASTA = $(subst fasta,ng.fasta,$(SCHL_BOOTSTRAP_FASTA))
@@ -405,7 +405,7 @@ data/schloss/schloss.vagc.ref_mcc : code/reference_mcc.R $(SCHL_VAGC_LIST) $(SCH
 
 
 SCHL_POOL_SENSSPEC = data/schloss/schloss.an.pool_sensspec data/schloss/schloss.fn.pool_sensspec data/schloss/schloss.nn.pool_sensspec data/schloss/schloss.dgc.pool_sensspec data/schloss/schloss.agc.pool_sensspec data/schloss/schloss.open.pool_sensspec data/schloss/schloss.closed.pool_sensspec data/schloss/schloss.swarm.pool_sensspec data/schloss/schloss.vdgc.pool_sensspec data/schloss/schloss.vagc.pool_sensspec
-data/schloss/schloss.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AN_LIST)) 
+data/schloss/schloss.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*an.sensspec', 'data/schloss/schloss.an.pool_sensspec')"
 
 data/schloss/schloss.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_FN_LIST))
@@ -438,28 +438,28 @@ data/schloss/schloss.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst l
 
 SCHL_RAREFACTION = data/schloss/schloss.an.rarefaction data/schloss/schloss.nn.rarefaction data/schloss/schloss.fn.rarefaction data/schloss/schloss.agc.rarefaction data/schloss/schloss.dgc.rarefaction data/schloss/schloss.closed.rarefaction data/schloss/schloss.open.rarefaction data/schloss/schloss.swarm.rarefaction data/schloss/schloss.vdgc.rarefaction data/schloss/schloss.vagc.rarefaction
 
-data/schloss/schloss.an.rarefaction : $(SCHL_AN_LIST) code/rarefy_data.R 
+data/schloss/schloss.an.rarefaction : $(SCHL_AN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/schloss')"
 
-data/schloss/schloss.nn.rarefaction : $(SCHL_NN_LIST) code/rarefy_data.R 
+data/schloss/schloss.nn.rarefaction : $(SCHL_NN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/schloss')"
 
-data/schloss/schloss.fn.rarefaction : $(SCHL_FN_LIST) code/rarefy_data.R 
+data/schloss/schloss.fn.rarefaction : $(SCHL_FN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/schloss')"
 
-data/schloss/schloss.agc.rarefaction : $(SCHL_AGC_LIST) code/rarefy_data.R 
+data/schloss/schloss.agc.rarefaction : $(SCHL_AGC_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/schloss')"
 
-data/schloss/schloss.dgc.rarefaction : $(SCHL_DGC_LIST) code/rarefy_data.R 
+data/schloss/schloss.dgc.rarefaction : $(SCHL_DGC_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/schloss')"
 
-data/schloss/schloss.closed.rarefaction : $(SCHL_CLOSED_LIST) code/rarefy_data.R 
+data/schloss/schloss.closed.rarefaction : $(SCHL_CLOSED_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/schloss')"
 
-data/schloss/schloss.open.rarefaction : $(SCHL_OPEN_LIST) code/rarefy_data.R 
+data/schloss/schloss.open.rarefaction : $(SCHL_OPEN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/schloss')"
 
-data/schloss/schloss.swarm.rarefaction : $(SCHL_SWARM_LIST) code/rarefy_data.R 
+data/schloss/schloss.swarm.rarefaction : $(SCHL_SWARM_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/schloss')"
 
 data/schloss/schloss.vdgc.rarefaction : $(SCHL_VDGC_LIST) code/rarefy_data.R
@@ -536,21 +536,21 @@ $(MISEQ_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, 
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_an.sh $(DIST) $(NAMES)
 
-MISEQ_NN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list))) 
+MISEQ_NN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.nn.list)))
 .SECONDEXPANSION:
 $(MISEQ_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_nn.sh $(DIST) $(NAMES)
 
-MISEQ_FN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list))) 
+MISEQ_FN_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(foreach R,$(REP),  $F_$R.unique.fn.list)))
 .SECONDEXPANSION:
 $(MISEQ_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
 	$(eval DIST=$(word 1,$^))
 	$(eval NAMES=$(word 2,$^))
 	bash code/run_fn.sh $(DIST) $(NAMES)
 
-MISEQ_NEIGHBOR_LIST = $(MISEQ_AN_LIST) $(MISEQ_NN_LIST) $(MISEQ_FN_LIST) 
+MISEQ_NEIGHBOR_LIST = $(MISEQ_AN_LIST) $(MISEQ_NN_LIST) $(MISEQ_FN_LIST)
 
 
 MISEQ_DEGAP_FASTA = $(subst fasta,ng.fasta,$(MISEQ_BOOTSTRAP_FASTA))
@@ -662,7 +662,7 @@ data/miseq/miseq.vagc.ref_mcc : code/reference_mcc.R $(miseq_VAGC_LIST) $(MISEQ_
 
 
 MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.swarm.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec
-data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST)) 
+data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
 
 data/miseq/miseq.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_FN_LIST))
@@ -695,28 +695,28 @@ data/miseq/miseq.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,
 
 MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction data/miseq/miseq.vdgc.rarefaction data/miseq/miseq.vagc.rarefaction
 
-data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R 
+data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.nn.rarefaction : $(MISEQ_NN_LIST) code/rarefy_data.R 
+data/miseq/miseq.nn.rarefaction : $(MISEQ_NN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.fn.rarefaction : $(MISEQ_FN_LIST) code/rarefy_data.R 
+data/miseq/miseq.fn.rarefaction : $(MISEQ_FN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.agc.rarefaction : $(MISEQ_AGC_LIST) code/rarefy_data.R 
+data/miseq/miseq.agc.rarefaction : $(MISEQ_AGC_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.dgc.rarefaction : $(MISEQ_DGC_LIST) code/rarefy_data.R 
+data/miseq/miseq.dgc.rarefaction : $(MISEQ_DGC_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.closed.rarefaction : $(MISEQ_CLOSED_LIST) code/rarefy_data.R 
+data/miseq/miseq.closed.rarefaction : $(MISEQ_CLOSED_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R 
+data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
-data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R 
+data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R
 	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
 
 data/miseq/miseq.vdgc.rarefaction : $(MISEQ_VDGC_LIST) code/rarefy_data.R
@@ -799,7 +799,7 @@ data/rand_ref/original.fasta : $(REFS)/97_otus.fasta
 
 REF_BOOTSTRAP_FASTA = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP), 1.0_$R.fasta))
 
-$(REF_BOOTSTRAP_FASTA) : code/generate_samples.R data/rand_ref/original.fasta 	
+$(REF_BOOTSTRAP_FASTA) : code/generate_samples.R data/rand_ref/original.fasta
 	$(eval BASE=$(patsubst data/rand_ref/rand_ref%.fasta,%,$@))
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
 	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/references/97_otus.fasta', 'data/rand_ref/rand_ref', 1.0, '$R')"
@@ -847,3 +847,24 @@ data/process/schloss.rarefaction.summary : code/summarize_rarefaction.R $(SCHL_R
 
 data/process/miseq.rarefaction.summary : code/summarize_rarefaction.R $(MISEQ_RAREFACTION)
 	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('miseq')"
+
+
+
+results/figures/figure_1.pdf : code/build_figure2.R data/process/he.mcc_ref.summary
+	R -e "source('code/build_figure1.R'); build_figure1('he', $@)"
+
+results/figures/figure_1_schl.pdf : code/build_figure2.R data/process/schloss.mcc_ref.summary
+	R -e "source('code/build_figure1.R'); build_figure1('schloss', $@)"
+
+results/figures/figure_1_miseq.pdf : code/build_figure2.R data/process/miseq.mcc_ref.summary
+	R -e "source('code/build_figure1.R'); build_figure1('miseq', $@)"
+
+
+results/figures/figure_2.pdf : code/build_figure2.R data/process/he.rarefaction.summary
+	R -e "source('code/build_figure2.R'); build_figure2('he', $@)"
+
+results/figures/figure_2_schl.pdf : code/build_figure2.R data/process/schloss.rarefaction.summary
+	R -e "source('code/build_figure2.R'); build_figure2('schloss', $@)"
+
+results/figures/figure_2_miseq.pdf : code/build_figure2.R data/process/miseq.rarefaction.summary
+	R -e "source('code/build_figure2.R'); build_figure2('miseq', $@)"
