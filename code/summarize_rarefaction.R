@@ -1,5 +1,5 @@
-summarize_rarefaction <- function(folder){
-	methods <- c("an", "fn", "nn", "agc", "dgc", "closed", "open", "swarm")
+summarize_rarefaction <- function(dataset){
+	methods <- c("an", "fn", "nn", "agc", "dgc", "closed", "open", "swarm", "vagc", "vdgc")
 
 	output_file_name <- paste0("data/process/", folder, ".rarefaction.summary")
 	write(x="method\tfraction\tsobs\tsobs_lci\tsobs_uci\trarefied\trare_lci\trare_uci\tp_value", file=output_file_name)
