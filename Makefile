@@ -838,7 +838,6 @@ data/process/miseq.mcc_ref.summary : code/summarize_mcc_ref.R $(MISEQ_REF_MCC)
 	R -e "source('code/summarize_mcc_ref.R'); summarize_mcc_ref('miseq')"
 
 
-
 data/process/he.rarefaction.summary : code/summarize_rarefaction.R $(HE_RAREFACTION)
 	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('he')"
 
@@ -847,6 +846,17 @@ data/process/schloss.rarefaction.summary : code/summarize_rarefaction.R $(SCHL_R
 
 data/process/miseq.rarefaction.summary : code/summarize_rarefaction.R $(MISEQ_RAREFACTION)
 	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('miseq')"
+
+
+data/process/he.mcc.summary : code/summarize_mcc.R $(HE_GREEDY_SENSSPEC) $(HE_NEIGHBOR_SENSSPEC)
+	R -e "source('code/summarize_mcc.R'); summarize_mcc('he')"
+
+data/process/schloss.mcc.summary : code/summarize_mcc.R $(SCHL_GREEDY_SENSSPEC) $(SCHL_NEIGHBOR_SENSSPEC)
+	R -e "source('code/summarize_mcc.R'); summarize_mcc('schloss')"
+
+data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_GREEDY_SENSSPEC) $(MISEQ_NEIGHBOR_SENSSPEC)
+	R -e "source('code/summarize_mcc.R'); summarize_mcc('miseq')"
+
 
 
 
