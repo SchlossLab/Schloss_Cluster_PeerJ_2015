@@ -1,12 +1,12 @@
 summarize_rarefaction <- function(dataset){
 	methods <- c("an", "fn", "nn", "agc", "dgc", "closed", "open", "swarm", "vagc", "vdgc")
 
-	output_file_name <- paste0("data/process/", folder, ".rarefaction.summary")
+	output_file_name <- paste0("data/process/", dataset, ".rarefaction.summary")
 	write(x="method\tfraction\tsobs\tsobs_lci\tsobs_uci\trarefied\trare_lci\trare_uci\tp_value", file=output_file_name)
 
 	for(m in methods){
 		print(m)
-		file_name <- paste0("data/", folder, "/", folder, ".", m, ".rarefaction")
+		file_name <- paste0("data/", dataset, "/", dataset, ".", m, ".rarefaction")
 		rarefy <-read.table(file=file_name, header=T)
 		fractions <- unique(rarefy$fraction)
 
