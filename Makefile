@@ -486,7 +486,8 @@ data/miseq/mouse.files : code/get_contigsfile.R
 
 
 
-M_FRACTION = 0.05 0.1 0.15 0.2 1.0
+#M_FRACTION = 0.05 0.1 0.15 0.2 1.0
+M_FRACTION = 0.2 0.4 0.6 0.8 1.0
 
 data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
 	bash code/process_mice.sh data/miseq/miseq.files
@@ -612,7 +613,15 @@ $(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/miseq)"
 
 MISEQ_GREEDY_SENSSPEC = $(subst list,sensspec, $(MISEQ_GREEDY_LIST))
+
 MISEQ_VAGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_VAGC_LIST))
+MISEQ_VDGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_VDGC_LIST))
+MISEQ_AGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_AGC_LIST))
+MISEQ_DGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_DGC_LIST))
+MISEQ_OPEN_SENSSPEC = $(subst list,sensspec, $(MISEQ_OPEN_LIST))
+MISEQ_CLOSED_SENSSPEC = $(subst list,sensspec, $(MISEQ_CLOSED_LIST))
+MISEQ_SWARM_SENSSPEC = $(subst list,sensspec, $(MISEQ_SWARM_LIST))
+
 .SECONDEXPANSION:
 $(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
 	$(eval LIST=$(word 2,$^))
@@ -828,3 +837,13 @@ data/process/schloss.mcc_ref.summary : code/summarize_mcc_ref.R $(SCHL_REF_MCC)
 data/process/miseq.mcc_ref.summary : code/summarize_mcc_ref.R $(MISEQ_REF_MCC)
 	R -e "source('code/summarize_mcc_ref.R'); summarize_mcc_ref('miseq')"
 
+
+
+data/process/he.rarefaction.summary : code/summarize_rarefaction.R $(HE_RAREFACTION)
+	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('he')"
+
+data/process/schloss.rarefaction.summary : code/summarize_rarefaction.R $(SCHL_RAREFACTION)
+	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('schloss')"
+
+data/process/miseq.rarefaction.summary : code/summarize_rarefaction.R $(MISEQ_RAREFACTION)
+	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('miseq')"
