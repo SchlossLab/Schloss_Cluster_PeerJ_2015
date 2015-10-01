@@ -132,25 +132,25 @@ data/he/he.nn.ref_mcc : code/reference_mcc.R $(HE_NN_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*unique.nn.list', 'he_1.0.*unique.nn.list', 'he.*names', 'data/he/he.nn.ref_mcc')"
 
 data/he/he.closed.ref_mcc : code/reference_mcc.R $(HE_CLOSED_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*closed.list', 'he_1.0.*closed.list', 'he.*names', 'data/he/he.closed.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.closed.list', 'he_1.0.*closed.list', 'he.*names', 'data/he/he.closed.ref_mcc')"
 
 data/he/he.open.ref_mcc : code/reference_mcc.R $(HE_OPEN_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*open.list', 'he_1.0.*open.list', 'he.*names', 'data/he/he.open.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.open.list', 'he_1.0.*open.list', 'he.*names', 'data/he/he.open.ref_mcc')"
 
 data/he/he.agc.ref_mcc : code/reference_mcc.R $(HE_AGC_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*agc.list', 'he_1.0.*agc.list', 'he.*names', 'data/he/he.agc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*\\\.agc.list', 'he_1.0.*\\\.agc.list', 'he.*names', 'data/he/he.agc.ref_mcc')"
 
 data/he/he.dgc.ref_mcc : code/reference_mcc.R $(HE_DGC_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*dgc.list', 'he_1.0.*dgc.list', 'he.*names', 'data/he/he.dgc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*\\\.dgc.list', 'he_1.0.*\\\.dgc.list', 'he.*names', 'data/he/he.dgc.ref_mcc')"
 
 data/he/he.swarm.ref_mcc : code/reference_mcc.R $(HE_SWARM_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*swarm.list', 'he_1.0.*swarm.list', 'he.*names', 'data/he/he.swarm.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.swarm.list', 'he_1.0.*swarm.list', 'he.*names', 'data/he/he.swarm.ref_mcc')"
 
 data/he/he.vdgc.ref_mcc : code/reference_mcc.R $(HE_VDGC_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*vdgc.list', 'he_1.0.*vdgc.list', 'he.*names', 'data/he/he.vdgc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.vdgc.list', 'he_1.0.*.vdgc.list', 'he.*names', 'data/he/he.vdgc.ref_mcc')"
 
 data/he/he.vagc.ref_mcc : code/reference_mcc.R $(HE_VAGC_LIST) $(HE_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*vagc.list', 'he_1.0.*vagc.list', 'he.*names', 'data/he/he.vagc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.vagc.list', 'he_1.0.*.vagc.list', 'he.*names', 'data/he/he.vagc.ref_mcc')"
 
 
 
@@ -389,10 +389,10 @@ data/schloss/schloss.open.ref_mcc : code/reference_mcc.R $(SCHL_OPEN_LIST) $(SCH
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*open.list', 'schloss_1.0.*open.list', 'schloss.*names', 'data/schloss/schloss.open.ref_mcc')"
 
 data/schloss/schloss.agc.ref_mcc : code/reference_mcc.R $(SCHL_AGC_LIST) $(SCHL_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*agc.list', 'schloss_1.0.*agc.list', 'schloss.*names', 'data/schloss/schloss.agc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*\\\.agc.list', 'schloss_1.0.*\\\.agc.list', 'schloss.*names', 'data/schloss/schloss.agc.ref_mcc')"
 
 data/schloss/schloss.dgc.ref_mcc : code/reference_mcc.R $(SCHL_DGC_LIST) $(SCHL_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*dgc.list', 'schloss_1.0.*dgc.list', 'schloss.*names', 'data/schloss/schloss.dgc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*\\\.dgc.list', 'schloss_1.0.*\\\.dgc.list', 'schloss.*names', 'data/schloss/schloss.dgc.ref_mcc')"
 
 data/schloss/schloss.swarm.ref_mcc : code/reference_mcc.R $(SCHL_SWARM_LIST) $(SCHL_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*swarm.list', 'schloss_1.0.*swarm.list', 'schloss.*names', 'data/schloss/schloss.swarm.ref_mcc')"
@@ -486,8 +486,7 @@ data/miseq/mouse.files : code/get_contigsfile.R
 
 
 
-#M_FRACTION = 0.05 0.1 0.15 0.2 1.0
-M_FRACTION = 0.2 0.4 0.6 0.8 1.0
+M_FRACTION = 0.05 0.1 0.2 0.4 1.0
 
 data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
 	bash code/process_mice.sh data/miseq/miseq.files
@@ -646,10 +645,10 @@ data/miseq/miseq.open.ref_mcc : code/reference_mcc.R $(MISEQ_OPEN_LIST) $(MISEQ_
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*open.list', 'miseq_1.0.*open.list', 'miseq.*names', 'data/miseq/miseq.open.ref_mcc')"
 
 data/miseq/miseq.agc.ref_mcc : code/reference_mcc.R $(MISEQ_AGC_LIST) $(MISEQ_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*agc.list', 'miseq_1.0.*agc.list', 'miseq.*names', 'data/miseq/miseq.agc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*\\\.agc.list', 'miseq_1.0.*\\\.agc.list', 'miseq.*names', 'data/miseq/miseq.agc.ref_mcc')"
 
 data/miseq/miseq.dgc.ref_mcc : code/reference_mcc.R $(MISEQ_DGC_LIST) $(MISEQ_NAMES)
-	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*dgc.list', 'miseq_1.0.*dgc.list', 'miseq.*names', 'data/miseq/miseq.dgc.ref_mcc')"
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*\\\.dgc.list', 'miseq_1.0.*\\\.dgc.list', 'miseq.*names', 'data/miseq/miseq.dgc.ref_mcc')"
 
 data/miseq/miseq.swarm.ref_mcc : code/reference_mcc.R $(MISEQ_SWARM_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*swarm.list', 'miseq_1.0.*swarm.list', 'miseq.*names', 'data/miseq/miseq.swarm.ref_mcc')"
@@ -696,34 +695,34 @@ data/miseq/miseq.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,
 MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction data/miseq/miseq.vdgc.rarefaction data/miseq/miseq.vagc.rarefaction
 
 data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.nn.rarefaction : $(MISEQ_NN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.fn.rarefaction : $(MISEQ_FN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.agc.rarefaction : $(MISEQ_AGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.dgc.rarefaction : $(MISEQ_DGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.closed.rarefaction : $(MISEQ_CLOSED_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.vdgc.rarefaction : $(MISEQ_VDGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('vdgc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vdgc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 data/miseq/miseq.vagc.rarefaction : $(MISEQ_VAGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('vagc', 'data/miseq', c('0.05', '0.1', '0.15', '0.2', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vagc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
 
 
 
