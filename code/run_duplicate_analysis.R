@@ -14,6 +14,6 @@ split_dups <- lapply(dups$V2, split_seq_names)
 n_dups <- sapply(split_dups, length)
 n_taxa <- sapply(split_dups, count_tax, tax_file)
 
-combined <- cbind(rownames(dups), n_dups = n_dups, n_taxa = n_taxa)
+combined <- cbind(dups$V1, n_dups = n_dups, n_taxa = n_taxa)
 write.table(combined, file="data/gg_13_8/duplicate.analysis", quote=F, row.names=F, col.names=F)
 
