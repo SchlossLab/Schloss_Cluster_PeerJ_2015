@@ -4,7 +4,7 @@ author: Patrick D. Schloss
 date: '`r format(Sys.Date(), format="%B %d, %Y")`'
 bibliography: references.bib
 output:
-  html_document:
+  pdf_document:
     includes:
       in_header: header.tex
 csl: peerj.csl
@@ -12,6 +12,9 @@ fontsize: 11pt
 geometry: margin=1.0in
 ---
 
+```{r, echo=F}
+options(scipen=999)
+```
 
 ## Introduction
 
@@ -29,6 +32,9 @@ A recent analysis by He and colleagues (REF) attempted to characterize the three
 
 
 ## Results and Discussion
+```{r}
+z <- read.table(file="data/process/he.mcc_ref.summary", header=T)
+```
 
 ***Summary and replication of He study.*** We sought to identify the more critical analyses performed in the He study. Similar to their study, we obtained the Canadian soil dataset from Roesch et al. (REF) and processed the sequences as described in their analysis. In our opinion there were three important tests.
 
@@ -57,7 +63,7 @@ rand_ref_v <- read.table(file="data/rand_ref/hits.vclosed.summary", row.names=1)
 
 ```
 
-***Additional problems with reference-based clustering.*** The He study indicated that the closed-reference algorithm generated perfectly stable OTUs. This was unsurprising since, by definition, the algorithm represents a one-to-one mapping of reads to a reference and treats the input sequences independently. An important test that was not performed in the He study was to determine whether the clustering was sensitive to the order of the sequences in the database. We randomized the order of the reference sequences 30 times and used them to carry out the closed-reference algorithm with the full MiSeq dataset. Surprisingly, we observed that the number of OTUs generated was not the same in each of the randomizations. On average there were `r round(rand_ref_u["mean", 1], 2)` OTUs per randomization (range from `r round(rand_ref["min", 1], 2)` to `r round(rand_ref_u["max", 1], 2)`). The unrandomized reference resulted in `r rand_ref_u["original", 1]` OTUs, below the minimum observed number of OTUs when the references were randomized. This surprising result is likely because a heuristic is employed by USEARCH to determine when to stop searching the database such that the best possible match is not necessarily returned. If the order of the reference sequences differed between runs, then the heuristic criteria would be triggered at different points. To test this, we substituted VSEARCH for USEARCH in the closed-reference algorithm because VSEARCH does not utilize the heuristic but is otherwise modeled after USEARCH. In fact, all randomizations of the reference sequences and the original ordering of the reference sequences generated `r rand_ref_v["original", 1]` OTUs.
+***Additional problems with reference-based clustering.*** The He study indicated that the closed-reference algorithm generated perfectly stable OTUs. This was unsurprising since, by definition, the algorithm represents a one-to-one mapping of reads to a reference and treats the input sequences independently. An important test that was not performed in the He study was to determine whether the clustering was sensitive to the order of the sequences in the database. We randomized the order of the reference sequences 30 times and used them to carry out the closed-reference algorithm with the full MiSeq dataset. Surprisingly, we observed that the number of OTUs generated was not the same in each of the randomizations. On average there were `r round(rand_ref_u["mean", 1], 2)` OTUs per randomization (range from `r round(rand_ref_u["min", 1], 2)` to `r round(rand_ref_u["max", 1], 2)`). The unrandomized reference resulted in `r rand_ref_u["original", 1]` OTUs, below the minimum observed number of OTUs when the references were randomized. This surprising result is likely because a heuristic is employed by USEARCH to determine when to stop searching the database such that the best possible match is not necessarily returned. If the order of the reference sequences differed between runs, then the heuristic criteria would be triggered at different points. To test this, we substituted VSEARCH for USEARCH in the closed-reference algorithm because VSEARCH does not utilize the heuristic but is otherwise modeled after USEARCH. In fact, all randomizations of the reference sequences and the original ordering of the reference sequences generated `r rand_ref_v["original", 1]` OTUs.
 
 ```{r, cache=TRUE}
 v4_dist <- read.table(file="data/gg_13_8/gg_13_8_97.v4_ref.unique.dist")
@@ -73,14 +79,14 @@ n_v4_good <- length(scan("data/gg_13_8/gg_13_8_97.v4_ref.names", what="", sep="\
 v_overlap <- read.table(file="data/rand_ref/overlap.vclosed.summary")
 ```
 
-We noticed that even with VSEARCH, the reference OTU label that was assigned to each OTU differed even though the composition of the OTUs were the same across the randomized references. The default QIIME database that was used in the He study and by others contains full-length sequences that are at most 97% similar to each other. We suspect that the reference database was designed this way to overcome the limitations of the heuristic employed in USEARCH. This curated database is used for mapping sequences to a reference phylogenetic tree for carrying out UniFrac-based analyses (REFS) and to reference genomes for performing analyses such as picrust (REFS). Because the downstream applications depend on the correct and unique labeling of the OTUs, the lack of stability of the labeling was a concern. We hypothesized that within a given region  there would be sequences that were more similar to each other and possibly identical to each other. There were a total of `r nrow(v19)` sequences in the reference database and `r n_v19_good` of those sequences fully overlap the V4 region. Among those sequences that fully overlapped the V4 region, there were `r n_small_v19_dist` pairs of sequences that were more than 97% similar to each other over the full length of the 16S rRNA gene. When the extracted V4 sequences were dereplicated, we identified `r n_v19_good-n_v4_good` sequences that were identical to each other. Among the dereplicated V4 sequences there were `r n_small_v4_dist` pairs of sequences that were more than 97% similar to each other. The presence of duplicate V4 reference sequences explains the lack of labeling stability when using either USEARCH or VSEARCH to carry out the closed-reference algorithm. Using VSEARCH to perform the closed-reference clustering, an average of `r round(100*v_overlap["orig", "mean"], 1)`% of the labels were shared between pairs of the 30 randomizations (range=`r round(100*v_overlap["orig", "min"], 1)` to `r round(100*v_overlap["orig", "max"], 1)`).
+We noticed that even with VSEARCH, the reference OTU label that was assigned to each OTU differed even though the composition of the OTUs were the same across the randomized references. The default QIIME database that was used in the He study and by others contains full-length sequences that are at most 97% similar to each other. We suspect that the reference database was designed this way to overcome the limitations of the heuristic employed in USEARCH. This curated database is used for mapping sequences to a reference phylogenetic tree for carrying out UniFrac-based analyses (REFS) and to reference genomes for performing analyses such as picrust (REFS). Because the downstream applications depend on the correct and unique labeling of the OTUs, the lack of stability of the labeling was a concern. We hypothesized that within a given region  there would be sequences that were more similar to each other and possibly identical to each other. There were a total of `r nrow(v19_summary)` sequences in the reference database and `r n_v19_good` of those sequences fully overlap the V4 region. Among those sequences that fully overlapped the V4 region, there were `r n_small_v19_dist` pairs of sequences that were more than 97% similar to each other over the full length of the 16S rRNA gene. When the extracted V4 sequences were dereplicated, we identified `r n_v19_good-n_v4_good` sequences that were identical to each other. Among the dereplicated V4 sequences there were `r n_small_v4_dist` pairs of sequences that were more than 97% similar to each other. The presence of duplicate V4 reference sequences explains the lack of labeling stability when using either USEARCH or VSEARCH to carry out the closed-reference algorithm. Using VSEARCH to perform the closed-reference clustering, an average of `r round(100*v_overlap["orig", "mean"], 1)`% of the labels were shared between pairs of the 30 randomizations (range=`r round(100*v_overlap["orig", "min"], 1)` to `r round(100*v_overlap["orig", "max"], 1)`).
 
 ```{r duplicate_analysis}
 dups <- read.table(file="data/gg_13_8/duplicate.analysis")
 max_taxa <- dups[dups$V3 == max(dups$V3),]
 ```
 
-We next asked whether the lack of consistency in labeling would affect the taxonomic identification of the sequences. The `r sum(dups$V2)-nrow(dups)` duplicated V4 sequences represented `r nrow(dups)` unique sequences. Among the `r sum(dups$V2==2)` reference sequences that had one duplicate, `r sum(dups$V2==2 & dups$V3==2)` had discordant taxonomies. Among those `r sum(dups$V2 > 2)` sequences with two or more duplicates, `r sum(dups$V2>2 & dups$V3>=2)` had discordant taxonomies. Two sequences mapped to `r max_taxa[1,2]-1` and `r max_taxa[2,2]-1` duplicate sequences and both contained `r max_taxa[1,3]` different taxonomies. There was also a sequence had `r max(dups[,2]])-1` duplicates and contained `r dups[which.max(dups[,2]),3]` different taxonomies.
+We next asked whether the lack of consistency in labeling would affect the taxonomic identification of the sequences. The `r sum(dups$V2)-nrow(dups)` duplicated V4 sequences represented `r nrow(dups)` unique sequences. Among the `r sum(dups$V2==2)` reference sequences that had one duplicate, `r sum(dups$V2==2 & dups$V3==2)` had discordant taxonomies. Among those `r sum(dups$V2 > 2)` sequences with two or more duplicates, `r sum(dups$V2>2 & dups$V3>=2)` had discordant taxonomies. Two sequences mapped to `r max_taxa[1,2]-1` and `r max_taxa[2,2]-1` duplicate sequences and both contained `r max_taxa[1,3]` different taxonomies. There was also a sequence had `r max(dups[,2])-1` duplicates and contained `r dups[which.max(dups[,2]),3]` different taxonomies.
 
 
 ***Evalution of an open-source alternative to USEARCH.***
