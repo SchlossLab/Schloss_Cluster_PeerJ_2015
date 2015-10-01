@@ -14,7 +14,7 @@ geometry: margin=1.0in
 
 ```{r knitr.settings, eval=TRUE, echo=FALSE, cache=TRUE}
 opts_chunk$set("tidy" = TRUE)
-opts_chunk$set("echo" = TRUE)
+opts_chunk$set("echo" = FALSE)
 opts_chunk$set("eval" = TRUE)
 opts_chunk$set("warning" = FALSE)
 opts_chunk$set("cache" = FALSE)
@@ -72,11 +72,19 @@ n_groups <- ncol(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good
 
 [   Something, something, something.    ]
 
+* Compare MCC and its variation when using different algorithms
+* Address stability
+* Quality of algorithms are data-dependent
+
 
 
 ***Evalution of an open-source alternative to USEARCH.*** The AGC and DGC algorithms appear to perform as well and possibly than the hierarchical clustering algorithms for some datasets. These algorithms utilize the USEARCH program (REF), which is not available as open source code and is only available for free to academic users as a 32-bit program. Access for non-academic users and those needing the 64-bit version is available commercially from the developer. An alternative to USEARCH is VSEARCH, which is being developed in parallel to USEARCH as a open-source alternative. One subtle difference between the two programs is that USEARCH employs a heuristic to determine when to stop searching a database because it think it has found the best hit or does not believe that the database contains a hit. This means that the best possible match is not necessarily returned once a highly similar hit is obtained. In contrast, VSEARCH does not utilize the heuristic, which the VSEARCH developers claim enhances the sensitivity relative to USEARCH. Using the two datasets, we determined whether the AGC and DGC algorithms as implemented by the two methods yielded sequencing assignments of similar quality.
 
 [   Something, something, something.    ]
+
+* MCC for VAGC/VDGC > AGC/DGC
+* MCC for VAGC and VDGC are basically the same
+* Stability of VAGC/VDGC goes up
 
 This also explains the variation observed in the AGC and DGC algorithms, which rely upon the USEARCH algorithm.
 
@@ -129,5 +137,27 @@ Beyond comparing the abundance of specific OTUs across samples, the reference da
 
 ## Methods
 
-***Roesch Canadian soil dataset***
+***454 FLX-generated Roesch Canadian soil dataset***
 After obtaining the 16S rRNA gene fragments from GenBank (accessions EF308591-EF361836), we followed the methods outlined by the He study by removing any sequence that contained an ambiguous base, was identified as being a chimera, and fell outside a defined sequence length. Although they reported observing a total of 50,542 sequences that were represented by 13,293 unique sequences, we obtained a total of `r length(scan("data/he/canada_soil.good.unique.pick.redundant.fasta", what="", sep="\n", quiet=T))/2` sequences that were represented by `r length(scan("data/he/canada_soil.good.unique.pick.fasta", what="", sep="\n", quiet=T))/2` unique sequences. Similar to the He study, we randomly sampled, without replacement, 20, 40, 60, and 80% of the sequences from the full data set. The random sampling was repeated 30 times. The order of the sequences in the full dataset was randomly permuted without replacement to generate an additional 30 datasets. For the hierarchical clustering algorithms and to generate a distance matrix, the pairwise distances between sequences were calculated in mothur using the pairwise.seqs command with the default Needleman-Wunsch alignment algorithm and parameters. Execution of the clustering algorithms was performed as described in the original He study using mothur (v.1.37) and QIIME (v.1.9.1) as appropriate.
+
+***MiSeq-generated Murine gut microbiota dataset***
+
+
+
+
+
+***Analysis of reference database***
+* used gg_13_8 with the 97_otus.fasta as the reference
+
+
+
+***Calculation of Matthew's Correlation Coefficient***
+
+-> Available within mothur as the sens.spec command
+
+
+***Software availability***
+QIIME v.1.9.1
+mothur v.1.37.0
+R v.3.2
+Reproducible workflow including this manuscript as a literate programming document is available at https://github.com/SchlossLab/Schloss_Cluster_PeerJ_2015
