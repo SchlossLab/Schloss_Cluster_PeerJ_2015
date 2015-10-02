@@ -23,10 +23,10 @@ options(scipen=999)
 
 inline_hook <- function(x){
   if(is.numeric(x)){
-    paste(format(x,digits=2))
+    paste(format(x,big.mark=','))
   }
 }
-knitr::knit_hooks$set(big.sep=',')
+knitr::knit_hooks$set(inline=inline_hook)
 
 ```
 
