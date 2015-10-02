@@ -12,6 +12,14 @@ fontsize: 11pt
 geometry: margin=1.0in
 ---
 
+## To Do:
+* miseq analysis
+* methods section
+* references
+* figure captions
+
+
+
 ```{r knitr.settings, eval=TRUE, echo=FALSE, cache=TRUE}
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = FALSE)
@@ -60,12 +68,12 @@ A recent analysis by He and colleagues (REF) attempted to characterize the three
 
 ## Results and Discussion
 ```{r}
-z <- read.table(file="data/process/he.mcc_ref.summary", header=T)
+he_stability <- read.table(file="data/process/he.mcc_ref.summary", header=T)
 ```
 
 ***Summary and replication of He study.*** We sought to identify the more critical analyses performed in the He study. Similar to their study, we obtained the Canadian soil dataset from Roesch et al. (REF) and processed the sequences as described in their analysis. In our opinion there were three important tests.
 
-First, we sought to quantify whether the clustering observed for a subset of the data represented the same clustering that was found with the full dataset. The He study found that when they used the open and closed-reference methods clusters formed using the subset data most closely resembled those of the full dataset. Among the *de novo* clustering methods they observed that the abundance-based greedy clustering (AGC) algorithm followed by single linkage (SL), distance-based greedy clustering (DGC), complete linkage (CL), and average linkage (AL) algorithms. They observed a broad range of MCC values among their AL replicates, which was not explained by the authors. We first sought to assess calculated the MCC for for each of the clustering algorithms using 20, 40, 60, and 80% relative to the clusters formed by the algorithms using the full dataset (Figure 1A). Because a random number generator is used in some of algorithms to break ties where pairs of sequences have the same distance between them, similar to the He study, we replicated each algorithm and subsample 30 times. Across these sequencing depths, we observed that the stability of the SL and CL algorithms were highly sensitive to sampling effort relative to the AL, AGC, and DGC algorithms (Figure 1A). Our results (Figure 1B) largely confirmed those of Figure 4C of He study with one notable exception. In the He study, when comparing the OTUs formed using the AL algorithm with 60% of the data, they observed a mean MCC value of approximately 0.63 (95% confidence interval between approximately 0.15 and 0.75). In contrast, we observed a mean value of `r round(z[z$method=="an" & z$fraction==0.6, "mean"], 2)` (95% confidence interval between `r round(z[z$method=="an" & z$fraction==0.6, "lci"], 2)` and `r round(z[z$method=="an" & z$fraction==0.6, "uci"], 2)`). This result suggests that the AL algorithm was far more stabile than indicated in the He study. Regardless, it supports the assertion that the clustering observed for the subset of the data does not represent the same clustering that was found with the full dataset; however, the significance of these differences is unclear.
+First, we sought to quantify whether the clustering observed for a subset of the data represented the same clustering that was found with the full dataset. The He study found that when they used the open and closed-reference methods clusters formed using the subset data most closely resembled those of the full dataset. Among the *de novo* clustering methods they observed that the abundance-based greedy clustering (AGC) algorithm followed by single linkage (SL), distance-based greedy clustering (DGC), complete linkage (CL), and average linkage (AL) algorithms. They observed a broad range of MCC values among their AL replicates, which was not explained by the authors. We first sought to assess calculated the MCC for for each of the clustering algorithms using 20, 40, 60, and 80% relative to the clusters formed by the algorithms using the full dataset (Figure 1A). Because a random number generator is used in some of algorithms to break ties where pairs of sequences have the same distance between them, similar to the He study, we replicated each algorithm and subsample 30 times. Across these sequencing depths, we observed that the stability of the SL and CL algorithms were highly sensitive to sampling effort relative to the AL, AGC, and DGC algorithms (Figure 1A). Our results (Figure 1B) largely confirmed those of Figure 4C of He study with one notable exception. In the He study, when comparing the OTUs formed using the AL algorithm with 60% of the data, they observed a mean MCC value of approximately 0.63 (95% confidence interval between approximately 0.15 and 0.75). In contrast, we observed a mean value of `r round(he_stability[he_stability$method=="an" & he_stability$fraction==0.6, "mean"], 2)` (95% confidence interval between `r round(he_stability[he_stability$method=="an" & he_stability$fraction==0.6, "lci"], 2)` and `r round(he_stability[he_stability$method=="an" & he_stability$fraction==0.6, "uci"], 2)`). This result suggests that the AL algorithm was far more stabile than indicated in the He study. Regardless, it supports the assertion that the clustering observed for the subset of the data does not represent the same clustering that was found with the full dataset; however, the significance of these differences is unclear.
 
 Second, rarefaction curves calculated using clusters obtained using a portion of the dataset did not overlap with rarefaction curves generated using clusters generated from the full dataset. This result was originally observed in the Roesch study using the complete linkage algorithm and was reproduced in the He study where this result was more pronounced problem when using the CL, SL, and DGC algorithms relative to the other algorithms. The He and Roesch studies both found that the CL algorithm produced fewer OTUs in the subset than in the rarefied data. Expanding the analysis to other algorithms, the He study found that the SL algorithm produced more OTUs, the AGC produced fewer, and the other algorithms produced similar numbers of OTUs than expected when comparing the subsetted data to the rarefied data. Our results support those of these previous studies (Figure 2). It was clear that inter-method differences were generally more pronounced than the differences observed between rarefying from the full dataset and from clustering the subsetted data. The number of OTUs observed was largest using the CL algorithm, followed by the open-reference algorithm. The AL, AGC, and DGC algorithms all provided comparable numbers of OTUs. Finally, the closed-referene and SL algorithms generated the fewest number of OTUs.
 
@@ -97,19 +105,7 @@ n_groups <- ncol(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good
 
 
 
-***Evalution of an open-source alternative to USEARCH.*** The AGC and DGC algorithms appear to perform as well and possibly than the hierarchical clustering algorithms for some datasets. These algorithms utilize the USEARCH program (REF), which is not available as open source code and is only available for free to academic users as a 32-bit program. Access for non-academic users and those needing the 64-bit version is available commercially from the developer. An alternative to USEARCH is VSEARCH, which is being developed in parallel to USEARCH as a open-source alternative. One subtle difference between the two programs is that USEARCH employs a heuristic to determine when to stop searching a database because it think it has found the best hit or does not believe that the database contains a hit. This means that the best possible match is not necessarily returned once a highly similar hit is obtained. In contrast, VSEARCH does not utilize the heuristic, which the VSEARCH developers claim enhances the sensitivity relative to USEARCH. Using the two datasets, we determined whether the AGC and DGC algorithms as implemented by the two methods yielded sequencing assignments of similar quality.
-
-* Able to parallelize
-
-[   Something, something, something.    ]
-
-* MCC for VAGC/VDGC > AGC/DGC
-* MCC for VAGC and VDGC are basically the same
-* Stability of VAGC/VDGC goes up
-
-This also explains the variation observed in the AGC and DGC algorithms, which rely upon the USEARCH algorithm.
-
-
+***Evalution of an open-source alternative to USEARCH.*** The AGC and DGC algorithms appear to perform as well and possibly than the hierarchical clustering algorithms for some datasets. These algorithms utilize the USEARCH program (REF), which is not available as open source code and is only available for free to academic users as a 32-bit program. Access for non-academic users and those needing the 64-bit version is available commercially from the developer. An alternative to USEARCH is VSEARCH, which is being developed in parallel to USEARCH as a open-source alternative. One subtle difference between the two programs is that USEARCH employs a heuristic to determine when to stop searching a database because it think it has found the best hit or does not believe that the database contains a hit. This means that the best possible match is not necessarily returned once a highly similar hit is obtained. In contrast, VSEARCH does not utilize the heuristic, which the VSEARCH developers claim enhances the sensitivity relative to USEARCH. Using the two datasets, we determined whether the AGC and DGC algorithms as implemented by the two methods yielded sequencing assignments of similar quality. In general the overall trends that we observed with the USEARCH-version of AGC and DGC were also observed with the VSEARCH-verion of the algorithms. When we compared the two implementations of the AGC and DGC algorithms, the OTUs generated by the VSEARCH-verion of the algorithms were as stable or more stable than the USEARCH-version when using 60% of the datasets. In addition, the MCC values for the entire datasets, calculated relative to the distance matrix, were virtually indistinguishable (Figure 4). These results are a strong indication that VSEARCH is a suitable and possibly better replacement for USEARCH for executing the AGC and DGC algorithms.
 
 ```{r rand_ref_analysis}
 rand_ref_u <- read.table(file="data/rand_ref/hits.uclosed.summary", row.names=1)
@@ -184,3 +180,8 @@ Reproducible workflow including this manuscript as a literate programming docume
 \newpage
 
 ## References
+
+
+
+
+## Figures
