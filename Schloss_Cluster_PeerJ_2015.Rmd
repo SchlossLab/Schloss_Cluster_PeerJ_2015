@@ -1,6 +1,6 @@
 ---
 title: "**Accuracy and precision of 16S rRNA gene sequence assignments to OTUs is more important than the stability of OTUs**"
-author: Patrick D. Schloss
+author: Patrick D. Schloss* and Sarah L. Westcott
 date: '`r format(Sys.Date(), format="%B %d, %Y")`'
 bibliography: references.bib
 output:
@@ -28,6 +28,12 @@ inline_hook <- function(x){
 }
 knitr::knit_hooks$set(inline=inline_hook)
 ```
+
+* To whom correspondence should be addressed.
+pschloss@umich.edu
+
+Department of Microbiology and Immunology, University of Michigan, Ann Arbor, MI
+
 
 \newpage
 
@@ -135,19 +141,16 @@ We also observed that regardless of whether we used USEARCH or VSEARCH, the refe
 Beyond comparing the abundance of specific OTUs across samples, the reference database is used in the open and closed-reference algorithms to generate OTU labels that are used in several downstream applications.  to extract information from a reference phylogenetic tree to carrying out UniFrac-based analyses (REFS) and to identify reference genomes for performing analyses such as PICRUSt (REFS). Because these downstream applications depend on the correct and unique labeling of the OTUs, the lack of stability of the labeling is problematic. As one illustration of the effects that incorrect labels would have on an analysis, we asked whether the duplicate sequences had the same taxonomies. Among the `r sum(dups$V2==2)` reference sequences that had one duplicate, `r sum(dups$V2==2 & dups$V3==2)` had discordant taxonomies. Furthermore, among those `r sum(dups$V2 > 2)` sequences with two or more duplicates, `r sum(dups$V2>2 & dups$V3>=2)` had discordant taxonomies. Two sequences mapped to `r max_taxa[1,2]-1` and `r max_taxa[2,2]-1` duplicate sequences and both contained `r max_taxa[1,3]` different taxonomies. There was also a sequence had `r max(dups[,2])-1` duplicates and contained `r dups[which.max(dups[,2]),3]` different taxonomies. Together, these results demonstrate some of the considerable problems with the reference-based clustering of sequences.
 
 
-
-
 ## Conclusions
 It is worth noting that the entire design of the He study was artificial. First, their analysis was based on a single soil sample. Researchers generally have dozens or hundreds of samples that are pooled and clustered together to enable comparison across samples. Second, all of the sequence data from these datasets is pooled for a single analysis. It is unclear why anyone would ever perform an analysis based on a subset of their data (REFS). Because of these points, the value of identifying stable OTUs is unclear. Greater emphasis should be placed on obtaining an optimal balance between splitting similar sequences into separate OTUs and merging disparate sequences into the same OTU. Through the use of the pairwise distances between sequences, we were able to use the MCC to demonstrate that, in general, the AL, AGC, and DGC methods perform better than the others. Although there is concern that running the algorithms multiple times yields different clusterings, we have shown that there is little variation in their MCC values. This suggests that the different clusterings by the same algorithm are equally good. Finally, it is impossible to obtain a clustering with no false positives or false negatives and the optimal algorithm may vary by dataset. With this in mind, researchers are encouraged to run the AL and VSEARCH DGC algorithms and calculate and report their MCC values. MCC values can be calculated in the mothur software package using the `sens.spec` command.
 
 Our analysis of those algorithms that implemented USEARCH as a method for clustering sequences revealed that its heuristic limited its sensitivity. When we replaced USEARCH with VSEARCH, the clustering quality improved. Although there may be parameters in USEARCH that can be tuned to improve the heuristic, these parameters are likely dataset dependent. Based on the data presented in this study, its availability as an open source, and free program, VSEARCH should replace USEARCH in these clustering algorithms. Furthermore, although not tested in our study, VSEARCH can be parallelized leading to potentially significant improvements in speed. Although USEARCh and VSEARCH do utilize aligned sequences, it is important to note that a sequence curation pipeline including denoising, alignment, trimming to a consistent region of the 16S rRNA gene, and chimera checking are critical to making proper inferences (REF).
 
+For the first time, we assessed the ability of reference-based clustering algorithms to capture the actual similarity of the sequences in a dataset. Several studies have lauded both the open and closed-reference approaches for generating reproducible clusterings, yet we showed that both reference-based approaches did a poor job of representing the similarity between the sequences compared to the *de novo* approaches. So, although the clusterings are reproducible and stable across a range of library sizes, the clusterings are a poor representation of the data. We also observed that the clusterings were not actually reproducible when the order of the reference sequences was randomize. When USEARCH was used, the actual number of sequences that mapped to the reference changed depending on the order of the reference. Perhaps most alarming is that the default order of the database provided the worst sensitivity of any of the randomizations we attempted. Even when we used VSEARCH to perform closed-reference clustering and were able to obtain a consistent clusterings, we observed that the labels on the OTUs differed between randomizations. Because the OTU labels are frequently used to identify representative sequences for those OTUs, variation in labels, often representing different taxonomic groups, will have a detrimental effect on the interpretation of downstream analyses.
 
-* Reference-based clustering has many problems
-* Open-reference clustering issues
-* Implemented in numerous pipelines for large projects
+Because the open-reference algorithm is a hybrid of the closed-reference and DGC algorithms, it is also negatively affected by the problems with using USEARCH for both algorithms. An added problem with the open-reference algorithm is that the two phases of the algorithm employ different thresholds. In the closed-reference step, sequences must be within a threshold of a reference to be in the same OTU. This means that two sequences that are 97% similar to a reference and are joined into the same OTU, may only be 94% similar to each other. In the DGC step, the goal is to approximate the AL algorithm which requires that, on average, the sequences within an OTU are at least 97% similar to each other. The end result of the open-reference approach is that sequences that are similar to previously observed sequences are clustered with one threshold while those that are not similar to previously observed sequences are clustered with a different threshold.
 
-* Many difficulties in clustering have to do with underlying data quality.
+As the throughput of sequencing technologies have improved, algorithm development to keep pace. *De novo* clustering algorithms are considerably slower and more computationally intensive than reference-based algorithms and the greedy *de novo* algorithms are faster than the hierarchical. In our experience (REFS), the most significant detriment to execution speed of the *de novo* algorithms has been in adequate removal of sequencing error. As the rate of sequencing error increases so do the number of unique sequences that must be clustered. The speed of the *de novo* algorithms scales approximately quadratically, so that doubling the number of sequences results in a four-fold increase in the time required to execute the algorithm. The rapid expansion in sequencing throughput has been likened to the Red Queen in Lewis Carroll's, *Through the Looking-Glass* who must run in place to keep up to her changing surroundings (REF). Microbial ecologists must continue to refine clustering algorithms to better handle the size of the datasets, but they must also take steps to improve the quality of the underlying data. Ultimately, objective standards must be applied to assess the quality of the data and the quality of OTU clustering.
 
 
 ## Methods
