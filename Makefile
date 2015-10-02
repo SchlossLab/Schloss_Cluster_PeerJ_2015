@@ -486,7 +486,8 @@ data/miseq/mouse.files : code/get_contigsfile.R
 
 
 
-M_FRACTION = 0.05 0.1 0.2 0.4 1.0
+#M_FRACTION = 0.05 0.1 0.2 0.4 1.0
+M_FRACTION = 0.2 0.4 0.6 0.8 1.0
 
 data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta : code/process_mice.sh data/miseq/miseq.files data/references/silva.bacteria.align data/references/trainset10_082014.pds.fasta data/references/trainset10_082014.pds.tax
 	bash code/process_mice.sh data/miseq/miseq.files
@@ -695,34 +696,34 @@ data/miseq/miseq.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,
 MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction data/miseq/miseq.vdgc.rarefaction data/miseq/miseq.vagc.rarefaction
 
 data/miseq/miseq.an.rarefaction : $(MISEQ_AN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.an', 'data/miseq')"
 
 data/miseq/miseq.nn.rarefaction : $(MISEQ_NN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.nn', 'data/miseq')"
 
 data/miseq/miseq.fn.rarefaction : $(MISEQ_FN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('unique.fn', 'data/miseq')"
 
 data/miseq/miseq.agc.rarefaction : $(MISEQ_AGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('agc', 'data/miseq')"
 
 data/miseq/miseq.dgc.rarefaction : $(MISEQ_DGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('dgc', 'data/miseq')"
 
 data/miseq/miseq.closed.rarefaction : $(MISEQ_CLOSED_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('closed', 'data/miseq')"
 
 data/miseq/miseq.open.rarefaction : $(MISEQ_OPEN_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('open', 'data/miseq')"
 
 data/miseq/miseq.swarm.rarefaction : $(MISEQ_SWARM_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('swarm', 'data/miseq')"
 
 data/miseq/miseq.vdgc.rarefaction : $(MISEQ_VDGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('vdgc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vdgc', 'data/miseq')"
 
 data/miseq/miseq.vagc.rarefaction : $(MISEQ_VAGC_LIST) code/rarefy_data.R
-	R -e "source('code/rarefy_data.R');rarefy_sobs('vagc', 'data/miseq', c('0.05', '0.1', '0.2', '0.4', '1.0'))"
+	R -e "source('code/rarefy_data.R');rarefy_sobs('vagc', 'data/miseq')"
 
 
 
@@ -876,7 +877,7 @@ results/figures/figure_2_schl.pdf : code/build_figure2.R data/process/schloss.ra
 	R -e "source('code/build_figure2.R'); build_figure2('schloss', '$@')"
 
 results/figures/figure_2_miseq.pdf : code/build_figure2.R data/process/miseq.rarefaction.summary
-	R -e "source('code/build_figure2.R'); build_figure2('miseq', '$@')"
+	R -e "source('code/build_figure2.R'); build_figure2('miseq', '$@', 'topright')"
 
 
 results/figures/figure_3.pdf : code/build_figure3.R data/process/he.mcc.summary
