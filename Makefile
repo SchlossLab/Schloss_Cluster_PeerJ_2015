@@ -166,10 +166,10 @@ data/he/he.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*nn.sensspec', 'data/he/he.nn.pool_sensspec')"
 
 data/he/he.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_DGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*dgc.sensspec', 'data/he/he.dgc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*\\\.dgc.sensspec', 'data/he/he.dgc.pool_sensspec')"
 
 data/he/he.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*agc.sensspec', 'data/he/he.agc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*\\\.agc.sensspec', 'data/he/he.agc.pool_sensspec')"
 
 data/he/he.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_OPEN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*open.sensspec', 'data/he/he.open.pool_sensspec')"
@@ -415,10 +415,10 @@ data/schloss/schloss.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst lis
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*nn.sensspec', 'data/schloss/schloss.nn.pool_sensspec')"
 
 data/schloss/schloss.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_DGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*dgc.sensspec', 'data/schloss/schloss.dgc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*\\\.dgc.sensspec', 'data/schloss/schloss.dgc.pool_sensspec')"
 
 data/schloss/schloss.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*agc.sensspec', 'data/schloss/schloss.agc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*\\\.agc.sensspec', 'data/schloss/schloss.agc.pool_sensspec')"
 
 data/schloss/schloss.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_OPEN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*open.sensspec', 'data/schloss/schloss.open.pool_sensspec')"
@@ -672,10 +672,10 @@ data/miseq/miseq.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,se
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*nn.sensspec', 'data/miseq/miseq.nn.pool_sensspec')"
 
 data/miseq/miseq.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_DGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*dgc.sensspec', 'data/miseq/miseq.dgc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*\\\.dgc.sensspec', 'data/miseq/miseq.dgc.pool_sensspec')"
 
 data/miseq/miseq.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AGC_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*agc.sensspec', 'data/miseq/miseq.agc.pool_sensspec')"
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*\\\.agc.sensspec', 'data/miseq/miseq.agc.pool_sensspec')"
 
 data/miseq/miseq.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_OPEN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*open.sensspec', 'data/miseq/miseq.open.pool_sensspec')"
