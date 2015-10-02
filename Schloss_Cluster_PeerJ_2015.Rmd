@@ -20,7 +20,17 @@ opts_chunk$set("warning" = FALSE)
 opts_chunk$set("cache" = FALSE)
 
 options(scipen=999)
+
+inline_hook <- function(x){
+  if(is.numeric(x)){
+    paste(format(x,digits=2))
+  }
+}
+knitr::knit_hooks$set(big.sep=',')
+
 ```
+
+* possible to include commas for large numbers?
 
 ## Introduction
 
@@ -79,6 +89,8 @@ n_groups <- ncol(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good
 
 
 ***Evalution of an open-source alternative to USEARCH.*** The AGC and DGC algorithms appear to perform as well and possibly than the hierarchical clustering algorithms for some datasets. These algorithms utilize the USEARCH program (REF), which is not available as open source code and is only available for free to academic users as a 32-bit program. Access for non-academic users and those needing the 64-bit version is available commercially from the developer. An alternative to USEARCH is VSEARCH, which is being developed in parallel to USEARCH as a open-source alternative. One subtle difference between the two programs is that USEARCH employs a heuristic to determine when to stop searching a database because it think it has found the best hit or does not believe that the database contains a hit. This means that the best possible match is not necessarily returned once a highly similar hit is obtained. In contrast, VSEARCH does not utilize the heuristic, which the VSEARCH developers claim enhances the sensitivity relative to USEARCH. Using the two datasets, we determined whether the AGC and DGC algorithms as implemented by the two methods yielded sequencing assignments of similar quality.
+
+* Able to parallelize
 
 [   Something, something, something.    ]
 
