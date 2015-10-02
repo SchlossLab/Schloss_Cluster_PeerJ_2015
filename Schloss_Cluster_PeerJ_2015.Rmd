@@ -27,10 +27,14 @@ inline_hook <- function(x){
   }
 }
 knitr::knit_hooks$set(big.sep=',')
-
 ```
+\newpage
 
-* possible to include commas for large numbers?
+## Abstract
+
+
+
+\newpage
 
 ## Introduction
 
@@ -59,8 +63,6 @@ First, we sought to quantify whether the clustering observed for a subset of the
 Second, rarefaction curves calculated using clusters obtained using a portion of the dataset did not overlap with rarefaction curves generated using clusters generated from the full dataset. This result was originally observed in the Roesch study using the complete linkage algorithm and was reproduced in the He study where this result was more pronounced problem when using the CL, SL, and DGC algorithms relative to the other algorithms. The He and Roesch studies both found that the CL algorithm produced fewer OTUs in the subset than in the rarefied data. Expanding the analysis to other algorithms, the He study found that the SL algorithm produced more OTUs, the AGC produced fewer, and the other algorithms produced similar numbers of OTUs than expected when comparing the subsetted data to the rarefied data. Our results support those of these previous studies (Figure 2). It was clear that inter-method differences were generally more pronounced than the differences observed between rarefying from the full dataset and from clustering the subsetted data. The number of OTUs observed was largest using the CL algorithm, followed by the open-reference algorithm. The AL, AGC, and DGC algorithms all provided comparable numbers of OTUs. Finally, the closed-referene and SL algorithms generated the fewest number of OTUs.
 
 Third, the authors attempted to describe the effects of the clustering instability on comparisons of communities. They used Adonis to test whether the community structure represented in subsetted communities resembled that of the full dataset. Inspection of these results indicates that although they were able to detect significant p-values, they were were of marginal biological significance. Adonis R statistics close to zero indicate the community structures from the full and subsetted datasets overlapped while values of one indicate the communities are completely different. The He study observed adonis R statistics of 0.02 (closed-reference), 0.03 (open-reference), 0.07 (CL, AGC, DGC), and 0.16 (SL and AL). Regardless of the statistical or biological significance of these results, the analysis does not make sense since the *de novo* and open-reference approaches do not consistently label the OTUs that sequences belong to when the clustering algorithms are run multiple times with different random number seeds. To overcome this, the authors selected representative sequences from each OTU and used those representative sequences to link OTU assignments between the different sized sequence sets. The justification for this analysis is specious as the OTU assignments are based on the data available in the dataset when the sequences are clustered and comparing assignments in this manner are irreconcilable. It is not surprising that the only analysis that did not provide a significant p-value was for the closed-reference analysis, which is the only analysis that provides consistent OTU labels. Because this analysis was so poorly designed, we did not seek to reproduce it.
-
-It is worth noting that the entire design of the He study is artificial. First, their analysis was based on a single sample. Researchers generally have dozens or hundreds of samples that are pooled and clustered together to enable comparison across samples. Second, all of the sequence data from these datasets is pooled for a single analysis. No one would ever perform an analysis based on a subset of their data. Because of these points, the value of identifying stable OTUs is unclear.
 
 
 ***Methods vary in their accuracy.*** More important than the stability of OTUs is whether sequences are assigned to the correct OTUs. A method can generate highly stable OTUs, but the OTUs may be meaningless by poorly representing a specified cutoff in the assignment of sequences to those OTUs. To assess the accuracy and precision of the various methods, we made use of the pairwise distance between the unique sequences to count the number of true positives and negatives and the number of false positives and negatives for each method and sampling depth so that we could calculate the average MCC value as a measure of a method's accuracy and its variation as a measure of its precision. We made three important observations. First, each of the *de novo* methods varied in how sensitive their MCC values were to additional sequences (Figure 3A). The SL and CL algorithms were the most sensitive; however, the MCC values using 80 and 100% of the data did not vary meaningfully when using *de novo* algorithms. Second, the AL algorithm out-performed the other methods followed by DGC, AGC, CL, open-reference, and closed-reference, and SL. Third, with the possible exception of the CL algorithm, the MCC values for each of the only demonstrated a small amount of variation between runs of the algorithm with a different ordering of the input sequences. This indicates that although there may be variation between executions of the same algorithm, they produce OTU assignments that are equally good. Revisiting the concept of stability, we question the value of obtaining stable OTUs when the the full dataset is not optimally assigned to OTUs. Our analysis indicates that the best algorithm for assigning the Canadian soils sequences to OTUs using a 97% threshold is the AL algorithm.
@@ -135,14 +137,14 @@ Beyond comparing the abundance of specific OTUs across samples, the reference da
 
 
 ## Conclusions
-* Stability is meaningless in context of accuracy and precision of clustering assignments
-* *De novo* clustering algorithms outperform reference-based approaches.
-* The best algorithm is data-specific and researchers should evaluate the clustering obtained by multiple methods
+It is worth noting that the entire design of the He study was artificial. First, their analysis was based on a single soil sample. Researchers generally have dozens or hundreds of samples that are pooled and clustered together to enable comparison across samples. Second, all of the sequence data from these datasets is pooled for a single analysis. It is unclear why anyone would ever perform an analysis based on a subset of their data (REFS). Because of these points, the value of identifying stable OTUs is unclear. Greater emphasis should be placed on obtaining an optimal balance between splitting similar sequences into separate OTUs and merging disparate sequences into the same OTU. Through the use of the pairwise distances between sequences, we were able to use the MCC to demonstrate that, in general, the AL, AGC, and DGC methods perform better than the others. Although there is concern that running the algorithms multiple times yields different clusterings, we have shown that there is little variation in their MCC values. This suggests that the different clusterings by the same algorithm are equally good. Finally, it is impossible to obtain a clustering with no false positives or false negatives and the optimal algorithm may vary by dataset. With this in mind, researchers are encouraged to run the AL and VSEARCH DGC algorithms and calculate and report their MCC values. MCC values can be calculated in the mothur software package using the `sens.spec` command.
 
-* Don't use USEARCH to cluster sequences
-* VSEARCH is an excellent alternative
+Our analysis of those algorithms that implemented USEARCH as a method for clustering sequences revealed that its heuristic limited its sensitivity. When we replaced USEARCH with VSEARCH, the clustering quality improved. Although there may be parameters in USEARCH that can be tuned to improve the heuristic, these parameters are likely dataset dependent. Based on the data presented in this study, its availability as an open source, and free program, VSEARCH should replace USEARCH in these clustering algorithms. Furthermore, although not tested in our study, VSEARCH can be parallelized leading to potentially significant improvements in speed. Although USEARCh and VSEARCH do utilize aligned sequences, it is important to note that a sequence curation pipeline including denoising, alignment, trimming to a consistent region of the 16S rRNA gene, and chimera checking are critical to making proper inferences (REF).
+
 
 * Reference-based clustering has many problems
+* Open-reference clustering issues
+* Implemented in numerous pipelines for large projects
 
 * Many difficulties in clustering have to do with underlying data quality.
 
@@ -173,3 +175,8 @@ QIIME v.1.9.1
 mothur v.1.37.0
 R v.3.2
 Reproducible workflow including this manuscript as a literate programming document is available at https://github.com/SchlossLab/Schloss_Cluster_PeerJ_2015
+
+
+\newpage
+
+## References
