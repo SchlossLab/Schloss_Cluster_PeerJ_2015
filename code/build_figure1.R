@@ -12,7 +12,7 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	par(mar=c(5.5, 5, 0.5, 0.5))
 
-	plot(NA, ylim=c(0.5,1), xlim=c(0.1,1), axes=F, ylab="", xlab="")
+	plot(NA, ylim=c(0,1), xlim=c(0,1), axes=F, ylab="", xlab="")
 	clrs <- rainbow(n_methods)
 	abline(v=threshold, col="gray", lwd=2)
 
@@ -24,7 +24,7 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 	axis(2, las=1)
 	box()
 
-	text(x=0.12, y=0.98, label="A", cex=1.5, font=2)
+	text(x=0.02, y=0.98, label="A", cex=1.5, font=2)
 
 	title(ylab="MCC value relative to\nfull dataset")
 
