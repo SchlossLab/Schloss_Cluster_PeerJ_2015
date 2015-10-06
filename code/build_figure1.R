@@ -14,7 +14,7 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	plot(NA, ylim=c(0,1), xlim=c(0.1,1), axes=F, xlab="Fraction of dataset used", ylab="")
 	#clrs <- rainbow(n_methods)
-	clrs <- c("red", "orange", "yellow", rainbow(n_methods)[4], rainbow(n_methods)[5], rainbow(n_methods)[6])
+	clrs <- c("red", "orange", "yellow", rainbow(n_methods)[4], rainbow(n_methods)[5], rainbow(n_methods)[6], rainbow(n_methods)[7])
 	abline(v=threshold, col="gray", lwd=2)
 
 	for(m in 1:n_methods){
