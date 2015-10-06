@@ -30,7 +30,7 @@ options(scipen=999)
 
 inline_hook <- function(x){
   if(is.numeric(x)){
-    paste(format(x,big.mark=','))
+    paste(format(x,big.mark=',', digits=2))
   }
 }
 knitr::knit_hooks$set(inline=inline_hook)
