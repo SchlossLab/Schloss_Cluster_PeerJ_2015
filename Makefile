@@ -860,35 +860,21 @@ data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_POOL_SENSSPEC)
 
 
 
-results/figures/figure_1.pdf : code/build_figure1.R data/process/he.mcc_ref.summary
-	R -e "source('code/build_figure1.R'); build_ref_mcc_plot('he', '$@')"
-
-results/figures/figure_1_schl.pdf : code/build_figure1.R data/process/schloss.mcc_ref.summary
-	R -e "source('code/build_figure1.R'); build_ref_mcc_plot('schloss', '$@')"
-
-results/figures/figure_1_miseq.pdf : code/build_figure1.R data/process/miseq.mcc_ref.summary
-	R -e "source('code/build_figure1.R'); build_ref_mcc_plot('miseq', '$@')"
-
+results/figures/figure_1.pdf : code/build_mcc_plot.R data/process/he.mcc_ref.summary
+	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('he', '$@')"
 
 results/figures/figure_2.pdf : code/build_figure2.R data/process/he.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('he', '$@')"
+
+results/figures/figure_3.pdf : code/build_mcc_plot.R data/process/miseq.mcc_ref.summary
+	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('miseq', '$@')"
+
+results/figures/figure_4.pdf : code/build_figure4.R data/process/he.mcc.summary data/process/miseq.mcc.summary
+	R -e "source('code/build_figure4.R')"
+
 
 results/figures/figure_2_schl.pdf : code/build_figure2.R data/process/schloss.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('schloss', '$@')"
 
 results/figures/figure_2_miseq.pdf : code/build_figure2.R data/process/miseq.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('miseq', '$@', 'topright')"
-
-
-results/figures/figure_3.pdf : code/build_figure3.R data/process/he.mcc.summary
-	R -e "source('code/build_figure3.R'); build_mcc_plot('he', '$@', threshold=1.0)"
-
-results/figures/figure_3_schl.pdf : code/build_figure3.R data/process/schloss.mcc.summary
-	R -e "source('code/build_figure3.R'); build_mcc_plot('schloss', '$@', threshold=1.0)"
-
-results/figures/figure_3_miseq.pdf : code/build_figure3.R data/process/miseq.mcc.summary
-	R -e "source('code/build_figure3.R'); build_mcc_plot('miseq', '$@', threshold=1.0)"
-
-
-results/figures/figure_4.pdf : code/build_figure4.R data/process/he.mcc.summary data/process/miseq.mcc.summary
-	R -e "source('code/build_figure4.R')"
