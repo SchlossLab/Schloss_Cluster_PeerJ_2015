@@ -1,3 +1,4 @@
+
 build_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	data <- read.table(file=paste0("data/process/", dataset, ".mcc.summary"), header=T, stringsAsFactors=F)
@@ -11,9 +12,10 @@ build_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 	layout(matrix(c(1,2), nrow=1), widths=c(4, 3.5))
 
 	par(mar=c(5.5, 5, 0.5, 0.5))
+	clrs <- c("red", "orange", "yellow", rainbow(n_methods)[4:n_methods])
 
 	plot(NA, ylim=c(0,1), xlim=c(0.1,1), axes=F, ylab="", xlab="")
-	clrs <- rainbow(n_methods)
+
 	abline(v=threshold, col="gray", lwd=2)
 
 	for(m in 1:n_methods){
