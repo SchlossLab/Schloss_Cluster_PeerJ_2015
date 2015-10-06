@@ -26,8 +26,8 @@ build_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	text(x=0.12, y=0.98, label="A", cex=1.5, font=2)
 
-	title(ylab="MCC value relative to\nfull dataset")
-
+	title(ylab="MCC value relative to\ndistance matrix")
+	title(xlab="Fraction of dataset used")
 
 
 
