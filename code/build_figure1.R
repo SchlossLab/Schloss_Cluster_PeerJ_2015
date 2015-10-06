@@ -12,7 +12,7 @@ build_ref_mcc_plot <- function(dataset, output_file_name, threshold=0.6){
 
 	par(mar=c(5.5, 5, 0.5, 0.5))
 
-	plot(NA, ylim=c(0,1), xlim=c(0.1,1), axes=F, ylab="Fraction of dataset used", xlab="")
+	plot(NA, ylim=c(0,1), xlim=c(0.1,1), axes=F, xlab="Fraction of dataset used", ylab="")
 	clrs <- rainbow(n_methods)
 	abline(v=threshold, col="gray", lwd=2)
 
