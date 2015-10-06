@@ -889,5 +889,6 @@ results/figures/figure_3_schl.pdf : code/build_figure3.R data/process/schloss.mc
 results/figures/figure_3_miseq.pdf : code/build_figure3.R data/process/miseq.mcc.summary
 	R -e "source('code/build_figure3.R'); build_mcc_plot('miseq', '$@', threshold=1.0)"
 
-results/figures/figure_3_miseq.pdf : code/build_figure4.R data/process/he.mcc.summary data/process/miseq.mcc.summary
+
+results/figures/figure_4.pdf : code/build_figure4.R data/process/he.mcc.summary data/process/miseq.mcc.summary
 	R -e "source('code/build_figure4.R')"
