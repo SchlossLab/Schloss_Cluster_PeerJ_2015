@@ -873,6 +873,10 @@ results/figures/figure_4.pdf : code/build_figure4.R data/process/he.mcc.summary 
 	R -e "source('code/build_figure4.R')"
 
 
+
+results/figures/figure_1_schl.pdf : code/build_mcc_plot.R data/process/schloss.mcc_ref.summary
+	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('schloss', '$@')"
+
 results/figures/figure_2_schl.pdf : code/build_figure2.R data/process/schloss.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('schloss', '$@')"
 
