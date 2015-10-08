@@ -72,7 +72,7 @@ build_mcc_plots <- function(dataset, output_file_name){
 
 	par(mar=c(0,0,0,0))
 	plot.new()
-	text(x=0.3, y=0.5, label="MCC value relative to\ndistance matrix", cex=1.5, srt=90, xpd=TRUE)
+	text(x=0.3, y=0.5, label="MCC value relative to\ndistances", cex=1.5, srt=90, xpd=TRUE)
 
 	### C ###
 	par(mar=c(0.5, 0.5, 0.5, 0.5))
