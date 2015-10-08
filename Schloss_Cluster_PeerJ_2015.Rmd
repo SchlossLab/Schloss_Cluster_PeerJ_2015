@@ -1,5 +1,5 @@
 ---
-title: "**Accuracy and precision of 16S rRNA gene sequence assignments to OTUs is more important than the stability of OTUs**"
+title: "***De novo* clustering methods out-perform reference-based methods for assigning 16S rRNA gene sequences to operational taxonomic units**"
 author: Patrick D. Schloss* and Sarah L. Westcott
 date: '`r format(Sys.Date(), format="%B %d, %Y")`'
 bibliography: references.bib
@@ -14,9 +14,8 @@ geometry: margin=1.0in
 
 ## To Do:
 * references
+* abstract
 * revise
-* subsample vs. sub-sample
-
 
 ```{r knitr.settings, eval=TRUE, echo=FALSE, cache=TRUE}
 opts_chunk$set("tidy" = TRUE)
