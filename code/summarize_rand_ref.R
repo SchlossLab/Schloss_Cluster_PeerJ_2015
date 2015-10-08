@@ -22,6 +22,11 @@ get_hits_summary <- function(rand_hits, orig_hits, method){
 	output_data <- c(summary_stats(rand_n_hits), original=orig_n_hits)
 	output_filename <- paste0("data/rand_ref/hits.", method, "closed.summary")
 	write.table(file=output_filename, x=output_data, row.names=TRUE, col.names=FALSE, quote=FALSE, sep="\t")
+
+       output_filename <- paste0("data/rand_ref/hits.", method, "closed.counts")
+       write.table(file=output_filename, c(rand_n_hits, orig_n_hits), row.names=c(1:30, "original"), col.names=FALSE, sep="\t", quote=FALSE)
+
+
 }
 
 

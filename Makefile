@@ -819,10 +819,10 @@ RAND_REF_VCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.
 $(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh code/closedref.params.txt data/rand_ref/miseq.fasta
 	bash code/run_rand_vref.sh $<
 
-data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
+data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary data/rand_ref/hits.uclosed.counts : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('u')"
 
-data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary : code/summarize_rand_ref.R $(RAND_REF_VCLUSTER)
+data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary data/rand_ref/hits.vclosed.counts : code/summarize_rand_ref.R $(RAND_REF_VCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('v')"
 
 
