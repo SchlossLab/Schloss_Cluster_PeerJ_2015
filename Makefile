@@ -120,6 +120,9 @@ $(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/he)"
 
+HE_VAGC_SENSSPEC = $(subst list,sensspec, $(HE_VAGC_LIST))
+HE_VDGC_SENSSPEC = $(subst list,sensspec, $(HE_VDGC_LIST))
+
 
 HE_REF_MCC = data/he/he.fn.ref_mcc data/he/he.nn.ref_mcc data/he/he.an.ref_mcc data/he/he.agc.ref_mcc data/he/he.dgc.ref_mcc data/he/he.closed.ref_mcc data/he/he.open.ref_mcc data/he/he.swarm.ref_mcc data/he/he.vdgc.ref_mcc data/he/he.vagc.ref_mcc
 data/he/he.an.ref_mcc : code/reference_mcc.R $(HE_AN_LIST) $(HE_NAMES)
@@ -371,6 +374,8 @@ $(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
 
+SCHL_VAGC_SENSSPEC = $(subst list,sensspec, $(SCHL_VAGC_LIST))
+SCHL_VDGC_SENSSPEC = $(subst list,sensspec, $(SCHL_VDGC_LIST))
 
 SCHL_REF_MCC = data/schloss/schloss.fn.ref_mcc data/schloss/schloss.nn.ref_mcc data/schloss/schloss.an.ref_mcc data/schloss/schloss.agc.ref_mcc data/schloss/schloss.dgc.ref_mcc data/schloss/schloss.closed.ref_mcc data/schloss/schloss.open.ref_mcc data/schloss/schloss.swarm.ref_mcc data/schloss/schloss.vdgc.ref_mcc data/schloss/schloss.vagc.ref_mcc
 data/schloss/schloss.an.ref_mcc : code/reference_mcc.R $(SCHL_AN_LIST) $(SCHL_NAMES)
@@ -654,10 +659,10 @@ data/miseq/miseq.dgc.ref_mcc : code/reference_mcc.R $(MISEQ_DGC_LIST) $(MISEQ_NA
 data/miseq/miseq.swarm.ref_mcc : code/reference_mcc.R $(MISEQ_SWARM_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*swarm.list', 'miseq_1.0.*swarm.list', 'miseq.*names', 'data/miseq/miseq.swarm.ref_mcc')"
 
-data/miseq/miseq.vdgc.ref_mcc : code/reference_mcc.R $(miseq_VDGC_LIST) $(MISEQ_NAMES)
+data/miseq/miseq.vdgc.ref_mcc : code/reference_mcc.R $(MISEQ_VDGC_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*vdgc.list', 'miseq_1.0.*vdgc.list', 'miseq.*names', 'data/miseq/miseq.vdgc.ref_mcc')"
 
-data/miseq/miseq.vagc.ref_mcc : code/reference_mcc.R $(miseq_VAGC_LIST) $(MISEQ_NAMES)
+data/miseq/miseq.vagc.ref_mcc : code/reference_mcc.R $(MISEQ_VAGC_LIST) $(MISEQ_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*vagc.list', 'miseq_1.0.*vagc.list', 'miseq.*names', 'data/miseq/miseq.vagc.ref_mcc')"
 
 
@@ -869,7 +874,8 @@ results/figures/figure_2.pdf : code/build_figure2.R data/process/he.rarefaction.
 results/figures/figure_3.pdf : code/build_mcc_plot.R data/process/miseq.mcc_ref.summary
 	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('miseq', '$@')"
 
-results/figures/figure_4.pdf : code/build_figure4.R data/process/he.mcc.summary data/process/miseq.mcc.summary
+results/figures/figure_4.pdf : code/build_figure4.R data/process/miseq.mcc_ref.summary data/process/he.mcc_ref.summary\
+							data/process/he.mcc.summary data/process/miseq.mcc.summary
 	R -e "source('code/build_figure4.R')"
 
 
