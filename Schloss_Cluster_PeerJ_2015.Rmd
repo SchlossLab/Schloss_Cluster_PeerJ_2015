@@ -86,9 +86,9 @@ Third, the authors attempted to describe the effects of the clustering instabili
 ***Methods vary in their accuracy.*** More important than the stability of OTUs is whether sequences are assigned to the correct OTUs. A method can generate highly stable OTUs, but the OTUs may be meaningless by poorly representing a specified cutoff in the assignment of sequences to those OTUs. To assess the accuracy and precision of the various methods, we made use of the pairwise distance between the unique sequences to count the number of true positives and negatives and the number of false positives and negatives for each method and sampling depth so that we could calculate the average MCC value as a measure of a method's accuracy and its variation as a measure of its precision. We made three important observations. First, each of the *de novo* methods varied in how sensitive their MCC values were to additional sequences (Figure 1C). The SL and CL methods were the most sensitive; however, the MCC values using 80 and 100% of the data did not vary meaningfully when using *de novo* methods. Second, the AL method out-performed the other methods followed by DGC, AGC, CL, open-reference, and closed-reference, and SL (Figure 1D). Third, with the possible exception of the CL method, the MCC values for each of the only demonstrated a small amount of variation between runs of the method with a different ordering of the input sequences. This indicates that although there may be variation between executions of the same method, they produce OTU assignments that are equally good. Revisiting the concept of stability, we question the value of obtaining stable OTUs when the the full dataset is not optimally assigned to OTUs. Our analysis indicates that the best method for assigning the Canadian soils sequences to OTUs using a 97% threshold is the AL method.
 
 ```{r, cache=TRUE}
-gg_summary <- read.table(file="data/gg_13_8/gg_13_8_97.v19.summary", header=T)
-n_v4_overlap <- sum(gg_summary$start <= 3967 & gg_summary$end >= 6116)
-n_v9_overlap <- sum(gg_summary$start <= 10179 & gg_summary$end >= 10683)
+n_overlap <- read.table(file="data/gg_13_8/gg_13_8_97.overlap.count", row.names=1)
+n_v4_overlap <- n_overlap["v4", 1]
+n_v9_overlap <- n_overlap["v9", 1]
 
 n_miseq_seqs <- nrow(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.summary"))
 
@@ -114,15 +114,11 @@ rand_ref_v <- read.table(file="data/rand_ref/hits.vclosed.summary", row.names=1)
 ***Problems with reference-based clustering in general and as implemented in QIIME.*** The He study indicated that the closed-reference method generated perfectly stable OTUs. This was unsurprising since, by definition, the method represents a one-to-one mapping of reads to a reference and treats the input sequences independently. An important test that was not performed in the He study was to determine whether the clustering was sensitive to the order of the sequences in the database. The default QIIME database, which was used in the He study and by others, contains full-length sequences that are at most 97% similar to each other. We randomized the order of the reference sequences 30 times and used them to carry out the closed-reference method with the full MiSeq dataset, which contained `r n_unique_miseq_seqs` unique sequences. Surprisingly, we observed that the number of OTUs generated was not the same in each of the randomizations. On average there were `r round(rand_ref_u["mean", 1], 2)` sequences that mapped to a reference OTU per randomization (range from `r round(rand_ref_u["min", 1], 2)` to `r round(rand_ref_u["max", 1], 2)`). The original ordering of the reference resulted in `r rand_ref_u["original", 1]` sequences being mapped, less than the minimum observed number of mapped sequences when the references were randomized. This surprising result was likely due to the performance of the USEARCH heuristic. As with the AGC and DGC methods, if the order of the reference sequences differed between runs, then the heuristic criteria would be triggered at different points. To test this further, we substituted VSEARCH for USEARCH in the closed-reference method. When we used VSEARCH the original ordering of the reference sequences and all randomizations were able to map `r rand_ref_v["original", 1]` sequences to reference OTUs. That VSEARCH mapped more sequences than even the maximum number of sequences found across the USEARCH randomizations supports the VSEARCH developers' assertion that it has greater sensitivity than USEARCH.
 
 ```{r, cache=TRUE}
-v4_dist <- read.table(file="data/gg_13_8/gg_13_8_97.v4_ref.unique.dist")
-n_small_v4_dist <- sum(v4_dist$V3<=0.03)
+small_dists <- read.table(file="data/gg_13_8/gg_13_8_97.small_dist.count", row.names=1)
+n_small_v4_dist <- small_dists["v4",1]
+n_small_v19_dist <- small_dists["v19",1]
 
-v19_dist <- read.table(file="data/gg_13_8/gg_13_8_97.v19_ref.unique.dist")
-n_small_v19_dist <- sum(v19_dist$V3<=0.03)
-
-v19_summary <- read.table(file="data/gg_13_8/gg_13_8_97.v19.summary", header=T)
-
-n_v4_unique <- length(scan("data/gg_13_8/gg_13_8_97.v4_ref.names", what="", sep="\n", quiet=T))
+n_v4_unique <- length(scan(file="data/gg_13_8/gg_13_8_97.v4_ref.names", what="", sep="\n", quiet=T))
 
 u_overlap <- read.table(file="data/rand_ref/overlap.uclosed.summary")
 v_overlap <- read.table(file="data/rand_ref/overlap.vclosed.summary")
