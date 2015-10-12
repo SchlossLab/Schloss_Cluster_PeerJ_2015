@@ -176,7 +176,7 @@ A reproducible workflow including all scripts and this manuscript as a literate 
 
 ## References
 
-\bibliography
+\printbibliography
 
 
 ## Figures
