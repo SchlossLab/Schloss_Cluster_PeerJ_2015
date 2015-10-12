@@ -90,11 +90,10 @@ n_overlap <- read.table(file="data/gg_13_8/gg_13_8_97.overlap.count", row.names=
 n_v4_overlap <- n_overlap["v4", 1]
 n_v9_overlap <- n_overlap["v9", 1]
 
-n_miseq_seqs <- nrow(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.summary"))
-
-n_unique_miseq_seqs <- nrow(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.summary"))
-
-n_groups <- ncol(read.table(file="data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table")) - 2 #subtract 2 to remove the sequence name and total number of sequences
+miseq_info <- read.table(file="data/miseq/miseq.seq.info", row.names=1, quote=F)
+n_groups <- miseq_info["n_groups",1]
+n_miseq_seqs <- miseq_info["n_miseq_seqs",1]
+n_unique_miseq_seqs <- miseq_info["n_unique_miseq_seqs",1]
 
 miseq_stability <- read.table(file="data/process/miseq.mcc_ref.summary", header=T)
 miseq_mcc <- read.table(file="data/process/miseq.mcc.summary", header=T)
