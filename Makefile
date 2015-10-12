@@ -762,6 +762,10 @@ GG_DIST = data/gg_13_8/gg_13_8_97.v4_ref.unique.dist data/gg_13_8/gg_13_8_97.v19
 data/gg_13_8/gg_13_8_97.%.dist : data/gg_13_8/gg_13_8_97.%.align
 	mothur "#dist.seqs(fasta=$<, cutoff=0.15, processors=8)"
 
+data/gg_13_8/gg_13_8_97.small_dist.count : $(GG_DIST) code/count_small_distances.R
+ 	R -e source('code/count_small_distances.R')
+
+
 GG_DIST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.dist)
 data/gg_13_8/gg_13_8_97.v4_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v4_ref.unique.dist
 	cp $< $@
@@ -797,6 +801,9 @@ data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
 # allows us to compare how well the length of the region is represented
 data/gg_13_8/gg_13_8_97.v19.summary : data/gg_13_8/gg_13_8_97.v19.align
 	mothur "#summary.seqs(fasta=$<, processors=8)"
+
+data/gg_13_8/gg_13_8_97.overlap.count : data/gg_13_8/gg_13_8_97.v19.summary code/count_region_overlap.R
+	R -e source('code/count_region_overlap.R')
 
 
 # see how many taxa are represented in duplicate sequences
