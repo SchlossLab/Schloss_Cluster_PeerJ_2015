@@ -737,6 +737,11 @@ data/miseq/miseq.vagc.rarefaction : $(MISEQ_VAGC_LIST) code/rarefy_data.R
 $(REFS)97_otus.fasta : ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
 	cp -p $< $@
 
+$(REFS)97_otus.taxonomy : ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt
+	sed 's/ //g' < ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt > $(REFS)97_otus.taxonomy_temp
+	sed 's/$$/;/' < $(REFS)97_otus.taxonomy_temp > $(REFS)97_otus.taxonomy
+	rm $(REFS)97_otus.taxonomy_temp
+
 data/gg_13_8/gg_13_8_97.v19.align : $(REFS)/97_otus.fasta $(REFS)silva.bact_archaea.align
 	mothur "#align.seqs(fasta=$(REFS)/97_otus.fasta, reference=$(REFS)silva.bact_archaea.align, processors=2, outputdir=data/gg_13_8);pcr.seqs(fasta=data/gg_13_8/97_otus.align, start=1044, end=43116, keepdots=F, processors=8);filter.seqs(vertical=T)"
 	rm data/gg_13_8/97_otus.align.report data/gg_13_8/97_otus.flip.accnos data/gg_13_8/97_otus.pcr.align data/gg_13_8/97_otus.filter
