@@ -23,7 +23,7 @@ opts_chunk$set("eval" = TRUE)
 opts_chunk$set("warning" = FALSE)
 opts_chunk$set("cache" = FALSE)
 
-options(scipen=999)
+options(scipen=99999)
 
 inline_hook <- function(x){
   if(is.numeric(x)){
