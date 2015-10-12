@@ -17,6 +17,8 @@
 # Produces...
 # * *.precluster.pick.pick.fasta
 # * *.precluster.uchime.pick.pick.count_table
+# * *.precluster.pick.pds.wang.pick.taxonomy
+# * *.filter
 #
 ################################################################################
 
@@ -77,9 +79,9 @@ rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.denovo.u
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.tax.summary
 rm $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy
-rm $MISEQ_PATH/*.filter
 
 #keeping...
 # $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta
 # $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table
 # $MISEQ_PATH/*.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy
+# $MISEQ_PATH/*.filter
