@@ -906,3 +906,22 @@ results/figures/figure_2_schl.pdf : code/build_figure2.R data/process/schloss.ra
 
 results/figures/figure_2_miseq.pdf : code/build_figure2.R data/process/miseq.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('miseq', '$@', 'topright')"
+
+
+get.paper_data : data/gg_13_8/gg_13_8_97.v4_ref.names\
+	data/he/canada_soil.good.unique.pick.redundant.fasta\
+	data/he/canada_soil.good.unique.pick.fasta\
+	data/process/he.mcc_ref.summary\
+	data/gg_13_8/gg_13_8_97.overlap.count\
+	data/miseq/miseq.seq.info\
+	data/process/miseq.mcc_ref.summary\
+	data/process/miseq.mcc.summary\
+	data/rand_ref/hits.uclosed.summary\
+	data/rand_ref/hits.vclosed.summary\
+	data/gg_13_8/gg_13_8_97.small_dist.count\
+	data/rand_ref/overlap.uclosed.summary\
+	data/rand_ref/overlap.vclosed.summary\
+	data/gg_13_8/duplicate.analysis\
+
+write.paper : Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
+	R -e "render('Schloss_Cluster_PeerJ_2015.Rmd')"
