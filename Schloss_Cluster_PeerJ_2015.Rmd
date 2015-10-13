@@ -17,13 +17,12 @@ geometry: margin=1.0in
 * revise
 * add sensitivity/specificity of closed-reference searching
 
-```{r knitr.settings, eval=TRUE, echo=FALSE, cache=TRUE}
+```{r knitr_settings, eval=TRUE, echo=FALSE, cache=FALSE}
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = FALSE)
 opts_chunk$set("eval" = TRUE)
 opts_chunk$set("warning" = FALSE)
 opts_chunk$set("cache" = FALSE)
-
 
 inline_hook <- function(x){
   if(is.numeric(x)){
@@ -69,7 +68,7 @@ A recent analysis by He and colleagues (REF) attempted to characterize the three
 
 
 ## Results and Discussion
-```{r}
+```{r he_stability_analysis}
 he_stability <- read.table(file="data/process/he.mcc_ref.summary", header=T)
 ```
 
@@ -84,12 +83,14 @@ Third, the authors attempted to describe the effects of the clustering instabili
 
 ***Methods vary in their accuracy.*** More important than the stability of OTUs is whether sequences are assigned to the correct OTUs. A method can generate highly stable OTUs, but the OTUs may be meaningless by poorly representing a specified cutoff in the assignment of sequences to those OTUs. To assess the accuracy and precision of the various methods, we made use of the pairwise distance between the unique sequences to count the number of true positives and negatives and the number of false positives and negatives for each method and sampling depth so that we could calculate the average MCC value as a measure of a method's accuracy and its variation as a measure of its precision. We made three important observations. First, each of the *de novo* methods varied in how sensitive their MCC values were to additional sequences (Figure 1C). The SL and CL methods were the most sensitive; however, the MCC values using 80 and 100% of the data did not vary meaningfully when using *de novo* methods. Second, the AL method out-performed the other methods followed by DGC, AGC, CL, open-reference, and closed-reference, and SL (Figure 1D). Third, with the possible exception of the CL method, the MCC values for each of the only demonstrated a small amount of variation between runs of the method with a different ordering of the input sequences. This indicates that although there may be variation between executions of the same method, they produce OTU assignments that are equally good. Revisiting the concept of stability, we question the value of obtaining stable OTUs when the the full dataset is not optimally assigned to OTUs. Our analysis indicates that the best method for assigning the Canadian soils sequences to OTUs using a 97% threshold is the AL method.
 
-```{r, cache=TRUE}
+```{r region_overlap}
 n_overlap <- read.table(file="data/gg_13_8/gg_13_8_97.overlap.count", row.names=1)
 n_v4_overlap <- n_overlap["v4", 1]
 n_v9_overlap <- n_overlap["v9", 1]
 n_v19_total <- n_overlap["v19", 1]
+```
 
+```{r miseq_analysis}
 miseq_info <- read.table(file="data/miseq/miseq.seq.info", row.names=1)
 n_groups <- miseq_info["n_groups",1]
 n_miseq_seqs <- miseq_info["n_miseq_seqs",1]
@@ -98,7 +99,6 @@ n_unique_miseq_seqs <- miseq_info["n_unique_miseq_seqs",1]
 miseq_stability <- read.table(file="data/process/miseq.mcc_ref.summary", header=T)
 miseq_mcc <- read.table(file="data/process/miseq.mcc.summary", header=T)
 ```
-
 
 ***Deep sampling of 16S rRNA genes.*** Three factors make the Canadian soil dataset less than desirable to evaluate clustering methods. First, the Canadian soil dataset that the He study used to analyze the stability of OTUs is one of the earliest 16S rRNA gene sequence datasets published using the 454 FLX platform. Developments in sequencing technology now permits the sequencing of millions of sequences for a study. In addition, because the original phred quality scores and flowgram data are not available, it was not possible to adequately remove sequencing errors (REFS). The large number of sequences that one would expect to remain in the dataset are likely to negatively affect the performance of all of the clustering methods. Second, the dataset used in the He study covered the V9 region of the 16S rRNA gene. For a variety of reasons, this region is not well represented in databases, including the reference database used by the closed and open-reference methods. Of the `r n_v19_total` sequences in the default QIIME database, only `r n_v4_overlap` fully cover the V9 region. In contrast, `r n_v4_overlap` of the sequences fully covered the V4 region. Inadequate coverage of the V9 region would adversely affect the ability of the reference-based methods to assign sequences to OTUs. Third, our previous analysis has shown that the V9 region evolves at a rate much slower than the rest of the gene. With these points in mind, we compared the clustering assignment for each of these methods using a time series experiment that was obtained using mouse stool (REFS). The MiSeq platform was used to generate `r n_miseq_seqs` sequences from the V4 region of the 16S rRNA gene of `r n_groups` samples. Parallel sequencing of a mock community indicated that the sequencing error rate was approximately 0.02% (REFS). Although no dataset is perfect for exhaustively testing these clustering methods, this dataset was useful for demonstrating several points. First, when using 60% of the data the stability relationships amongst the different methods were similar to what we observed using the He dataset (Figure 3AB). With the exception for the clusters generated using CL, the methods all performed very well with stabilities greater than `r round(min(miseq_stability[miseq_stability$fraction=="0.6" & miseq_stability$method != "fn","mean"]), 2)`. Second, the MCC values calculated relative to the distances between sequences were generally higher than was observed for the He dataset for all of the methods except for CL and SL. Surprisingly, the MCC values for the DGC (`r round(miseq_mcc[miseq_mcc$fraction==1.0 & miseq_mcc$method == "dgc","mean"],2)`)  and AGC (`r round(miseq_mcc[miseq_mcc$fraction==1.0 & miseq_mcc$method == "agc","mean"],2)`) methods were comparable to the AL method (`r round(miseq_mcc[miseq_mcc$fraction==1.0 & miseq_mcc$method == "an","mean"],2)`; Figure 3CD). This result suggests that the optimal method may be database-dependent. Finally, as was observed with the He dataset, there was little variation in MCC values observed among the 30 randomizations. Therefore, although the methods have a stochastic component, the OTU assignments do not vary meaningfully. The results from both the Canadian soil and murine microbiota datasets demonstrate that the *de novo* methods can generate very stable OTU assignments, as defined by the He study, and that the assignments are highly reproducible. Most importantly, these analyses demonstrate that the OTU assignments using the AL, AGC, and DGC *de novo* methods are consistently more robust than either of the reference-based methods.
 
@@ -112,7 +112,7 @@ rand_ref_v <- read.table(file="data/rand_ref/hits.vclosed.summary", row.names=1)
 
 ***Problems with reference-based clustering in general and as implemented in QIIME.*** The He study indicated that the closed-reference method generated perfectly stable OTUs. This was unsurprising since, by definition, the method represents a one-to-one mapping of reads to a reference and treats the input sequences independently. An important test that was not performed in the He study was to determine whether the clustering was sensitive to the order of the sequences in the database. The default QIIME database, which was used in the He study and by others, contains full-length sequences that are at most 97% similar to each other. We randomized the order of the reference sequences 30 times and used them to carry out the closed-reference method with the full MiSeq dataset, which contained `r n_unique_miseq_seqs` unique sequences. Surprisingly, we observed that the number of OTUs generated was not the same in each of the randomizations. On average there were `r round(rand_ref_u["mean", 1], 2)` sequences that mapped to a reference OTU per randomization (range from `r round(rand_ref_u["min", 1], 2)` to `r round(rand_ref_u["max", 1], 2)`). The original ordering of the reference resulted in `r rand_ref_u["original", 1]` sequences being mapped, less than the minimum observed number of mapped sequences when the references were randomized. This surprising result was likely due to the performance of the USEARCH heuristic. As with the AGC and DGC methods, if the order of the reference sequences differed between runs, then the heuristic criteria would be triggered at different points. To test this further, we substituted VSEARCH for USEARCH in the closed-reference method. When we used VSEARCH the original ordering of the reference sequences and all randomizations were able to map `r rand_ref_v["original", 1]` sequences to reference OTUs. That VSEARCH mapped more sequences than even the maximum number of sequences found across the USEARCH randomizations supports the VSEARCH developers' assertion that it has greater sensitivity than USEARCH.
 
-```{r, cache=TRUE}
+```{r database_analysis}
 small_dists <- read.table(file="data/gg_13_8/gg_13_8_97.small_dist.count", row.names=1)
 n_small_v4_dist <- small_dists["v4",1]
 n_small_v19_dist <- small_dists["v19",1]
