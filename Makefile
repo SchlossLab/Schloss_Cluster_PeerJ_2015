@@ -755,12 +755,21 @@ data/gg_13_8/gg_13_8_97.v19_ref.unique.align data/gg_13_8/gg_13_8_97.v19_ref.nam
 	mothur "#screen.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.align, start=3967, end=6116, processors=8); unique.seqs()"
 	mv data/gg_13_8/gg_13_8_97.v19.good.unique.align data/gg_13_8/gg_13_8_97.v19_ref.unique.align
 	mv data/gg_13_8/gg_13_8_97.v19.good.names data/gg_13_8/gg_13_8_97.v19_ref.names
+	rm data/gg_13_8/gg_13_8_97.v19.good.align
+	rm data/gg_13_8/gg_13_8_97.v19.bad.accnos
 
 data/gg_13_8/gg_13_8_97.v4_ref.unique.align data/gg_13_8/gg_13_8_97.v4_ref.names : data/gg_13_8/gg_13_8_97.v19.bad.accnos data/gg_13_8/gg_13_8_97.v19.align
-	mothur "#remove.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.align, accnos=data/gg_13_8/gg_13_8_97.v19.bad.accnos); pcr.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.pick.align, keepdots=F, start=3967, end=6116, processors=4); unique.seqs()"
-	mv data/gg_13_8/gg_13_8_97.v19.pick.pcr.unique.align data/gg_13_8/gg_13_8_97.v4_ref.unique.align
-	mv data/gg_13_8/gg_13_8_97.v19.pick.pcr.names data/gg_13_8/gg_13_8_97.v4_ref.names
+	mothur "#remove.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.align, accnos=data/gg_13_8/gg_13_8_97.v19.bad.accnos); pcr.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.pick.align, keepdots=F, start=3967, end=6116, processors=4); degap.seqs(); unique.seqs()"
+	cut -f 1 data/gg_13_8/gg_13_8_97.v19.pick.pcr.ng.names > data/gg_13_8/gg_13_8_97.v19.unique.accnos
+	mothur "#get.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.pick.pcr.align, accnos=data/gg_13_8/gg_13_8_97.v19.unique.accnos)"
+	mv data/gg_13_8/gg_13_8_97.v19.pick.pcr.pick.align data/gg_13_8/gg_13_8_97.v4_ref.unique.align
+	mv data/gg_13_8/gg_13_8_97.v19.pick.pcr.ng.names data/gg_13_8/gg_13_8_97.v4_ref.names
 	rm data/gg_13_8/gg_13_8_97.v19.pick.align
+	rm data/gg_13_8/gg_13_8_97.v19.pick.pcr.align
+	rm data/gg_13_8/gg_13_8_97.v19.pick.pcr.ng.fasta
+	rm data/gg_13_8/gg_13_8_97.v19.pick.pcr.ng.unique.fasta
+	rm data/gg_13_8/gg_13_8_97.v19.unique.accnos
+
 
 GG_DIST = data/gg_13_8/gg_13_8_97.v4_ref.unique.dist data/gg_13_8/gg_13_8_97.v19_ref.unique.dist
 data/gg_13_8/gg_13_8_97.%.dist : data/gg_13_8/gg_13_8_97.%.align
@@ -770,36 +779,36 @@ data/gg_13_8/gg_13_8_97.small_dist.count : $(GG_DIST) code/count_small_distances
 	R -e "source('code/count_small_distances.R')"
 
 
-GG_DIST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.dist)
-data/gg_13_8/gg_13_8_97.v4_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v4_ref.unique.dist
-	cp $< $@
-
-GG_NAMES_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.names)
-data/gg_13_8/gg_13_8_97.v4_ref.%.names : data/gg_13_8/gg_13_8_97.v4_ref.names
-	cp $< $@
-
-GG_DIST_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.unique.dist)
-data/gg_13_8/gg_13_8_97.v19_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v19_ref.unique.dist
-	cp $< $@
-
-GG_NAMES_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.names)
-data/gg_13_8/gg_13_8_97.v19_ref.%.names : data/gg_13_8/gg_13_8_97.v19_ref.names
-	cp $< $@
-
-
-GG_CLUST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.an.list)
-GG_CLUST_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.unique.an.list)
-data/gg_13_8/gg_13_8_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@)
-	$(eval DIST=$(word 1,$^))
-	$(eval NAMES=$(word 2,$^))
-	$(eval REP=$(subst .,,$(suffix $(subst .names,,$(NAMES)))))
-	@echo $(REP)
-	mothur "#cluster(column=$(DIST), name=$(NAMES), seed=$(REP))"
-	rm $(subst list,sabund,$@)
-	rm $(subst list,rabund,$@)
-
-data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
-	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_8/', 'gg_13_8_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_8_97.v19_ref.\\\d\\\d.unique.an.list', 'data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc')"
+#GG_DIST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.dist)
+#data/gg_13_8/gg_13_8_97.v4_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v4_ref.unique.dist
+#	cp $< $@
+#
+#GG_NAMES_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.names)
+#data/gg_13_8/gg_13_8_97.v4_ref.%.names : data/gg_13_8/gg_13_8_97.v4_ref.names
+#	cp $< $@
+#
+#GG_DIST_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.unique.dist)
+#data/gg_13_8/gg_13_8_97.v19_ref.%.unique.dist : data/gg_13_8/gg_13_8_97.v19_ref.unique.dist
+#	cp $< $@
+#
+#GG_NAMES_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.names)
+#data/gg_13_8/gg_13_8_97.v19_ref.%.names : data/gg_13_8/gg_13_8_97.v19_ref.names
+#	cp $< $@
+#
+#
+#GG_CLUST_V4 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v4_ref.$R.unique.an.list)
+#GG_CLUST_V19 = $(foreach R,$(REP),data/gg_13_8/gg_13_8_97.v19_ref.$R.unique.an.list)
+#data/gg_13_8/gg_13_8_97%unique.an.list : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@)
+#	$(eval DIST=$(word 1,$^))
+#	$(eval NAMES=$(word 2,$^))
+#	$(eval REP=$(subst .,,$(suffix $(subst .names,,$(NAMES)))))
+#	@echo $(REP)
+#	mothur "#cluster(column=$(DIST), name=$(NAMES), seed=$(REP))"
+#	rm $(subst list,sabund,$@)
+#	rm $(subst list,rabund,$@)
+#
+#data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc : $(GG_CLUST_V4) $(GG_CLUST_V19)
+#	R -e "source('code/reference_mcc.R');run_reference_mcc2('data/gg_13_8/', 'gg_13_8_97.v4_ref.\\\d\\\d.unique.an.list', 'gg_13_8_97.v19_ref.\\\d\\\d.unique.an.list', 'data/gg_13_8/gg_13_8_97.v4_v19.ref_mcc')"
 
 
 # allows us to compare how well the length of the region is represented
