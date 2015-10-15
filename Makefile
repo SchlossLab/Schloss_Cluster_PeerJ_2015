@@ -756,7 +756,6 @@ data/gg_13_8/gg_13_8_97.v19_ref.unique.align data/gg_13_8/gg_13_8_97.v19_ref.nam
 	mv data/gg_13_8/gg_13_8_97.v19.good.unique.align data/gg_13_8/gg_13_8_97.v19_ref.unique.align
 	mv data/gg_13_8/gg_13_8_97.v19.good.names data/gg_13_8/gg_13_8_97.v19_ref.names
 	rm data/gg_13_8/gg_13_8_97.v19.good.align
-	rm data/gg_13_8/gg_13_8_97.v19.bad.accnos
 
 data/gg_13_8/gg_13_8_97.v4_ref.unique.align data/gg_13_8/gg_13_8_97.v4_ref.names : data/gg_13_8/gg_13_8_97.v19.bad.accnos data/gg_13_8/gg_13_8_97.v19.align
 	mothur "#remove.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.align, accnos=data/gg_13_8/gg_13_8_97.v19.bad.accnos); pcr.seqs(fasta=data/gg_13_8/gg_13_8_97.v19.pick.align, keepdots=F, start=3967, end=6116, processors=4); degap.seqs(); unique.seqs()"
