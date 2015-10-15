@@ -172,7 +172,7 @@ Second, we calculated the MCC to determine the quality of the clusterings as pre
 
 
 ***Software availability***
-A reproducible workflow including all scripts and this manuscript as a literate programming document are available at https://github.com/SchlossLab/Schloss_Cluster_PeerJ_2015. The workflow utilized QIIME (v.1.9.1; REFS), mothur (v.1.37.0; REFS), USEARCH (v.1.5.0; REFS), VSEARCH (v.1.5.0; https://github.com/torognes/vsearch), and R (v.3.2; REFS). The Rcpp (REFS), rentrez (REFS), and jsonlite (REFS) packages were used within R.
+A reproducible workflow including all scripts and this manuscript as a literate programming document are available at https://github.com/SchlossLab/Schloss_Cluster_PeerJ_2015. The workflow utilized QIIME (v.1.9.1; REFS), mothur (v.1.37.0; REFS), USEARCH (v.1.5.0; REFS), VSEARCH (v.1.5.0; https://github.com/torognes/vsearch), and R (v.3.2; REFS). The knitr (`r packageDescription("knitr")$Version`, REFS), Rcpp (`r packageDescription("Rcpp")$Version`, REFS), rentrez (`r packageDescription("rentrez")$Version`, REFS), and jsonlite (`r packageDescription("jsonlite")$Version`, REFS) packages were used within R.
 
 
 \newpage
