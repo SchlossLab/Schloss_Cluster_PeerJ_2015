@@ -2,17 +2,21 @@
 #	data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta
 #	data/gg_13_8/97_otus.align
 #	data/references/silva.bact_archaea.align
+#
+#	code/map_to_reference.R
+#	code/distance.cpp
+#
+# Output:
+#	data/rand_ref/miseq.ref.mapping
 
-mothur "#align.seqs(fasta=data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, reference=data/references/silva.bact_archaea.align, outputdir=data/rand_ref, processors=4);
-	filter.seqs(fasta=data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.align-data/gg_13_8/97_otus.align, vertical=T);
-	classify.seqs(fasta=data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.filter.fasta,reference=data/rand_ref/97_otus.filter.fasta, taxonomy=data/references/97_otus.taxonomy, method=knn, numwanted=1, search=distance)"
+mothur "#align.seqs(fasta=data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, reference=data/references/silva.bact_archaea.align, outputdir=data/rand_ref, processors=4); screen.seqs(fasta=data/gg_13_8/97_otus.align, start=13862, end=23443, outputdir=data/rand_ref, processors=8); filter.seqs(fasta=data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.align-data/rand_ref/97_otus.good.align, vertical=T, trump=., processors=8);"
+
+R -e "source('code/map_to_reference.R')"
 
 rm data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.align
 rm data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.align.report
+rm data/rand_ref/97_otus.good.align
+rm data/rand_ref/97_otus.bad.accnos
 rm data/rand_ref/miseq97_otus.filter
 rm data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.filter.fasta
-rm data/rand_ref/97_otus.filter.fasta
-rm data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.filter.97_otus.knn.taxonomy
-rm data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.filter.97_otus.knn.tax.summary
-
-#keep data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.filter.97_otus.knn.match.dist
+rm data/rand_ref/97_otus.good.filter.fasta

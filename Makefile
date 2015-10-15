@@ -823,7 +823,8 @@ data/gg_13_8/gg_13_8_97.overlap.count : data/gg_13_8/gg_13_8_97.v19.summary code
 data/gg_13_8/duplicate.analysis : code/run_duplicate_analysis.R data/gg_13_8/gg_13_8_97.v4_ref.names ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt
 	R -e "source('code/run_duplicate_analysis.R')"
 
-data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.filter.97_otus.knn.match.dist : code/map_mouse_to_gg.sh data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta data/gg_13_8/97_otus.align data/references/silva.bact_archaea.align
+data/rand_ref/miseq.ref.mapping : code/map_mouse_to_gg.sh code/distance.cpp code/map_to_reference.R
+ data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta data/gg_13_8/97_otus.align data/references/silva.bact_archaea.align
 	bash code/map_mouse_to_gg.sh
 
 data/rand_ref/original.fasta : $(REFS)/97_otus.fasta
