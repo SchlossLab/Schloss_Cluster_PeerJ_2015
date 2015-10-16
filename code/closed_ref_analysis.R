@@ -34,7 +34,7 @@ get_sens_spec_data <- function(search_file, true_mapping, duplicate_lookup){
 	tn <- 0
 	fn <- 0
 
-	total <- nrow(true_map)
+	total <- nrow(true_mapping)
 
 	seq_overlap <- intersect(names(true_map), names(obs_map_unique))
 	real_overlap <- true_map[seq_overlap]
@@ -69,7 +69,7 @@ run_sens_spec_analysis <- function(method){
 	true_mapping <- read.table(file="data/rand_ref/miseq.ref.mapping", row.names=1, header=T, stringsAsFactors=F)
 	true_mapping$uniqued <- unique_mapping(true_mapping$references, redundant_ref_map)
 
-	files <- list.files(path="./data/rand_ref", paste0("*.", method, "closed.", method, "c"), include.dirs=TRUE)
+	files <- list.files(path="./data/rand_ref", paste0("*.", method, "closed.", method, "c"), full.names=TRUE)
 	results <- t(sapply(files, get_sens_spec_data, true_mapping, redundant_ref_map))
 
 	write.table(results, paste0('data/rand_ref/closed_ref.', method, 'search.sensspec'), quote=F, sep='\t')
