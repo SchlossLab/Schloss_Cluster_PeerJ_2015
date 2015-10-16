@@ -857,6 +857,14 @@ data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary data/ra
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('v')"
 
 
+data/rand_ref/closed_ref.usearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_UCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('u')"
+
+data/rand_ref/closed_ref.vsearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_VCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('v')"
+
+data/rand_ref/closed_ref.redundancy.analysis : code/closed_ref_analysis.R data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping data/references/97_otus.taxonomy
+	R -e "source('code/closed_ref_analysis.R'); run_redundancy_analysis()"
 
 
 data/process/he.mcc_ref.summary : code/summarize_mcc_ref.R $(HE_REF_MCC)
