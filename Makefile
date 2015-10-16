@@ -847,7 +847,7 @@ $(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh cod
 	bash code/run_rand_uref.sh $<
 
 RAND_REF_VCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.vclosed.vc)) data/rand_ref/original.vclosed.vc
-$(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh code/closedref.params.txt data/rand_ref/miseq.fasta
+$(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh data/rand_ref/miseq.fasta
 	bash code/run_rand_vref.sh $<
 
 data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary data/rand_ref/hits.uclosed.counts : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
