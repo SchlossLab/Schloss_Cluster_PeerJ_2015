@@ -2,6 +2,7 @@
 title: "***De novo* clustering methods out-perform reference-based methods for assigning 16S rRNA gene sequences to operational taxonomic units**"
 bibliography: references.bib
 output:
+  markdown
   pdf_document:
     includes:
       in_header: header.tex
@@ -21,7 +22,9 @@ opts_chunk$set("cache" = FALSE)
 inline_hook <- function(x){
   if(is.numeric(x)){
     paste(format(x,big.mark=',', digits=2, scientific=FALSE))
-  }
+    } else {
+        paste(x)      
+    }
 }
 knitr::knit_hooks$set(inline=inline_hook)
 ```
@@ -170,11 +173,11 @@ After obtaining the 16S rRNA gene fragments from GenBank (accessions EF308591-EF
 The murine 16S rRNA gene sequence data generated from the V4 region using an Illumina MiSeq was obtained from http:/www.mothur.org/MiSeqDevelopmentData/StabilityNoMetaG.tar and was processed as outlined in the original study [@Kozich2013]. Briefly, 250-nt read pairs were assembled into contigs by aligning the reads and correcting discordant base calls by requiring one of the base calls to have a Phred quality score at least 6 points higher than the other. Sequences where it was not possible to resolve the disagreement were culled from the dataset. The sequences were then aligned to a SILVA reference alignment [@Pruesse2007] and any reads that aligned outside of the V4 region were removed from the dataset. Sequences were pre-clustered by combining the abundances of sequences that differed by 2 or fewer nucleotides of a more abundant sequence. Each of the samples was then screened for chimeric sequences using the default parameters in UCHIME [@Edgar2011]. The resulting sequences were processed in the same manner as the Canadian soil dataset with the exception that the distance matrices were calculated based on the SILVA-based alignment.
 
 
-***Analysis of reference database***
+***Analysis of reference database.***
 We utilized the 97% OTUs greengenes reference sequence and taxonomy data (v.13.8) that accompanies the QIIME installation. Because the greengenes reference alignment does a poor job of representing the secondary structure of the 16S rRNA gene [@Schloss2010], we realigned the fasta sequences to a SILVA reference alignment to identify the V4 region of the sequences.
 
 
-***Calculation of Matthew's Correlation Coefficient (MCC)***
+***Calculation of Matthew's Correlation Coefficient (MCC).***
 The MCC was calculated by two approaches in this study using only the dereplicated sequence lists. First, we calculated the MCC to determine the stability of OTU assignments following the approach of the He study. We assumed that the clusters obtained from the 30 randomized full datasets were correct. We counted the number of sequence pairs that were in the same OTU for the subsetted dataset and the full dataset (i.e. true positives; TP), that were in different OTUs for the subsetted dataset and the full dataset (i.e. true negatives; TN), that were in the same OTU for the subsetted dataset and different OTUs in the full dataset (i.e. false positives; FP), and that were in different OTUs for the subsetted dataset and the same OTU in the full dataset (i.e. false negatives; FN). For each set of 30 random subsamplings of the dataset, we counted these parameters against the 30 randomizations of the full dataset. This gave 900 comparisons for each fraction of sequences being used in the analysis. The Matthew's correlation coefficient was then calculated as:
 
 $$
@@ -184,8 +187,8 @@ $$
 Second, we calculated the MCC to determine the quality of the clusterings as previously described [@Schloss2011]. Briefly, we compared the OTU assignments for pairs of sequences to the distance matrix that was calculated between all pairs of aligned sequences. For each dataset that was clustered, those sequences that were in the same OTU and had a distance less than 3% were TPs, those that were in different OTUs and had a distance greater than 3% were TNs, those that were in the same OTU and had a distance greater than 3% were FPs, and those that were in different OTUs and had a distance less than 3% were FNs. The MCC was counted for each dataset using the formula above as implemented in the `sens.spec` command in mothur.
 
 
-***Software availability***
-A reproducible workflow including all scripts and this manuscript as a literate programming document are available at https://github.com/SchlossLab/Schloss_Cluster_PeerJ_2015. The workflow utilized QIIME [v.1.9.1; @Caporaso2010], mothur [v.1.37.0; @Schloss2009], USEARCH [v.6.1; @Edgar2010], VSEARCH [v.1.5.0; @Rognes2015], and R (v.3.2) [@language2015]. The knitr (`r packageDescription("knitr")$Version`) [@xie2013dynamic], Rcpp (`r packageDescription("Rcpp")$Version`) [@eddelbuettel2013seamless], rentrez (`r packageDescription("rentrez")$Version`) [@winter2015rentrez], and jsonlite (`r packageDescription("jsonlite")$Version`) [@ooms2014jsonlite]) packages were used within R.
+***Software availability.***
+A reproducible workflow including all scripts and this manuscript as a literate programming document are available at https://github.com/SchlossLab/Schloss_Cluster_PeerJ_2015. The workflow utilized QIIME [v.1.9.1; @Caporaso2010], mothur [v.1.37.0; @Schloss2009], USEARCH [v.6.1; @Edgar2010], VSEARCH [v.1.5.0; @Rognes2015], and R [v.`r paste(version$major, version$minor, sep='.')`; @language2015]. The knitr [v.`r packageDescription("knitr")$Version`; @xie2013dynamic], Rcpp [v. `r packageDescription("Rcpp")$Version`; @eddelbuettel2013seamless], rentrez [v. `r packageDescription("rentrez")$Version`; @winter2015rentrez], and jsonlite [v. `r packageDescription("jsonlite")$Version`; @ooms2014jsonlite] packages were used within R.
 
 
 \newpage
