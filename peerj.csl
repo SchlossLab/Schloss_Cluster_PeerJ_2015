@@ -121,7 +121,7 @@
             </group>
           </group>
         </else-if>
-        <else-if type="post-weblog webpage" match="any">
+        <else-if type="post-weblog webpage manual" match="any">
           <group>
             <text macro="title"/>
             <group>
@@ -146,6 +146,11 @@
             <text variable="page" prefix=":"/>
           </group>
         </else>
+      </choose>
+      <choose>
+          <if variable="DOI">
+              <text variable="DOI" prefix=" DOI: " suffix="."/>
+          </if>
       </choose>
     </layout>
   </bibliography>
