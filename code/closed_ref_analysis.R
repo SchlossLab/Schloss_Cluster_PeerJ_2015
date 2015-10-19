@@ -1,5 +1,5 @@
 split_line <- function(line){
-	sub_vector_names <- sort(unlist(strsplit(line, ',')))
+	sub_vector_names <- unlist(strsplit(line, ','))
 	sub_vector <- rep(sub_vector_names[1], length(sub_vector_names))
 	names(sub_vector) <- sub_vector_names
 	return(sub_vector)
@@ -82,11 +82,15 @@ map_to_taxonomy <- function(line, taxonomy_data){
 	length(unique(taxonomy_data[otus]))
 }
 
+expand_names <- function(line, names_data){
+	otus <- unlist(strsplit(line, ','))
+	paste(unique(names_data[otus,1]), collapse=',')
+}
 
 run_redundancy_analysis <- function(){
 
-	names_file <- read.table(file="data/gg_13_8/gg_13_8_97.v4_ref.names", stringsAsFactors=F)
-	redundant_ref_map <- split_duplicates(names_file$V2)
+	names_file_map <- read.table(file="data/gg_13_8/gg_13_8_97.v4_ref.names", stringsAsFactors=F, row.names=1)
+	redundant_ref_map <- split_duplicates(names_file_map$V2)
 
 	true_mapping <- read.table(file="data/rand_ref/miseq.ref.mapping", row.names=1, header=T, stringsAsFactors=F)
 	true_mapping$uniqued <- unique_mapping(true_mapping$references, redundant_ref_map)
@@ -96,9 +100,14 @@ run_redundancy_analysis <- function(){
 	names(taxonomy_map) <- rownames(taxonomy_file)
 
 	close_data <- true_mapping[true_mapping$distance <= 0.03,]
-	n_taxa <- sapply(close_data$uniqued, map_to_taxonomy, taxonomy_data=taxonomy_map)
-	n_dups <- nchar(gsub("[^,]", "", close_data$uniqued)) + 1
+	n_taxa_uniqued <- sapply(close_data$uniqued, map_to_taxonomy, taxonomy_data=taxonomy_map)
+	n_dups_uniqued <- nchar(gsub("[^,]", "", close_data$uniqued)) + 1
 
-	write.table(table(n_taxa, n_dups), 'data/rand_ref/closed_ref.redundancy.analysis', quote=F, sep='\t')
+	close_data$expanded <- sapply(close_data$uniqued, expand_names, names_file_map)
+	n_taxa_expanded <- sapply(close_data$expanded, map_to_taxonomy, taxonomy_data=taxonomy_map)
+	n_dups_expanded <- nchar(gsub("[^,]", "", close_data$expanded)) + 1
 
+	write.table(cbind(n_dups_expanded, n_taxa_expanded, n_dups_uniqued, n_taxa_uniqued), row.names=rownames(close_data), 'data/rand_ref/closed_ref.redundancy.analysis', quote=F, sep='\t')
 }
+
+#sequence name / n_total_matches / n_total_taxa / n_close_matches / n_close_taxa
