@@ -947,4 +947,7 @@ get.paper_data : data/gg_13_8/gg_13_8_97.v4_ref.names\
 	results/figures/figure_4.pdf
 
 write.paper : Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
-	R -e "render('Schloss_Cluster_PeerJ_2015.Rmd')"
+	R -e "render('Schloss_Cluster_PeerJ_2015.Rmd', clean=FALSE)"
+	mv Schloss_Cluster_PeerJ_2015.utf8.md Schloss_Cluster_PeerJ_2015.md
+	rm Schloss_Cluster_PeerJ_2015.knit.md
+
