@@ -120,8 +120,8 @@ $(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/he)"
 
-data/he/he.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(HE_SWARM_LIST) $$(addsuffix .dist,$$(basename $$(basename $$(HE_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(HE_SWARM_LIST))))
-	R -e 'source("optimize_swarm_sensspec.R"); optimize_swarm("he")'
+data/he/he.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(HE_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(HE_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(HE_SWARM_LIST))))
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("he")'
 
 
 HE_VAGC_SENSSPEC = $(subst list,sensspec, $(HE_VAGC_LIST))
@@ -375,8 +375,8 @@ $(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
 
-data/schloss/schloss.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(SCHL_SWARM_LIST) $$(addsuffix .dist,$$(basename $$(basename $$(SCHL_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(SCHL_SWARM_LIST))))
-	R -e 'source("optimize_swarm_sensspec.R"); optimize_swarm("schloss")'
+data/schloss/schloss.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(SCHL_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(SCHL_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(SCHL_SWARM_LIST))))
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("schloss")'
 
 SCHL_VAGC_SENSSPEC = $(subst list,sensspec, $(SCHL_VAGC_LIST))
 SCHL_VDGC_SENSSPEC = $(subst list,sensspec, $(SCHL_VDGC_LIST))
@@ -631,8 +631,8 @@ $(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
 
-data/miseq/miseq.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(MISEQ_SWARM_LIST) $$(addsuffix .dist,$$(basename $$(basename $$(MISEQ_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(MISEQ_SWARM_LIST))))
-	R -e 'source("optimize_swarm_sensspec.R"); optimize_swarm("miseq")'
+data/miseq/miseq.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(MISEQ_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(MISEQ_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(MISEQ_SWARM_LIST))))
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("miseq")'
 
 MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc data/miseq/miseq.vdgc.ref_mcc data/miseq/miseq.vagc.ref_mcc
 data/miseq/miseq.an.ref_mcc : code/reference_mcc.R $(MISEQ_AN_LIST) $(MISEQ_NAMES)

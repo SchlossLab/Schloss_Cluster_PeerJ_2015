@@ -22,15 +22,13 @@ optimize_swarm <- function(dataset){
 				system(command)
 
 				#concatenate cutoffs
-				confusion <- rbind(confusion, read.table(file=sensspec, header=T))
+				results <- read.table(file=sensspec, header=T)
+				results$label <- list
+				confusion <- rbind(confusion, results)
 			}
-			confusion$label <- rep(list, length(co))
 		}
 	}
 
 	output_file <- paste0('data/', dataset, '/', dataset, '.swarm.opt.sensspec')
 	write.table(confusion, file=output_file, row.names=FALSE, quote=FALSE, sep='\t')
 }
-optimize_swarm('he')
-optimize_swarm('schloss')
-optimize_swarm('miseq')
