@@ -103,7 +103,7 @@ $(HE_VAGC_LIST) : $$(subst vagc.list,fasta, $$@) code/run_vagc_clust.sh code/uc_
 	bash code/run_vagc_clust.sh $<
 
 
-HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_SWARM_LIST) $(HE_VDGC_LIST) $(HE_VAGC_LIST)
+HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_VDGC_LIST) $(HE_VAGC_LIST)
 
 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
@@ -119,6 +119,10 @@ $(HE_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))
 	$(eval LIST=$(word 2,$^))
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/he)"
+
+data/he/he.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(HE_SWARM_LIST) $$(addsuffix .dist,$$(basename $$(basename $$(HE_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(HE_SWARM_LIST)))
+	R -e 'source("optimize_swarm_sensspec.R"); optimize_swarm("he")'
+
 
 HE_VAGC_SENSSPEC = $(subst list,sensspec, $(HE_VAGC_LIST))
 HE_VDGC_SENSSPEC = $(subst list,sensspec, $(HE_VDGC_LIST))
@@ -158,7 +162,7 @@ data/he/he.vagc.ref_mcc : code/reference_mcc.R $(HE_VAGC_LIST) $(HE_NAMES)
 
 
 
-HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.swarm.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.vagc.pool_sensspec
+HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.vagc.pool_sensspec
 data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
 
@@ -179,9 +183,6 @@ data/he/he.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,senssp
 
 data/he/he.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_CLOSED_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*closed.sensspec', 'data/he/he.closed.pool_sensspec')"
-
-data/he/he.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_SWARM_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*swarm.sensspec', 'data/he/he.swarm.pool_sensspec')"
 
 data/he/he.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_VDGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*vdgc.sensspec', 'data/he/he.vdgc.pool_sensspec')"
@@ -357,7 +358,7 @@ $(SCHL_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh cod
 	bash code/run_vagc_clust.sh $<
 
 
-SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CLOSED_LIST) $(SCHL_SWARM_LIST) $(SCHL_VDGC_LIST) $(SCHL_VAGC_LIST)
+SCHL_GREEDY_LIST = $(SCHL_DGC_LIST) $(SCHL_AGC_LIST) $(SCHL_OPEN_LIST) $(SCHL_CLOSED_LIST) $(SCHL_VDGC_LIST) $(SCHL_VAGC_LIST)
 
 
 SCHL_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(SCHL_NEIGHBOR_LIST))
@@ -373,6 +374,9 @@ $(SCHL_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)
 	$(eval LIST=$(word 2,$^))
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/schloss)"
+
+data/schloss/schloss.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(SCHL_SWARM_LIST) $$(addsuffix .dist,$$(basename $$(basename $$(SCHL_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(SCHL_SWARM_LIST)))
+	R -e 'source("optimize_swarm_sensspec.R"); optimize_swarm("schloss")'
 
 SCHL_VAGC_SENSSPEC = $(subst list,sensspec, $(SCHL_VAGC_LIST))
 SCHL_VDGC_SENSSPEC = $(subst list,sensspec, $(SCHL_VDGC_LIST))
@@ -409,7 +413,7 @@ data/schloss/schloss.vagc.ref_mcc : code/reference_mcc.R $(SCHL_VAGC_LIST) $(SCH
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/schloss/', 'schloss.*vagc.list', 'schloss_1.0.*vagc.list', 'schloss.*names', 'data/schloss/schloss.vagc.ref_mcc')"
 
 
-SCHL_POOL_SENSSPEC = data/schloss/schloss.an.pool_sensspec data/schloss/schloss.fn.pool_sensspec data/schloss/schloss.nn.pool_sensspec data/schloss/schloss.dgc.pool_sensspec data/schloss/schloss.agc.pool_sensspec data/schloss/schloss.open.pool_sensspec data/schloss/schloss.closed.pool_sensspec data/schloss/schloss.swarm.pool_sensspec data/schloss/schloss.vdgc.pool_sensspec data/schloss/schloss.vagc.pool_sensspec
+SCHL_POOL_SENSSPEC = data/schloss/schloss.an.pool_sensspec data/schloss/schloss.fn.pool_sensspec data/schloss/schloss.nn.pool_sensspec data/schloss/schloss.dgc.pool_sensspec data/schloss/schloss.agc.pool_sensspec data/schloss/schloss.open.pool_sensspec data/schloss/schloss.closed.pool_sensspec data/schloss/schloss.vdgc.pool_sensspec data/schloss/schloss.vagc.pool_sensspec
 data/schloss/schloss.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*an.sensspec', 'data/schloss/schloss.an.pool_sensspec')"
 
@@ -430,9 +434,6 @@ data/schloss/schloss.open.pool_sensspec : code/merge_sensspec_files.R $$(subst l
 
 data/schloss/schloss.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_CLOSED_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*closed.sensspec', 'data/schloss/schloss.closed.pool_sensspec')"
-
-data/schloss/schloss.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_SWARM_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*swarm.sensspec', 'data/schloss/schloss.swarm.pool_sensspec')"
 
 data/schloss/schloss.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(SCHL_VDGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/schloss', 'schloss_.*vdgc.sensspec', 'data/schloss/schloss.vdgc.pool_sensspec')"
@@ -612,7 +613,7 @@ MISEQ_VAGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(fo
 $(MISEQ_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
 	bash code/run_vagc_clust.sh $<
 
-MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_SWARM_LIST) $(MISEQ_VDGC_LIST) $(MISEQ_VAGC_LIST)
+MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_VDGC_LIST) $(MISEQ_VAGC_LIST)
 
 
 MISEQ_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(MISEQ_NEIGHBOR_LIST))
@@ -624,20 +625,14 @@ $(MISEQ_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  
 
 MISEQ_GREEDY_SENSSPEC = $(subst list,sensspec, $(MISEQ_GREEDY_LIST))
 
-MISEQ_VAGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_VAGC_LIST))
-MISEQ_VDGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_VDGC_LIST))
-MISEQ_AGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_AGC_LIST))
-MISEQ_DGC_SENSSPEC = $(subst list,sensspec, $(MISEQ_DGC_LIST))
-MISEQ_OPEN_SENSSPEC = $(subst list,sensspec, $(MISEQ_OPEN_LIST))
-MISEQ_CLOSED_SENSSPEC = $(subst list,sensspec, $(MISEQ_CLOSED_LIST))
-MISEQ_SWARM_SENSSPEC = $(subst list,sensspec, $(MISEQ_SWARM_LIST))
-
 .SECONDEXPANSION:
 $(MISEQ_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
 	$(eval LIST=$(word 2,$^))
 	$(eval NAMES=$(word 3,$^))
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/miseq)"
 
+data/miseq/miseq.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(MISEQ_SWARM_LIST) $$(addsuffix .dist,$$(basename $$(basename $$(MISEQ_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(MISEQ_SWARM_LIST)))
+	R -e 'source("optimize_swarm_sensspec.R"); optimize_swarm("miseq")'
 
 MISEQ_REF_MCC = data/miseq/miseq.fn.ref_mcc data/miseq/miseq.nn.ref_mcc data/miseq/miseq.an.ref_mcc data/miseq/miseq.agc.ref_mcc data/miseq/miseq.dgc.ref_mcc data/miseq/miseq.closed.ref_mcc data/miseq/miseq.open.ref_mcc data/miseq/miseq.swarm.ref_mcc data/miseq/miseq.vdgc.ref_mcc data/miseq/miseq.vagc.ref_mcc
 data/miseq/miseq.an.ref_mcc : code/reference_mcc.R $(MISEQ_AN_LIST) $(MISEQ_NAMES)
@@ -671,7 +666,7 @@ data/miseq/miseq.vagc.ref_mcc : code/reference_mcc.R $(MISEQ_VAGC_LIST) $(MISEQ_
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*vagc.list', 'miseq_1.0.*vagc.list', 'miseq.*names', 'data/miseq/miseq.vagc.ref_mcc')"
 
 
-MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.swarm.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec
+MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec
 data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
 
@@ -692,9 +687,6 @@ data/miseq/miseq.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,
 
 data/miseq/miseq.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_CLOSED_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*closed.sensspec', 'data/miseq/miseq.closed.pool_sensspec')"
-
-data/miseq/miseq.swarm.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_SWARM_LIST))
-	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*swarm.sensspec', 'data/miseq/miseq.swarm.pool_sensspec')"
 
 data/miseq/miseq.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_VDGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*vdgc.sensspec', 'data/miseq/miseq.vdgc.pool_sensspec')"
@@ -950,4 +942,3 @@ write.paper : Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
 	R -e "render('Schloss_Cluster_PeerJ_2015.Rmd', clean=FALSE)"
 	mv Schloss_Cluster_PeerJ_2015.utf8.md Schloss_Cluster_PeerJ_2015.md
 	rm Schloss_Cluster_PeerJ_2015.knit.md
-
