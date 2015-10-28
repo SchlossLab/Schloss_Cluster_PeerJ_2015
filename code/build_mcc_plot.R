@@ -1,8 +1,8 @@
 build_mcc_plots <- function(dataset, output_file_name){
 
-	methods <- c("fn", "nn", "an", "dgc", "agc", "closed", "open")
+	methods <- c("fn", "nn", "an", "dgc", "agc", "closed", "open", "swarm")
 	n_methods <- length(methods)
-	clrs <- c("brown", "red", "orange", rainbow(n_methods)[4:n_methods])
+	clrs <- c("brown", "red", "orange", rainbow(n_methods-1)[4:7], "black")
 
 
 
@@ -47,7 +47,7 @@ build_mcc_plots <- function(dataset, output_file_name){
 	sixty <- orig_methods[orig_methods$fraction==threshold,]
 	sixty$method <- factor(sixty$method, levels=methods)
 	sixty[sixty$method=="closed", c("lci", "uci")] <- c(0.999, 1.001)
-	plot(NA, ylim=c(0.0,1), xlim=c(0.75,7.25), axes=F, ylab="", xlab="")
+	plot(NA, ylim=c(0.0,1), xlim=c(0.75,n_methods+0.25), axes=F, ylab="", xlab="")
 
 	for(m in 1:n_methods){
 		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=19, col=clrs[m], cex=2.0)
@@ -67,6 +67,10 @@ build_mcc_plots <- function(dataset, output_file_name){
 	data <- read.table(file=paste0("data/process/", dataset, ".mcc.summary"), header=T, stringsAsFactors=F)
 	orig_methods <- data[data$method %in% methods,]
 
+	swarm_data <- read.table(file=paste0("data/", dataset, "/", dataset, ".swarm.opt.sensspec"), header=T, stringsAsFactors=F)
+	opt_swarm_data <- do.call(rbind, lapply(split(swarm_data, swarm_data$label), function(chunk) chunk[which.max(chunk$mcc),c("cutoff", "mcc")]))
+	fraction <- gsub(".*_(\\d.\\d)_.*", "\\1", rownames(opt_swarm_data))
+	swarm_mcc_by_fraction <- aggregate(opt_swarm_data, by=list(fraction), function(x)c(mean(x), range(x)))
 
 	threshold <- 1.0
 
@@ -102,7 +106,7 @@ build_mcc_plots <- function(dataset, output_file_name){
 	sixty <- orig_methods[orig_methods$fraction==threshold,]
 	sixty$method <- factor(sixty$method, levels=methods)
 
-	plot(NA, ylim=c(0.0,1), xlim=c(0.75,7.25), axes=F, ylab="", xlab="")
+	plot(NA, ylim=c(0.0,1), xlim=c(0.75,n_methods + 0.25), axes=F, ylab="", xlab="")
 
 	for(m in 1:n_methods){
 		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=19, col=clrs[m], cex=2.0)
@@ -111,7 +115,7 @@ build_mcc_plots <- function(dataset, output_file_name){
 		arrows(x0=m, y0=sixty[sixty$method==methods[m],"mean"], x1=m, y1=sixty[sixty$method==methods[m],"uci"]+1e-3, lwd=2, angle=90, length=0.1, col=clrs[m])
 	}
 
-	axis(1, at=1:7, label=c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref"), las=2, cex.axis=1.5)
+	axis(1, at=1:n_methods, label=c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref", "Swarm"), las=2, cex.axis=1.5)
 	axis(2, at=seq(0.2,1.0,0.2), labels=rep("", 5))
 	box()
 

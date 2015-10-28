@@ -891,13 +891,13 @@ data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_POOL_SENSSPEC)
 
 
 
-results/figures/figure_1.pdf : code/build_mcc_plot.R data/process/he.mcc_ref.summary
+results/figures/figure_1.pdf : code/build_mcc_plot.R data/process/he.mcc_ref.summary data/process/he.mcc.summary data/he/he.swarm.opt.sensspec
 	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('he', '$@')"
 
 results/figures/figure_2.pdf : code/build_figure2.R data/process/he.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('he', '$@')"
 
-results/figures/figure_3.pdf : code/build_mcc_plot.R data/process/miseq.mcc_ref.summary
+results/figures/figure_3.pdf : code/build_mcc_plot.R data/process/miseq.mcc_ref.summary data/process/miseq.mcc.summary data/miseq/miseq.swarm.opt.sensspec
 	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('miseq', '$@')"
 
 results/figures/figure_4.pdf : code/build_figure4.R data/process/miseq.mcc_ref.summary data/process/he.mcc_ref.summary\
