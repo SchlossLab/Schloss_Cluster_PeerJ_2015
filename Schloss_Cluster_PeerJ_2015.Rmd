@@ -36,7 +36,7 @@ knitr::knit_hooks$set(inline=inline_hook)
 
 \begin{center}
 \vspace{25mm}
-Patrick D. Schloss${^\dagger}$ and Sarah L. Westcott
+Sarah L. Westcott and Patrick D. Schloss${^\dagger}$
 
 \vspace{30mm}
 

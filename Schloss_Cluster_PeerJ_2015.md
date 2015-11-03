@@ -15,7 +15,7 @@ geometry: margin=1.0in
 
 \begin{center}
 \vspace{25mm}
-Patrick D. Schloss${^\dagger}$ and Sarah L. Westcott
+Sarah L. Westcott and Patrick D. Schloss${^\dagger}$
 
 \vspace{30mm}
 
