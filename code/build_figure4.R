@@ -39,7 +39,7 @@ for(i in 1:length(methods)){
 	points(i+6, row$mean, pch=21, bg="white")
 }
 
-legend(x=7.5, y=0.4, legend=c("Relative to full dataset", "Relative to distances"), pch=c(21,19), pt.cex=0.8, pt.bg=c("white", "black"), cex=0.6, bty="n")
+legend(x=7.5, y=0.4, legend=c("Stability", "Quality"), pch=c(21,19), pt.cex=1.0, pt.bg=c("white", "black"), cex=0.8, bty="n")
 axis(1, at=c(1:5, 7:11), label=c("AL", "U", "V", "U", "V", "AL", "U", "V", "U", "V"), cex.axis=0.9)
 mtext(side=1, line=2, at=2.5, "AGC")
 mtext(side=1, line=2, at=4.5, "DGC")
