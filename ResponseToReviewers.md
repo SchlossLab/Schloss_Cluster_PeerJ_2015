@@ -1,3 +1,16 @@
+---
+title: "***Response to reviewers**"
+output:
+  pdf_document:
+    includes:
+      in_header: header.tex
+csl: peerj.csl
+fontsize: 11pt
+geometry: margin=1.0in
+---
+
+
+
 > Reviewer 1 (Anonymous)
 
 > Basic reporting
@@ -324,7 +337,7 @@ Thank you for highlighting these three points.
 
 > - p.12, ll.260-1. This statement is too harsh based on the given data. The SWARM algorithm is designed to not work with "hard" thresholds in the classical sense, so it is not surprising that in the given testing framework, different "thresholds" would appear optimal for differentially deeply sequenced datasets.
 
-We attempted to soften this language. Regardless, in our opinion, the inability to define a "hard" thredhold makes it difficult to compare results across studies.
+We attempted to soften this language. Regardless, in our opinion, the inability to define a "hard" threshold makes it difficult to compare results across studies.
 
 
 > - p.15, ll.368-9. This solution appears slightly impractical. While it would clearly be desirable if researchers provided clustering quality metrics along with their results (and ideally, for more than one clustering method), calculating the MCC would always require to calculate and store full sequence distance matrices. Also, it is unclear what an MCC comparison across different studies would actually mean (considering additional confounding factors such as sequencing depth, clustering threshold, alignment, etc.). Nevertheless, I fully agree with the authors that researchers should ideally perform (and report) different clusterings on their data.
