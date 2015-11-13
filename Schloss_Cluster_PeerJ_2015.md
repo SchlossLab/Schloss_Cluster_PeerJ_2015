@@ -159,4 +159,11 @@ A reproducible workflow including all scripts and this manuscript as a literate 
 
 \newpage
 
+\includepdf{results/figures/figure_1.pdf}
+\includepdf{results/figures/figure_2.pdf}
+\includepdf{results/figures/figure_3.pdf}
+\includepdf{results/figures/figure_4.pdf}
+
+\newpage
+
 ## References
