@@ -221,15 +221,6 @@ A reproducible workflow including all scripts and this manuscript as a literate 
 
 **Figure 5. The number of closed-reference OTUs observed in the murine dataset when using USEARCH, VSEARCH, and without a heuristic.** In addition to the default ordering of the references provided with the QIIME package, the reference sequences were randomized 30 times; the order of the murine dataset was not randomized. Regardless of whether the default or randomized ordering was used, the number of OTUs generated using VSEARCH did not differ. The non-heuristic approach calculated the exact distance between the murine sequences and the the reference sequences and assigned the sequences to the reference with the smallest distance.
 
-
-\newpage
-
-\includepdf{results/figures/figure_1.pdf}
-\includepdf{results/figures/figure_2.pdf}
-\includepdf{results/figures/figure_3.pdf}
-\includepdf{results/figures/figure_4.pdf}
-\includepdf{results/figures/figure_5.pdf}
-
 \newpage
 
 ## References
