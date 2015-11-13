@@ -4,9 +4,8 @@ build_mcc_plots <- function(dataset, output_file_name){
 	n_methods <- length(methods)
 	clrs <- c("brown", "red", "orange", rainbow(n_methods-1)[4:7], "black")
 
-
-
-
+	my_pch <- c(15, 21, 16, 22, 17, 23, 18, 24)
+	my_cex <-  c(2,2,2,2,2,2,3,2)
 	data <- read.table(file=paste0("data/process/", dataset, ".mcc_ref.summary"), header=T, stringsAsFactors=F)
 
 	orig_methods <- data[data$method %in% methods,]
@@ -21,7 +20,7 @@ build_mcc_plots <- function(dataset, output_file_name){
 
 	par(mar=c(0,0,0,0))
 	plot.new()
-	text(x=0.3, y=0.5, label="MCC value relative to\nfull dataset", cex=1.5, srt=90, xpd=TRUE)
+	text(x=0.3, y=0.5, label="Stability", cex=1.5, srt=90, xpd=TRUE)
 
 	### A ###
 	par(mar=c(0.5, 0.5, 0.5, 0.5))
@@ -31,7 +30,8 @@ build_mcc_plots <- function(dataset, output_file_name){
 
 	for(m in 1:n_methods){
 		subset <- orig_methods[orig_methods$method==methods[m],]
-		points(subset$mean~subset$fraction, type="l", col=clrs[m], lwd=3)
+		points(subset$mean~subset$fraction, type="l", col=clrs[m], lwd=2)
+		points(0.2, subset$mean[1], pch=my_pch[m], col=clrs[m], cex=my_cex[m], bg="white")
 	}
 	axis(1, at=seq(0.2,1.0,0.2), labels=rep("", 5))
 	axis(2, las=1, cex.axis=1.5)
@@ -50,10 +50,11 @@ build_mcc_plots <- function(dataset, output_file_name){
 	plot(NA, ylim=c(0.0,1), xlim=c(0.75,n_methods+0.25), axes=F, ylab="", xlab="")
 
 	for(m in 1:n_methods){
-		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=19, col=clrs[m], cex=2.0)
 
 		arrows(x0=m, y0=sixty[sixty$method==methods[m],"mean"], x1=m, y1=sixty[sixty$method==methods[m],"lci"]-1e-3, lwd=2, angle=90, length=0.1, col=clrs[m])
 		arrows(x0=m, y0=sixty[sixty$method==methods[m],"mean"], x1=m, y1=sixty[sixty$method==methods[m],"uci"]+1e-3, lwd=2, angle=90, length=0.1, col=clrs[m])
+		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=my_pch[m], col=clrs[m], cex=my_cex[m], bg="white")
+
 	}
 
 	axis(1, at=1:n_methods, labels=rep("", n_methods))
@@ -76,7 +77,7 @@ build_mcc_plots <- function(dataset, output_file_name){
 
 	par(mar=c(0,0,0,0))
 	plot.new()
-	text(x=0.3, y=0.5, label="MCC value relative to\ndistances", cex=1.5, srt=90, xpd=TRUE)
+	text(x=0.3, y=0.5, label="Quality", cex=1.5, srt=90, xpd=TRUE)
 
 	### C ###
 	par(mar=c(0.5, 0.5, 0.5, 0.5))
@@ -87,7 +88,9 @@ build_mcc_plots <- function(dataset, output_file_name){
 
 	for(m in 1:n_methods){
 		subset <- orig_methods[orig_methods$method==methods[m],]
-		points(subset$mean~subset$fraction, type="l", col=clrs[m], lwd=3)
+		points(subset$mean~subset$fraction, type="l", col=clrs[m], lwd=2)
+		points(0.2, subset$mean[1], pch=my_pch[m], col=clrs[m], cex=my_cex[m], bg="white")
+
 	}
 	axis(1, cex.axis=1.5)
 	axis(2, las=1, cex.axis=1.5)
@@ -109,10 +112,10 @@ build_mcc_plots <- function(dataset, output_file_name){
 	plot(NA, ylim=c(0.0,1), xlim=c(0.75,n_methods + 0.25), axes=F, ylab="", xlab="")
 
 	for(m in 1:n_methods){
-		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=19, col=clrs[m], cex=2.0)
 
 		arrows(x0=m, y0=sixty[sixty$method==methods[m],"mean"], x1=m, y1=sixty[sixty$method==methods[m],"lci"]-1e-3, lwd=2, angle=90, length=0.1, col=clrs[m])
 		arrows(x0=m, y0=sixty[sixty$method==methods[m],"mean"], x1=m, y1=sixty[sixty$method==methods[m],"uci"]+1e-3, lwd=2, angle=90, length=0.1, col=clrs[m])
+		points(x=m, y=sixty[sixty$method==methods[m],"mean"], pch=my_pch[m], col=clrs[m], cex=my_cex[m], bg="white")
 	}
 
 	axis(1, at=1:n_methods, label=c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref", "Swarm"), las=2, cex.axis=1.5)
