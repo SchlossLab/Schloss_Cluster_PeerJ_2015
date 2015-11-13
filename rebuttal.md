@@ -28,7 +28,7 @@
 
 > -------
 
-> *Terminology: Over the course of the paper, (at least) five different terms are used to refer to the goodness of a clustering: stability, rigor, robustness, quality and accuracy. Yet only two distinct concepts are explored (stability and quality/accuracy). I strongly recommend that the words "rigorous" and "robust" be struck from the manuscript entirely. They are never defined, are unclear, and the first impression they give does not correspond well to the actual results they are being used to describe.
+> \*Terminology: Over the course of the paper, (at least) five different terms are used to refer to the goodness of a clustering: stability, rigor, robustness, quality and accuracy. Yet only two distinct concepts are explored (stability and quality/accuracy). I strongly recommend that the words "rigorous" and "robust" be struck from the manuscript entirely. They are never defined, are unclear, and the first impression they give does not correspond well to the actual results they are being used to describe.
 
 We thank this Reviewer (and Reviewer 2) for expressing their concern that we are not sufficiently clear in our terminology. Part of the problem comes down to the multiple definitions of accuracy, precision, etc. in the classification and statistics literature. The multiple terms is symptomatic of our obviously failed attempt to be clear. Throughout the manuscript we will stick with stability and quality as the reviewer recommends.
 
@@ -54,7 +54,7 @@ Thank you for this recommendation and it has been incorporated.
 As suggested, we have replaced robust throughout the manuscript
 
 
-> *L20-L21: USEARCH -> USEARCH and VSEARCH. According to your results, both methods produced OTU assignments that depended on the ordering of the reference database (~55-60% label consistency between reorderings of the database).
+> \*L20-L21: USEARCH -> USEARCH and VSEARCH. According to your results, both methods produced OTU assignments that depended on the ordering of the reference database (~55-60% label consistency between reorderings of the database).
 
 We have corrected the text to indicate that both programs are deficient in this regard.
 
@@ -77,7 +77,7 @@ This has been edited as suggested.
 This has been edited as suggested.
 
 
-> *L64: The other major advantage of reference based methods is that the OTU assignments can be compared across experiments and even studies. This should be mentioned here.
+> \*L64: The other major advantage of reference based methods is that the OTU assignments can be compared across experiments and even studies. This should be mentioned here.
 
 This has been edited as suggested.
 
@@ -102,7 +102,7 @@ This has been edited as suggested.
 This has been edited as suggested.
 
 
-> *L95-105: Evaluation of accuracy on mock communities needs to be included in this discussion of previous methods to evaluate OTU methods.
+> \*L95-105: Evaluation of accuracy on mock communities needs to be included in this discussion of previous methods to evaluate OTU methods.
 
 A sentence describing the use of mock communities has been added as suggested. Previously, these references were wrapped within the reference mapping approach.
 
@@ -132,7 +132,7 @@ This has been edited as suggested.
 My suspicion is that they did not compare apples-to-apples. I suspect they may have compared OTUs generated at one threshold for the subsampled data to OTUs generated at a different threshold for the full dataset. But it could really be anything. I have sought to clarify several questions with He and it has been a rather difficult process and decided to not bother with this point.
 
 
-> *L182-190: Comparing OTUs on the basis of their representative sequence is not "specious" and the He analysis was not "so poorly designed". The most abundant sequence in an OTU is a biologically meaningful object, and we would like to think that OTUs are biologically meaningful and not just abstract objects. This section needs to be removed, or rewritten with less polemic language and with an explanation of how comparing representative sequences can break down (for example for very low abundance OTUs).
+> \*L182-190: Comparing OTUs on the basis of their representative sequence is not "specious" and the He analysis was not "so poorly designed". The most abundant sequence in an OTU is a biologically meaningful object, and we would like to think that OTUs are biologically meaningful and not just abstract objects. This section needs to be removed, or rewritten with less polemic language and with an explanation of how comparing representative sequences can break down (for example for very low abundance OTUs).
 
 We appreciate the concern regarding our polemical language and have edited the text to be less confrontational.
 
@@ -204,7 +204,7 @@ We appreciate the reviewer's feedback and have altered the presentation of the f
 
 > => Figures 1&3 lack color legends (it took me some time to realize that colors in the left panel corresponded to the categorical axis in right panel). Also, being partially color-blind, I had a hard time distinguishing the thick lines in Fig 1&3, left panels. Ordinate axis labeling in Fig 1&3 was not intuitive on a first read-through; the meaning of "MCC relative to full dataset" and "to distances" was not clear, and only a close look at the corresponding Methods section (but not the Figure caption) helped resolve this.
 
-We have added a plotting symbol to the lines in panels A and C corresponding to where the gray line crosses the colored lines. These plotting symbols have been used in panels B and D. Because the lines in A and C overlap, there is a risk that including plotting symbols for all of the methods would be impossible to read. In addition, we have re-labeled the y-axes as Stability and Quality and then defined those terms in the figure caption.
+We have added a plotting symbol to the lines in panels A and C. These plotting symbols have been used in panels B and D. Because the lines in A and C overlap, there is a risk that including plotting symbols for all of the fractions would be impossible to read. To make lines easier to differentiate in A & C we have made them thinner. In addition, we have re-labeled the y-axes as Stability and Quality and then defined those terms in the figure caption.
 
 > => In my opinion, Fig 2 presents the data in a non-intuitive way. I am not sure which point the authors are trying to emphasize here: the illustration draws the focus to the generally varying number in absolute OTU counts, but from the arguments in the text I believe that relative differences in counts between re-clustered sub-setted datasets and rarefied full datasets are more important. The latter, however, are not clear to interpret from the figure as is. Also, it is not clear to me why clustering methods are the categorical axis while down-sampling steps are scattered vertically. Moreover, a comparison of SWARM is missing from this figure for some reason (?). I would suggest to split this figure into two parts: part A providing more classical rarefaction curves per method (with sub-setted clustering points as overlay scatter) and part B providing the (log) relative OTU count between rarefaction and sub-setting across down-sampling steps.
 
@@ -230,22 +230,16 @@ Similar to the previous comment, we have changed the Relative to full dataset / 
 
 We appreciate the reviewer's suggestions for additional papers to cite in our Introduction. Many of these have been added to the text as appropriate. As the reviewer can appreciate there have been many papers published in this area of varying quality. We did consider developing an overview figure or table to describe the various methods, but realized that the text was quickly becoming a review article. In addition, if this paper is read in conjunction with the original He study, much of the material is already covered in their study and we did not feel it was necessary to recover the same material.
 
->>>>>>>>>>>>>>>>>>>>>
-hmmmmm
->>>>>>>>>>>>>>>>>>>>>
-
 
 > - Related to this, the terms "abundance-based" and "distance-based greedy clustering" (AGC and DGC) are not properly introduced. Although the authors point out that they stick with the terminology of the He et al paper, these terms need to be explained somewhere in the manuscript, preferably in the Introduction.
 
-We have added text in the paragraph describing *de novo* approaches defining AGC and DGC.  
+We have added text in the paragraph describing *de novo* approaches defining AGC and DGC.
 
 
 > - Similarly, the last part in the Results and Discussion, "Problems with reference-based clustering [...]", could profit from an illustration. This part is very clearly written, and the presented results are striking (see also comments under "Validity of the Findings"). Nevertheless, a visual presentation of the data could additionally help to guide the reader through the conducted tests and illustrate just how striking the reported results are. Even a simple table summarizing the results would be helpful.
 
 
->>>>>>>>>>>>>>>>>>>>>
-hmmmmm
->>>>>>>>>>>>>>>>>>>>>
+We thank the reviewer for this recommendation. We have added a new figure showing the distribution of OTU numbers when the databases are randomized for both USEARCH and VSEARCH. We also show the expected number of OTUs based on calculating the actual distances between the murine dataset sequences and the references.
 
 
 > - The authors very clearly point out weaknesses in the criticized study by He et al; they support all their arguments with data and/or sound reasoning and do not, in my opinion, state any unfair or unsupported claims against the criticized work. Nevertheless, I personally felt that the wording is sometimes a bit harsh: e.g., p.9, l.190 ("this analysis was so poorly designed"); p.15, l.354 ("the entire design of the He study was artificial").
@@ -302,7 +296,7 @@ Thanks! We try to lead by example :).
 
 > Several metrics have been developed which appear more appropriate for the latter use case. The down-sampling experiment, in my opinion, would be more straightforward to interpret if clustering comparison metrics, e.g. based on mutual information were to be used. I freely admit to a "conflict of interest" here: in a previous work I was involved in (DOI: 10.1111/1462-2920.12610), we used Adjusted Mutual Information (Vinh et al., 2010, http://www.jmlr.org/papers/v11/vinh10a.html), Normalized Mutual Information (Fred 7 Jain, 2003, http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1211462) and the Adjusted Rand Index (Hubert & Arabie, 1985, http://link.springer.com/article/10.1007%2FBF01908075) in a very similar setup (testing clustering robustness to selective down-sampling). While I generally consider it very impolite to push one's own work as a reviewer, I do believe that in this case, there is a clear scientific motivation for doing so. For the tests conducted in Fig 1AB & 3AB, at least, I believe that the above measures would provide a highly informative complement, if not replacement, for the MCC. They are straightforward indices of OTU "stability", in the sense defined in the present manuscript. Indeed, based on our previous observations (Fig 5 in Schmidt et al., Environ Microbiol, 2015), I would expect that the trends observed in the present study would be even more pronounced. Taken together, MCC and AMI/NMI/ARI could then indeed be interpreted as OTU "accuracy" and "stability". Likewise, the comparison between USEARCH and VSEARCH is a model use case for which the above-mentioned methods were originally designed.
 
-I appreciate the reviewer's comments and can judge from their comments elsewhere i this review that they were a bit on the fence about whether to recommend we use the ARI/NMI/AMI in place of the MCC for the measurement of stability in the first part of the manuscript where we try to replicate the He paper’s work. Our initial inclination is to stick with the MCC approach, which was the method used by the original He study. If we were to do one of the other methods instead, then I feel like that would confuse the issue and would be a different type of replication. I feel that indicating that they perhaps picked the wrong metric would add unnecessarily to the figures and text when the point of the first section of the Results section is that their idea of “stability” is subservient to the quality of OTU assignments. Compounding this complexity would be the decision to pick one or all of the three choices to replace or supplement MCC for measuring stability. Furthermore, we feel that the consistency of that quality over multiple random seeds is much a better metric of “stability” than to compare the subsampled OTU assignments to the full dataset assignments. That being said, I feel like we’ve done a good job of addressing the quality/stability issue and the reviewers both seemed to agree. If the reviewer and editor feel that this would be an important issue to incorporate into the manuscript, then we’ll do it. At this point, it just seems like piling on when we’ve already made the point that their concept of “stability” is problematic.
+I appreciate the reviewer's comments and can judge from their comments elsewhere i this review that they were a bit on the fence about whether to recommend we use the ARI/NMI/AMI in place of the MCC for the measurement of stability in the first part of the manuscript where we try to replicate the He paper’s work. Our initial inclination is to stick with the MCC approach, which was the method used by the original He study. If we were to do one of the other methods instead, then I feel like that would confuse the issue and would be a different type of replication. I feel that indicating that they perhaps picked the wrong metric would add unnecessarily to the figures and text when the point of the first section of the Results section is that their idea of “stability” is subservient to the quality of OTU assignments. Compounding this complexity would be the decision to pick one or all of the three choices to replace or supplement MCC for measuring stability. Furthermore, we feel that the consistency of that quality over multiple random seeds is much a better metric of “stability” than to compare the subsampled OTU assignments to the full dataset assignments. That being said, I feel like we’ve done a good job of addressing the quality/stability issue and the reviewers both seemed to agree. If the reviewer and editor feel that this would be an important issue to incorporate into the manuscript, then we’ll do it. At this point, it just seems like piling on when we’ve already made the point that their concept of “stability” is problematic. Finally, we have added a sentence to the section of the Results section where we attempt to replicate the He study indicating that information-based methods have previously been used and are likely better, but that we chose to stick with the original approach.
 
 To the point of interpreting the MCC value, we have added a sentence to the end of the penultimate paragraph in the Introduction that provides an interpretation.
 
