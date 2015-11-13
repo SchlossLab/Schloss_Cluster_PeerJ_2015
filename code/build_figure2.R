@@ -1,11 +1,12 @@
 build_figure2 <- function(dataset, output_file_name, position='bottomright'){
+
 	rare <- read.table(file=paste0("data/process/", dataset, ".rarefaction.summary"), header=T, stringsAsFactors=T)
 
 	offset <- 0.1
 
 	n_fractions <- length(levels(factor(rare$fraction)))
 
-	methods <- c("fn", "nn", "an", "dgc", "agc", "closed", "open")
+	methods <- c("fn", "nn", "an", "dgc", "agc", "closed", "open", "swarm")
 
 	rare_methods <- rare[rare$method %in% methods,]
 
@@ -34,7 +35,7 @@ build_figure2 <- function(dataset, output_file_name, position='bottomright'){
 		points(rep(m+offset, n_fractions), subset[,"rarefied"], col=clrs, pch=21, cex=1.0)
 	}
 
-	method_labels <- c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref")
+	method_labels <- c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref", "Swarm")
 	axis(1, at=1:n_methods, label=method_labels, las=2)
 	axis(2, las=2, at=seq(0,6000,1000), label=c("0", "1,000", "2,000", "3,000", "4,000", "5,000", "6,000"))
 	box()
@@ -47,6 +48,6 @@ build_figure2 <- function(dataset, output_file_name, position='bottomright'){
 	    y=rep(pos$text$y, times=2),
 	    pch=rep(c(19,21), times=2), col=clrs, cex=0.7)
 
-	dev.off()
 	par <- orig_par
+	dev.off()
 }
