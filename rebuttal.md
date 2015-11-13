@@ -64,7 +64,7 @@ We have corrected the text to indicate that both programs are deficient in this 
 
 > L46-47: Move the last sentence of this paragraph to the first sentence of the next paragraph.
 
-This has been edited as suggested.
+We would prefer to leave this sentence where it is because it introduces the following three paragraphs.
 
 
 > L57-59: This sentence does not follow from the previous (don't need "Therefore,") and is not necessarily a shortcoming, but is rather an observation. All methods other than complete-linkage can join sequences together that are are less than 97% similar.
@@ -194,10 +194,27 @@ We agree and have inserted a sentence here to underscore the point.
 
 > - The manuscript is overall very readable, clearly written, the global structure is clear and all individual sections are well structured. That being said, the structure of the study is also somewhat disparate: the individual parts stand somewhat independently from each other and do not form a fully coherent body of research. In the current form, the authors do not make it sufficiently clear how the first part of the manuscript (a critical reproduction of the study by He et al) relates to the second (quality benchmarks of the very recent methods SWARM and VSEARCH) and, in turn, to the third (general problems with reference-based OTU demarcation). While all of these findings are valid and interesting in themselves, the manuscript seems to be telling several unrelated stories at once. One general topic is a comparison of de novo vs reference-based OTUs, another is the question of OTU "stability" vs "accuracy" and a third thread refers to the clustering quality of novel methods, in particular a comparison of USEARCH to its open-source clone VSEARCH. As I said, the manuscript is very readable as is, but these findings are not sufficiently synthesized in the Conclusions, in my opinion.
 
+The reviewer raises a great point. We have added a paragraph at the end of the section where we describe our reproduction of the He study. The paragraph lays out five additional questions that we raised because of this reproduction analysis. These questions now serve as the sub-section headings for the next five sub-sections of the Results & Discussion section. We are optimistic that this paragraph helps to tie together the various parts of the analysis.
+
+
 > - All Figures, in their current form, are really non-obvious to interpret. Frankly speaking, when I first read through the manuscript, I understood all results from the text but really struggled at interpreting the figures. I believe they would profit from a careful workover.
+
+We appreciate the reviewer's feedback and have altered the presentation of the figures and their captions. Hopefully, their presentation is more clear in the current draft.
+
+
 > => Figures 1&3 lack color legends (it took me some time to realize that colors in the left panel corresponded to the categorical axis in right panel). Also, being partially color-blind, I had a hard time distinguishing the thick lines in Fig 1&3, left panels. Ordinate axis labeling in Fig 1&3 was not intuitive on a first read-through; the meaning of "MCC relative to full dataset" and "to distances" was not clear, and only a close look at the corresponding Methods section (but not the Figure caption) helped resolve this.
+
+We have added a plotting symbol to the lines in panels A and C corresponding to where the gray line crosses the colored lines. These plotting symbols have been used in panels B and D. Because the lines in A and C overlap, there is a risk that including plotting symbols for all of the methods would be impossible to read. In addition, we have re-labeled the y-axes as Stability and Quality and then defined those terms in the figure caption.
+
 > => In my opinion, Fig 2 presents the data in a non-intuitive way. I am not sure which point the authors are trying to emphasize here: the illustration draws the focus to the generally varying number in absolute OTU counts, but from the arguments in the text I believe that relative differences in counts between re-clustered sub-setted datasets and rarefied full datasets are more important. The latter, however, are not clear to interpret from the figure as is. Also, it is not clear to me why clustering methods are the categorical axis while down-sampling steps are scattered vertically. Moreover, a comparison of SWARM is missing from this figure for some reason (?). I would suggest to split this figure into two parts: part A providing more classical rarefaction curves per method (with sub-setted clustering points as overlay scatter) and part B providing the (log) relative OTU count between rarefaction and sub-setting across down-sampling steps.
+
+We have added the Swarm data to this plot. Although we see the reviewers point of presenting the absolute difference between the sub-sampled and rarefied datasets, we also wanted to present the difference in the inferred richness using the different methods. As the reviewer indicated, we could present traditional rarefaction plots, but this would result in a figure with 8 panels. We feel that this presentation does the best job of showing that there really is little difference between the subsampled and rarefied data for most methods and that there are large differences in the number of OTUs generated by the various methods.
+
+
 > => Figure 4 lacks a caption that is explanatory beyond the figure title.
+
+Similar to the previous comment, we have changed the Relative to full dataset / Relative to distances descriptions to Stability and Quality and defined these terms in the figure caption. We also expended the description of the plot.
+
 
 > - The Introduction is generally very clear, concise and readable. However, there is a large body of previous work on testing methods for OTU clustering, and the authors focus on only a very limited subset of studies. While I think that a comprehensive review of all studies on OTU benchmarking ever published is certainly outside the scope of the present work, I believe that the manuscript would much profit from a more in-depth discussion of at least some. Other works possibly worth mentioning include, but are not limited to:
 > => Huse et al., Env Microbiol, 2010, DOI: 10.1111/j.1462-2920.2010.02193.x
@@ -211,30 +228,69 @@ We agree and have inserted a sentence here to underscore the point.
 
 > - The Introduction provides a detailed, accessible and balanced explanation of the three general approaches to OTU demarcation discussed in the paper: de novo, closed reference and open reference. Although the authors point to two comprehensive references which give further information on these points (Schloss & Westcott, 2011; Navas-Molina et al., 2013), I would suggest that the authors provide at least some visual/structural guidance to the reader (an overview figure or table). However, the manuscript is certainly understandable as is, so please consider this comment as a mere suggestion.
 
+We appreciate the reviewer's suggestions for additional papers to cite in our Introduction. Many of these have been added to the text as appropriate. As the reviewer can appreciate there have been many papers published in this area of varying quality. We did consider developing an overview figure or table to describe the various methods, but realized that the text was quickly becoming a review article. In addition, if this paper is read in conjunction with the original He study, much of the material is already covered in their study and we did not feel it was necessary to recover the same material.
+
+>>>>>>>>>>>>>>>>>>>>>
+hmmmmm
+>>>>>>>>>>>>>>>>>>>>>
+
+
 > - Related to this, the terms "abundance-based" and "distance-based greedy clustering" (AGC and DGC) are not properly introduced. Although the authors point out that they stick with the terminology of the He et al paper, these terms need to be explained somewhere in the manuscript, preferably in the Introduction.
+
+We have added text in the paragraph describing *de novo* approaches defining AGC and DGC.  
+
 
 > - Similarly, the last part in the Results and Discussion, "Problems with reference-based clustering [...]", could profit from an illustration. This part is very clearly written, and the presented results are striking (see also comments under "Validity of the Findings"). Nevertheless, a visual presentation of the data could additionally help to guide the reader through the conducted tests and illustrate just how striking the reported results are. Even a simple table summarizing the results would be helpful.
 
+
+>>>>>>>>>>>>>>>>>>>>>
+hmmmmm
+>>>>>>>>>>>>>>>>>>>>>
+
+
 > - The authors very clearly point out weaknesses in the criticized study by He et al; they support all their arguments with data and/or sound reasoning and do not, in my opinion, state any unfair or unsupported claims against the criticized work. Nevertheless, I personally felt that the wording is sometimes a bit harsh: e.g., p.9, l.190 ("this analysis was so poorly designed"); p.15, l.354 ("the entire design of the He study was artificial").
+
+Thank you for this comment, we have edited these sections to be less confrontational.
 
 
 > Minor comments:
 
 > - Please re-check for typos and grammar across the text (e.g., p.5, l.60 "seuquence"; p.5, l.69 "scale[s]"; p.6, l.88 "assigned"; p.7, l.137 "assess the calculated the MCC"; etc.)
 
+Thank you for pointing out these errors. We have corrected these and have gone back through the text to identify any additional problems.
+
+
 > - Several examples given throughout the text appear rather arbitrary. For example, p.5, l.59 ("may only be 94% similar", same in p.17, ll.402-3) or p.6, l.89 ("all sequences assigned to the Porphyromonadaceae would then be assigned to OTUs [...]") are out of context, the sudden mention of a concrete clustering threshold or an arbitrary bacterial family could confuse the reader more than illustrate the point being made.
+
+On the first point, the 94% similar follows from the previous sentence indicating that two sequences could be 97% similar to a reference. The 94% would be a worst case scenario where those two sequences are similar to the reference, but only 94% similar to each other (i.e. 100 - 3 - 3 = 94). In the second case, this is described as an example of a hybrid approach. We have edited the text around these comments to hopefully make these points more clear.
+
 
 > - p.4, l.56. I believe that the provided reference for the statement that "the commonly used variable regions [...] do not evolve at the same rate" is not fully appropriate. Citing Schloss, Plos Comp Biol, 2010 here (as is done elsewhere in the text) seems more meaningful, as this study is arguably the most comprehensive to date regarding this point. Moreover, it is probably also worth mentioning the related contribution by Kim et al. (Journal Micobiol Methods, 2011, http://www.ncbi.nlm.nih.gov/pubmed/21047533).
 
+This has been edited as suggested.
+
+
 > - When enumerating the pros and cons of closed ref clustering (p.5, ll. 48f), several points in favor of this approach could be added: it is trivially parallelizable, has a low memory footprint and arguably gets better as reference databases improve (which is the case as more and more sequence data accumulates).
+
+This has been edited as suggested.
+
 
 > - p.6, l.93-4. This statement is phrased too strongly. The approach advocated by the authors (taxonomic classification, followed by de novo clustering within taxonomic bins) has been shown to be very useful in practice, but presenting it as an ideal compromise between closed reference and de novo approaches is an overstatement and potentially misleading. The authors, themselves, point out just a few lines later that taxonomic classification is often far from perfect (it could be added that it depends strongly on reference database quality and classifier performance); however, if the classification step is not perfect, the entire clustering outcome will be (strongly) affected. Others have suggested database-agnostic alternatives in a similar spirit, such as SL pre-clustering (Huse et al., Env Microbiol, 2010) or the kmer-pre-clustering implemented in ESPRIT-Tree (Cai & Sun, NAR, 2011) which would be worth mentioning here.
 
+We have added a clause to the end of this paragraph indicating that our previously proposed hybrid approach still suffers from database quality and classification errors.
+
+
 > - p.6, ll.109ff. This paragraph explaining the MCC (in detail) feels a little out of place here; I suggest to relocate it to the (early) Results section.
+
+Thank you for the suggestion; we have moved this section to the paragraph in the Results & Discussion section describing the quality of the clustering methods.
+
 
 > Experimental design
 
 > - Methods are reported clearly and concisely, links to available data are provided, all tested tools are specified down to the version number. More Methods sections should look like this! In particular, I would like to commend the authors for uploading all code as reproducible workflow to Github.
+
+Thanks! We try to lead by example :).
+
 
 > - Matthew's Correlation Coefficient (MCC) is used throughout the study as the sole indicator of OTU "quality". The MCC is an objective summary statistic for classification problems and has been successfully used for OTU benchmarking before (originally introduced by the authors in their 2011 paper and since then picked up by several other teams). Nevertheless, I would like to point out three general objections to using the MCC as an OTU quality criterion and then argue that the MCC, when used as a sole index, is not the most informative choice for (all) the questions that the authors pursue in this study.
 
@@ -246,11 +302,22 @@ We agree and have inserted a sentence here to underscore the point.
 
 > Several metrics have been developed which appear more appropriate for the latter use case. The down-sampling experiment, in my opinion, would be more straightforward to interpret if clustering comparison metrics, e.g. based on mutual information were to be used. I freely admit to a "conflict of interest" here: in a previous work I was involved in (DOI: 10.1111/1462-2920.12610), we used Adjusted Mutual Information (Vinh et al., 2010, http://www.jmlr.org/papers/v11/vinh10a.html), Normalized Mutual Information (Fred 7 Jain, 2003, http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1211462) and the Adjusted Rand Index (Hubert & Arabie, 1985, http://link.springer.com/article/10.1007%2FBF01908075) in a very similar setup (testing clustering robustness to selective down-sampling). While I generally consider it very impolite to push one's own work as a reviewer, I do believe that in this case, there is a clear scientific motivation for doing so. For the tests conducted in Fig 1AB & 3AB, at least, I believe that the above measures would provide a highly informative complement, if not replacement, for the MCC. They are straightforward indices of OTU "stability", in the sense defined in the present manuscript. Indeed, based on our previous observations (Fig 5 in Schmidt et al., Environ Microbiol, 2015), I would expect that the trends observed in the present study would be even more pronounced. Taken together, MCC and AMI/NMI/ARI could then indeed be interpreted as OTU "accuracy" and "stability". Likewise, the comparison between USEARCH and VSEARCH is a model use case for which the above-mentioned methods were originally designed.
 
+I appreciate the reviewer's comments and can judge from their comments elsewhere i this review that they were a bit on the fence about whether to recommend we use the ARI/NMI/AMI in place of the MCC for the measurement of stability in the first part of the manuscript where we try to replicate the He paper’s work. Our initial inclination is to stick with the MCC approach, which was the method used by the original He study. If we were to do one of the other methods instead, then I feel like that would confuse the issue and would be a different type of replication. I feel that indicating that they perhaps picked the wrong metric would add unnecessarily to the figures and text when the point of the first section of the Results section is that their idea of “stability” is subservient to the quality of OTU assignments. Compounding this complexity would be the decision to pick one or all of the three choices to replace or supplement MCC for measuring stability. Furthermore, we feel that the consistency of that quality over multiple random seeds is much a better metric of “stability” than to compare the subsampled OTU assignments to the full dataset assignments. That being said, I feel like we’ve done a good job of addressing the quality/stability issue and the reviewers both seemed to agree. If the reviewer and editor feel that this would be an important issue to incorporate into the manuscript, then we’ll do it. At this point, it just seems like piling on when we’ve already made the point that their concept of “stability” is problematic.
+
+To the point of interpreting the MCC value, we have added a sentence to the end of the penultimate paragraph in the Introduction that provides an interpretation.
+
+
 > Validity of the findings
 
 > - As detailed above, I believe that all conclusions are generally justified by the analyses conducted, albeit reservations regarding the use of the MCC as sole index in the stated cases. However, as likewise detailed above, I also believe that several findings stand independently of each other, and their connections are not immediately obvious.
 
+We hope that the inclusion of the paragraph to the Results & Discussion section outlining the questions that were raised by our replication of the He study provides a sufficient roadmap to help tie the paper together better.
+
+
 > - One main rationale of the present study is that OTU assignment "accuracy" trumps "stability". The authors provide clear reasoning to support this argument, and their data is generally in line with this notion. Nevertheless, one could argue that indeed, both "stability" and "accuracy" are important features of OTUs, and that their relative significance depends on the application. It is neither desirable to work with "stable but wrong" nor "accurate but noisy" OTUs. I agree with the authors that accuracy is the more desirable property in general, but putting their study in context with other recent findings could suggest that in fact, accuracy and stability tend to be correlated, which would lend even more gravity to their argument.
+
+We agree that some metric of stability is important. We feel that by running the methods 30 times on the same dataset and essentially getting the same quality value (i.e. MCC) relative to the distances between sequences, is a superior metric of stability than comparing the subsampled OTU assignments to those from the full dataset.
+
 
 > - The points raised in critical response to the He et al. study are all well illustrated, argued and supported by data. Moreover, by repeating several of the tests on a more recent (and more reasonably chosen), more deeply sequenced dataset, the authors provide a clear added value.
 
@@ -258,10 +325,21 @@ We agree and have inserted a sentence here to underscore the point.
 
 > - The findings on "problems with reference-based clustering in general and as implemented in QIIME" are striking and, indeed, slightly disturbing. To be honest, I would not have expected such strong effects of sequence order for mappings against the QIIME reference database. I believe that these results will contribute to more debates in the field, and ultimately lead to further long-needed benchmarks on standard operating procedures for widely used software.
 
+Thank you for highlighting these three points.
+
+
 > - p.12, ll.260-1. This statement is too harsh based on the given data. The SWARM algorithm is designed to not work with "hard" thresholds in the classical sense, so it is not surprising that in the given testing framework, different "thresholds" would appear optimal for differentially deeply sequenced datasets.
 
+We attempted to soften this language. Regardless, in our opinion, the inability to define a "hard" thredhold makes it difficult to compare results across studies.
+
+
 > - p.15, ll.368-9. This solution appears slightly impractical. While it would clearly be desirable if researchers provided clustering quality metrics along with their results (and ideally, for more than one clustering method), calculating the MCC would always require to calculate and store full sequence distance matrices. Also, it is unclear what an MCC comparison across different studies would actually mean (considering additional confounding factors such as sequencing depth, clustering threshold, alignment, etc.). Nevertheless, I fully agree with the authors that researchers should ideally perform (and report) different clusterings on their data.
+
+We attempted to soften this language.
+
 
 > Comments for the author
 
 > I would like to again commend the authors on their manuscript and again apologize for pushing a study their way in which I was involved. I was very hesitant to include the points on the use of the MCC vs AMI/NMI/ARI in this review, but I honestly believe that they make sense scientifically.
+
+Thank you for your openness and thoroughness. Both reviews have gone a long way to improving the quality of the manuscript.
