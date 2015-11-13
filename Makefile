@@ -891,19 +891,28 @@ data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_POOL_SENSSPEC)
 
 
 
-results/figures/figure_1.pdf : code/build_mcc_plot.R data/process/he.mcc_ref.summary data/process/he.mcc.summary data/he/he.swarm.opt.sensspec
+results/figures/figure_1.pdf : code/build_mcc_plot.R data/process/he.mcc_ref.summary\
+								data/process/he.mcc.summary\
+								data/he/he.swarm.opt.sensspec
 	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('he', '$@')"
 
 results/figures/figure_2.pdf : code/build_figure2.R data/process/he.rarefaction.summary
 	R -e "source('code/build_figure2.R'); build_figure2('he', '$@')"
 
-results/figures/figure_3.pdf : code/build_mcc_plot.R data/process/miseq.mcc_ref.summary data/process/miseq.mcc.summary data/miseq/miseq.swarm.opt.sensspec
+results/figures/figure_3.pdf : code/build_mcc_plot.R data/process/miseq.mcc_ref.summary\
+								data/process/miseq.mcc.summary\
+								data/miseq/miseq.swarm.opt.sensspec
 	R -e "source('code/build_mcc_plot.R'); build_mcc_plots('miseq', '$@')"
 
-results/figures/figure_4.pdf : code/build_figure4.R data/process/miseq.mcc_ref.summary data/process/he.mcc_ref.summary\
+results/figures/figure_4.pdf : code/build_figure4.R data/process/miseq.mcc_ref.summary\
+							data/process/he.mcc_ref.summary\
 							data/process/he.mcc.summary data/process/miseq.mcc.summary
 	R -e "source('code/build_figure4.R')"
 
+results/figures/figure_5.pdf : code/build_figure5.R data/rand_ref/hits.uclosed.counts\
+							data/rand_ref/hits.vclosed.counts\
+							data/rand_ref/closed_ref.redundancy.analysis
+	R -e "source('code/build_figure5.R')"
 
 
 results/figures/figure_1_schl.pdf : code/build_mcc_plot.R data/process/schloss.mcc_ref.summary
@@ -936,7 +945,8 @@ get.paper_data : data/gg_13_8/gg_13_8_97.v4_ref.names\
 	results/figures/figure_1.pdf\
 	results/figures/figure_2.pdf\
 	results/figures/figure_3.pdf\
-	results/figures/figure_4.pdf
+	results/figures/figure_4.pdf\
+	results/figures/figure_5.pdf
 
 write.paper : Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
 	R -e "render('Schloss_Cluster_PeerJ_2015.Rmd', clean=FALSE)"
