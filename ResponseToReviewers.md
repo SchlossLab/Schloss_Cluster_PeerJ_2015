@@ -1,5 +1,5 @@
 ---
-title: "**Response to reviewers**"
+title: ""
 output:
   pdf_document:
     includes:
@@ -9,7 +9,18 @@ fontsize: 11pt
 geometry: margin=1.0in
 ---
 
+Dear Dr. Eren,
 
+Thank you for providing my co-author and I with a very fast review of our first submission. We were delighted by the generally positive and thorough comments provided by the two reviewers. Attached you will find a complete set of responses to each of their concerns. As you suggested, we streamlined our jargon and tempered our language. To the points raised by reviewer 2, we elected to use the MCC as was done in the original He paper for consistency. We have added text to the manuscript indicating that this probably wasn't the best choice of methods. Hopefully, the point is clear that this way of measuring stability is not ideal.
+
+Please do not hesitate to contact us if you have additional comments or concerns.
+
+Sincerely,
+
+Sarah Westcott & Pat Schloss
+
+
+\newpage
 
 **Reviewer 1 (Anonymous)**
 
