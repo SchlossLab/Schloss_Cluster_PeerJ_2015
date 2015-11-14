@@ -300,7 +300,7 @@ We have added a clause to the end of this paragraph indicating that our previous
 
 **- p.6, ll.109ff. This paragraph explaining the MCC (in detail) feels a little out of place here; I suggest to relocate it to the (early) Results section.**
 
-Thank you for the suggestion; we have moved this section to the paragraph in the Results & Discussion section describing the quality of the clustering methods.
+Thank you for the suggestion. Because we needed to reorganize the text, the details have been removed from the Introduction and are now in the Methods, which precedes the Results & Discussion.
 
 
 **Experimental design**
