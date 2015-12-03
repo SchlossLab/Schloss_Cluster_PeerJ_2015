@@ -227,6 +227,7 @@ As the throughput of sequencing technologies have improved, development of clust
 \includepdf{results/figures/figure_2.pdf}
 \includepdf{results/figures/figure_3.pdf}
 \includepdf{results/figures/figure_4.pdf}
+\includepdf{results/figures/figure_5.pdf}
 
 \newpage
 
