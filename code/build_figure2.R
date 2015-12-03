@@ -16,6 +16,8 @@ build_figure2 <- function(dataset, output_file_name, position='bottomright'){
 
 	orig_par <- par()
 
+	pch <- c(22,21,24,23,25)
+
 	pdf(file=output_file_name, width=4, height=4)
 	par(mar=c(5,5,0.5,0.5))
 	plot(NA, xlim=c(0.8,length(methods)+0.2), ylim=c(0,max(rare_methods$rare_uci)), axes=F, xlab="", ylab="")
@@ -27,12 +29,12 @@ build_figure2 <- function(dataset, output_file_name, position='bottomright'){
 	#	the 95% confidence intervals were smaller or similar in size to the cex=1 plotting symbol
 	#	arrows(x0=m-offset, y0=subset[,"sobs"], y1=subset[,"sobs_lci"], col=clrs, length=0.05, angle=90)
 	#	arrows(x0=m-offset, y0=subset[,"sobs"], y1=subset[,"sobs_uci"], col=clrs, length=0.05, angle=90)
-		points(rep(m-offset, n_fractions), subset[,"sobs"], col=clrs, pch=19, cex=1.0)
+		points(rep(m-offset, n_fractions), subset[,"sobs"], col=clrs, pch=pch, cex=1.0, bg=clrs)
 
 	#	the 95% confidence intervals were smaller or similar in size to the cex=1 plotting symbol
 	#	arrows(x0=m+offset, y0=subset[,"rarefied"], y1=subset[,"rare_lci"], col=clrs, length=0.05, angle=90)
 	#	arrows(x0=m+offset, y0=subset[,"rarefied"], y1=subset[,"rare_uci"], col=clrs, length=0.05, angle=90)
-		points(rep(m+offset, n_fractions), subset[,"rarefied"], col=clrs, pch=21, cex=1.0)
+		points(rep(m+offset, n_fractions), subset[,"rarefied"], col=clrs, pch=pch, cex=1.0)
 	}
 
 	method_labels <- c("CL", "SL", "AL", "DGC", "AGC", "Closed-ref", "Open-ref", "Swarm")
@@ -42,11 +44,15 @@ build_figure2 <- function(dataset, output_file_name, position='bottomright'){
 
 	title(ylab="Number of OTUs", line=3.5)
 
-#	pos <- legend(x=6.2, y=1400, legend=c("20%", "40%", "60%", "80%", "100%"),pch=19, col="white", cex=0.7)
-	pos <- legend(position, legend=c("20%", "40%", "60%", "80%", "100%"),pch=19, col="white", cex=0.7, bty="n")
-	points(x=rep(pos$text$x, times=2) - c(0.25,0.13),
-	    y=rep(pos$text$y, times=2),
-	    pch=rep(c(19,21), times=2), col=clrs, cex=0.7)
+	pos <- legend(position, legend=c("20%", "40%", "60%", "80%", "100%"), pch=pch,
+										col="white", cex=0.7, bty="n")
+	points(x=rep(pos$text$x, times=2) - c(0.4,0.2),
+	    	y=rep(pos$text$y, times=2),
+	    	pch=cbind(pch,pch),
+			bg=cbind(clrs, rep("white", 5)),
+			col=clrs
+			)
+
 
 	par <- orig_par
 	dev.off()
