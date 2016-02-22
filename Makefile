@@ -586,7 +586,7 @@ data/staggered/staggered.redundant.fix.fasta : data/staggered/staggered.redundan
 	sed "s/_/-/g" < $< > $@
 
 STAGGERED_BOOTSTRAP_FASTA = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.fasta))
-$(STAGGERED_BOOTSTRAP_FASTA) : code/generate_samples.R data/staggered.redundant.fix.fasta
+$(STAGGERED_BOOTSTRAP_FASTA) : code/generate_samples.R data/staggered/staggered.redundant.fix.fasta
 	$(eval BASE=$(patsubst data/staggered/staggered_%.fasta,%,$@))
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
 	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/staggered/staggered.redundant.fix.fasta', 'data/staggered/staggered', 1.0, '$R')"
