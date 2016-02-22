@@ -515,30 +515,27 @@ data/miseq/miseq.vagc.rarefaction : $(MISEQ_VAGC_LIST) code/rarefy_data.R
 
 
 
-
-mkdir data/even data/staggered
+$(shell mkdir -p data/even/)
+$(shell mkdir -p data/staggered/)
 data/even/even.fasta data/staggered/staggered.fasta : $(REFS)silva.v4.align
 	grep ">" $^ | cut -c 2- | awk 'NR % 8 == 0' > simulated.accnos
 	mothur "#get.seqs(fasta=$^, accnos=simulated.accnos)"
 	mv data/references/silva.v4.pick.align $@
 
 data/even/even.names : data/even/even.fasta code/build_simulated_names.R
-	R -e "source('code/build_simulated_names.R'); even($<)"
-
-data/staggered/staggered.names : data/staggered/staggered.fasta code/build_simulated_names.R
-	R -e "source('code/build_simulated_names.R'); staggered($<)"
-
+	R -e "source('code/build_simulated_names.R'); even('$<')"
 
 data/even/even.redundant.fasta : data/even/even.fasta data/even/even.names
 	mothur "#deunique.seqs(fasta=data/even/even.fasta, name=data/even/even.names)"
 
+data/even/even.redundant.fix.fasta : data/even/even.redundant.fasta
+	sed "s/_/-/g" < $< > $@
 
 EVEN_BOOTSTRAP_FASTA = $(addprefix data/even/even_1.0, $(foreach R,$(REP), _$R.fasta))
-$(EVEN_BOOTSTRAP_FASTA) : code/generate_samples.R data/even/data/even/even.redundant.fix.fasta
+$(EVEN_BOOTSTRAP_FASTA) : code/generate_samples.R data/even/even.redundant.fix.fasta
 	$(eval BASE=$(patsubst data/even/even_%.fasta,%,$@))
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
 	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/even/even.redundant.fix.fasta', 'data/even/even', 1.0, '$R')"
-
 
 EVEN_UNIQUE_FASTA = $(addprefix data/even/even_1.0, $(foreach R,$(REP), _$R.unique.fasta))
 $(EVEN_UNIQUE_FASTA) : $$(subst unique.fasta,fasta, $$@)
@@ -578,9 +575,9 @@ EVEN_NEIGHBOR_LIST = $(EVEN_AN_LIST) $(EVEN_NN_LIST) $(EVEN_FN_LIST)
 
 
 
-data/even/even.redundant.fix.fasta : data/even/even.redundant.fasta
-	sed "s/_/-/g" < $< > $@
 
+data/staggered/staggered.names : data/staggered/staggered.fasta code/build_simulated_names.R
+	R -e "source('code/build_simulated_names.R'); staggered('$<')"
 
 
 
