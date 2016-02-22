@@ -35,13 +35,16 @@ Overview
     |
     |- scratch/        # temporary files that can be safely deleted or lost
     |
-    |- Schloss_Cluster_PeerJ_2015.Rmd # executable Rmarkdown for this study, if applicable
-    |- Schloss_Cluster_PeerJ_2015.md  # Markdown (GitHub) version of the *Rmd file
-    |- Schloss_Cluster_PeerJ_2015.pdf # PDF version of *.Rmd file
-    |- peerj.csl       # CSL file for formatting bibliograph using PeerJ's format
-    |- references.bib  # bibtex formatted file of references
-    |- header.tex      # LaTeX header file for formatting paper
-    |
+	|- papers/		   # files used to write, submit, and publish paper
+	|  |- header.tex      # LaTeX header file for formatting paper
+    |  |
+	|  +- peerj_2015/    # original study
+	|     |- Schloss_Cluster_PeerJ_2015.Rmd # executable Rmarkdown for this study
+	|     |- Schloss_Cluster_PeerJ_2015.md  # Markdown (GitHub) version of the *Rmd file
+	|     |- Schloss_Cluster_PeerJ_2015.pdf # PDF version of *.Rmd file
+	|     |- peerj.csl       # CSL file for formatting bibliograph using PeerJ's format
+	|     + references.bib  # bibtex formatted file of references
+	|
     |- Makefile        # executable Makefile for this study
     |
     +- LICENSE.md
