@@ -622,6 +622,85 @@ $(EVEN_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh cod
 
 EVEN_GREEDY_LIST = $(EVEN_DGC_LIST) $(EVEN_AGC_LIST) $(EVEN_OPEN_LIST) $(EVEN_CLOSED_LIST) $(EVEN_VDGC_LIST) $(EVEN_VAGC_LIST) $(EVEN_SWARM_LIST)
 
+EVEN_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(EVEN_NEIGHBOR_LIST))
+.SECONDEXPANSION:
+$(EVEN_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/even)"
+
+EVEN_GREEDY_SENSSPEC = $(subst list,sensspec, $(EVEN_GREEDY_LIST))
+
+.SECONDEXPANSION:
+$(EVEN_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/even)"
+
+data/even/even.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(EVEN_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(EVEN_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(EVEN_SWARM_LIST))))
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("even")'
+
+EVEN_REF_MCC = data/even/even.fn.ref_mcc data/even/even.nn.ref_mcc data/even/even.an.ref_mcc data/even/even.agc.ref_mcc data/even/even.dgc.ref_mcc data/even/even.closed.ref_mcc data/even/even.open.ref_mcc data/even/even.swarm.ref_mcc data/even/even.vdgc.ref_mcc data/even/even.vagc.ref_mcc
+data/even/even.an.ref_mcc : code/reference_mcc.R $(EVEN_AN_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*unique.an.list', 'even_1.0.*unique.an.list', 'even.*names', 'data/even/even.an.ref_mcc')"
+
+data/even/even.fn.ref_mcc : code/reference_mcc.R $(EVEN_FN_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*unique.fn.list', 'even_1.0_.*unique.fn.list', 'even.*names', 'data/even/even.fn.ref_mcc')"
+
+data/even/even.nn.ref_mcc : code/reference_mcc.R $(EVEN_NN_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*unique.nn.list', 'even_1.0.*unique.nn.list', 'even.*names', 'data/even/even.nn.ref_mcc')"
+
+data/even/even.closed.ref_mcc : code/reference_mcc.R $(EVEN_CLOSED_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*closed.list', 'even_1.0.*closed.list', 'even.*names', 'data/even/even.closed.ref_mcc')"
+
+data/even/even.open.ref_mcc : code/reference_mcc.R $(EVEN_OPEN_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*open.list', 'even_1.0.*open.list', 'even.*names', 'data/even/even.open.ref_mcc')"
+
+data/even/even.agc.ref_mcc : code/reference_mcc.R $(EVEN_AGC_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*\\\.agc.list', 'even_1.0.*\\\.agc.list', 'even.*names', 'data/even/even.agc.ref_mcc')"
+
+data/even/even.dgc.ref_mcc : code/reference_mcc.R $(EVEN_DGC_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*\\\.dgc.list', 'even_1.0.*\\\.dgc.list', 'even.*names', 'data/even/even.dgc.ref_mcc')"
+
+data/even/even.swarm.ref_mcc : code/reference_mcc.R $(EVEN_SWARM_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*swarm.list', 'even_1.0.*swarm.list', 'even.*names', 'data/even/even.swarm.ref_mcc')"
+
+data/even/even.vdgc.ref_mcc : code/reference_mcc.R $(EVEN_VDGC_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*vdgc.list', 'even_1.0.*vdgc.list', 'even.*names', 'data/even/even.vdgc.ref_mcc')"
+
+data/even/even.vagc.ref_mcc : code/reference_mcc.R $(EVEN_VAGC_LIST) $(EVEN_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*vagc.list', 'even_1.0.*vagc.list', 'even.*names', 'data/even/even.vagc.ref_mcc')"
+
+
+EVEN_POOL_SENSSPEC = data/even/even.an.pool_sensspec data/even/even.fn.pool_sensspec data/even/even.nn.pool_sensspec data/even/even.dgc.pool_sensspec data/even/even.agc.pool_sensspec data/even/even.open.pool_sensspec data/even/even.closed.pool_sensspec data/even/even.vdgc.pool_sensspec data/even/even.vagc.pool_sensspec
+data/even/even.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_AN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*an.sensspec', 'data/even/even.an.pool_sensspec')"
+
+data/even/even.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_FN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*fn.sensspec', 'data/even/even.fn.pool_sensspec')"
+
+data/even/even.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_NN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*nn.sensspec', 'data/even/even.nn.pool_sensspec')"
+
+data/even/even.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_DGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*\\\.dgc.sensspec', 'data/even/even.dgc.pool_sensspec')"
+
+data/even/even.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_AGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*\\\.agc.sensspec', 'data/even/even.agc.pool_sensspec')"
+
+data/even/even.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_OPEN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*open.sensspec', 'data/even/even.open.pool_sensspec')"
+
+data/even/even.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_CLOSED_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*closed.sensspec', 'data/even/even.closed.pool_sensspec')"
+
+data/even/even.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_VDGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*vdgc.sensspec', 'data/even/even.vdgc.pool_sensspec')"
+
+data/even/even.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_VAGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*vagc.sensspec', 'data/even/even.vagc.pool_sensspec')"
+
+
 
 
 
@@ -726,6 +805,87 @@ $(STAGGERED_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.s
 	bash code/run_vagc_clust.sh $<
 
 STAGGERED_GREEDY_LIST = $(STAGGERED_DGC_LIST) $(STAGGERED_AGC_LIST) $(STAGGERED_OPEN_LIST) $(STAGGERED_CLOSED_LIST) $(STAGGERED_VDGC_LIST) $(STAGGERED_VAGC_LIST) $(STAGGERED_SWARM_LIST)
+
+
+STAGGERED_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(STAGGERED_NEIGHBOR_LIST))
+.SECONDEXPANSION:
+$(STAGGERED_NEIGHBOR_SENSSPEC) : $$(addsuffix .dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$(basename $$@))))
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=0.03, outputdir=data/staggered)"
+
+STAGGERED_GREEDY_SENSSPEC = $(subst list,sensspec, $(STAGGERED_GREEDY_LIST))
+
+.SECONDEXPANSION:
+$(STAGGERED_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)))  $$(subst sensspec,list,$$@) $$(addsuffix .names,$$(basename $$(basename $$@)))
+	$(eval LIST=$(word 2,$^))
+	$(eval NAMES=$(word 3,$^))
+	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/staggered)"
+
+data/staggered/staggered.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(STAGGERED_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(STAGGERED_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(STAGGERED_SWARM_LIST))))
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("staggered")'
+
+STAGGERED_REF_MCC = data/staggered/staggered.fn.ref_mcc data/staggered/staggered.nn.ref_mcc data/staggered/staggered.an.ref_mcc data/staggered/staggered.agc.ref_mcc data/staggered/staggered.dgc.ref_mcc data/staggered/staggered.closed.ref_mcc data/staggered/staggered.open.ref_mcc data/staggered/staggered.swarm.ref_mcc data/staggered/staggered.vdgc.ref_mcc data/staggered/staggered.vagc.ref_mcc
+data/staggered/staggered.an.ref_mcc : code/reference_mcc.R $(STAGGERED_AN_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*unique.an.list', 'staggered_1.0.*unique.an.list', 'staggered.*names', 'data/staggered/staggered.an.ref_mcc')"
+
+data/staggered/staggered.fn.ref_mcc : code/reference_mcc.R $(STAGGERED_FN_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*unique.fn.list', 'staggered_1.0_.*unique.fn.list', 'staggered.*names', 'data/staggered/staggered.fn.ref_mcc')"
+
+data/staggered/staggered.nn.ref_mcc : code/reference_mcc.R $(STAGGERED_NN_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*unique.nn.list', 'staggered_1.0.*unique.nn.list', 'staggered.*names', 'data/staggered/staggered.nn.ref_mcc')"
+
+data/staggered/staggered.closed.ref_mcc : code/reference_mcc.R $(STAGGERED_CLOSED_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*closed.list', 'staggered_1.0.*closed.list', 'staggered.*names', 'data/staggered/staggered.closed.ref_mcc')"
+
+data/staggered/staggered.open.ref_mcc : code/reference_mcc.R $(STAGGERED_OPEN_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*open.list', 'staggered_1.0.*open.list', 'staggered.*names', 'data/staggered/staggered.open.ref_mcc')"
+
+data/staggered/staggered.agc.ref_mcc : code/reference_mcc.R $(STAGGERED_AGC_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*\\\.agc.list', 'staggered_1.0.*\\\.agc.list', 'staggered.*names', 'data/staggered/staggered.agc.ref_mcc')"
+
+data/staggered/staggered.dgc.ref_mcc : code/reference_mcc.R $(STAGGERED_DGC_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*\\\.dgc.list', 'staggered_1.0.*\\\.dgc.list', 'staggered.*names', 'data/staggered/staggered.dgc.ref_mcc')"
+
+data/staggered/staggered.swarm.ref_mcc : code/reference_mcc.R $(STAGGERED_SWARM_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*swarm.list', 'staggered_1.0.*swarm.list', 'staggered.*names', 'data/staggered/staggered.swarm.ref_mcc')"
+
+data/staggered/staggered.vdgc.ref_mcc : code/reference_mcc.R $(STAGGERED_VDGC_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*vdgc.list', 'staggered_1.0.*vdgc.list', 'staggered.*names', 'data/staggered/staggered.vdgc.ref_mcc')"
+
+data/staggered/staggered.vagc.ref_mcc : code/reference_mcc.R $(STAGGERED_VAGC_LIST) $(STAGGERED_NAMES)
+	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*vagc.list', 'staggered_1.0.*vagc.list', 'staggered.*names', 'data/staggered/staggered.vagc.ref_mcc')"
+
+
+STAGGERED_POOL_SENSSPEC = data/staggered/staggered.an.pool_sensspec data/staggered/staggered.fn.pool_sensspec data/staggered/staggered.nn.pool_sensspec data/staggered/staggered.dgc.pool_sensspec data/staggered/staggered.agc.pool_sensspec data/staggered/staggered.open.pool_sensspec data/staggered/staggered.closed.pool_sensspec data/staggered/staggered.vdgc.pool_sensspec data/staggered/staggered.vagc.pool_sensspec
+data/staggered/staggered.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_AN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*an.sensspec', 'data/staggered/staggered.an.pool_sensspec')"
+
+data/staggered/staggered.fn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_FN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*fn.sensspec', 'data/staggered/staggered.fn.pool_sensspec')"
+
+data/staggered/staggered.nn.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_NN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*nn.sensspec', 'data/staggered/staggered.nn.pool_sensspec')"
+
+data/staggered/staggered.dgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_DGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*\\\.dgc.sensspec', 'data/staggered/staggered.dgc.pool_sensspec')"
+
+data/staggered/staggered.agc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_AGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*\\\.agc.sensspec', 'data/staggered/staggered.agc.pool_sensspec')"
+
+data/staggered/staggered.open.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_OPEN_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*open.sensspec', 'data/staggered/staggered.open.pool_sensspec')"
+
+data/staggered/staggered.closed.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_CLOSED_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*closed.sensspec', 'data/staggered/staggered.closed.pool_sensspec')"
+
+data/staggered/staggered.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_VDGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*vdgc.sensspec', 'data/staggered/staggered.vdgc.pool_sensspec')"
+
+data/staggered/staggered.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_VAGC_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*vagc.sensspec', 'data/staggered/staggered.vagc.pool_sensspec')"
+
+
 
 
 
