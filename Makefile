@@ -579,6 +579,53 @@ EVEN_NEIGHBOR_LIST = $(EVEN_AN_LIST) $(EVEN_NN_LIST) $(EVEN_FN_LIST)
 data/staggered/staggered.names : data/staggered/staggered.fasta code/build_simulated_names.R
 	R -e "source('code/build_simulated_names.R'); staggered('$<')"
 
+data/staggered/staggered.redundant.fasta : data/staggered/staggered.fasta data/staggered/staggered.names
+	mothur "#deunique.seqs(fasta=data/staggered/staggered.fasta, name=data/staggered/staggered.names)"
+
+data/staggered/staggered.redundant.fix.fasta : data/staggered/staggered.redundant.fasta
+	sed "s/_/-/g" < $< > $@
+
+STAGGERED_BOOTSTRAP_FASTA = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.fasta))
+$(STAGGERED_BOOTSTRAP_FASTA) : code/generate_samples.R data/staggered.redundant.fix.fasta
+	$(eval BASE=$(patsubst data/staggered/staggered_%.fasta,%,$@))
+	$(eval R=$(lastword $(subst _, ,$(BASE))))
+	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/staggered/staggered.redundant.fix.fasta', 'data/staggered/staggered', 1.0, '$R')"
+
+STAGGERED_UNIQUE_FASTA = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.unique.fasta))
+$(STAGGERED_UNIQUE_FASTA) : $$(subst unique.fasta,fasta, $$@)
+	mothur "#unique.seqs(fasta=$<)"
+
+STAGGERED_NAMES = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.names))
+$(STAGGERED_NAMES) : $$(subst names,unique.fasta, $$@)
+
+STAGGERED_DISTANCE = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.unique.dist))
+$(STAGGERED_DISTANCE) : $$(subst dist,fasta, $$@)
+	mothur "#dist.seqs(fasta=$<, processors=8, cutoff=0.20)"
+
+
+
+STAGGERED_AN_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.unique.an.list))
+$(STAGGERED_AN_LIST) : $$(subst .an.list,.dist, $$@) $$(subst unique.an.list,names, $$@) code/run_an.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_an.sh $(DIST) $(NAMES)
+
+STAGGERED_NN_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.unique.nn.list))
+$(STAGGERED_NN_LIST) : $$(subst .nn.list,.dist, $$@) $$(subst unique.nn.list,names, $$@) code/run_nn.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_nn.sh $(DIST) $(NAMES)
+
+STAGGERED_FN_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP), _$R.unique.fn.list))
+.SECONDEXPANSION:
+$(STAGGERED_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $$@) code/run_fn.sh
+	$(eval DIST=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	bash code/run_fn.sh $(DIST) $(NAMES)
+
+STAGGERED_NEIGHBOR_LIST = $(STAGGERED_AN_LIST) $(STAGGERED_NN_LIST) $(STAGGERED_FN_LIST)
+
+
 
 
 $(REFS)97_otus.fasta : ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
