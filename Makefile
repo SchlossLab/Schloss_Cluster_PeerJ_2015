@@ -571,6 +571,56 @@ $(EVEN_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,names, $
 
 EVEN_NEIGHBOR_LIST = $(EVEN_AN_LIST) $(EVEN_NN_LIST) $(EVEN_FN_LIST)
 
+EVEN_DEGAP_FASTA = $(subst fasta,ng.fasta,$(EVEN_BOOTSTRAP_FASTA))
+$(EVEN_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
+	mothur "#degap.seqs(fasta=$<)"
+
+EVEN_DGC_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.dgc.list))
+.SECONDEXPANSION:
+$(EVEN_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
+	bash code/run_dgc.sh $<
+	mv $(NG_LIST) $@
+
+EVEN_AGC_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.agc.list))
+.SECONDEXPANSION:
+$(EVEN_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
+	bash code/run_agc.sh $<
+	mv $(NG_LIST) $@
+
+EVEN_CLOSED_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.closed.list))
+.SECONDEXPANSION:
+$(EVEN_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
+	bash code/run_closed.sh $<
+	mv $(NG_LIST) $@
+
+EVEN_OPEN_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.open.list))
+.SECONDEXPANSION:
+$(EVEN_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
+	bash code/run_open.sh $<
+	mv $(NG_LIST) $@
+
+EVEN_SWARM_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.swarm.list))
+.SECONDEXPANSION:
+$(EVEN_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,names, $$@) code/cluster_swarm.R
+	$(eval FASTA=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
+
+EVEN_VDGC_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.vdgc.list))
+.SECONDEXPANSION:
+$(EVEN_VDGC_LIST) : $$(subst vdgc.list,ng.fasta, $$@) code/run_vdgc_clust.sh code/uc_to_list.R
+	bash code/run_vdgc_clust.sh $<
+
+EVEN_VAGC_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.vagc.list))
+.SECONDEXPANSION:
+$(EVEN_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
+	bash code/run_vagc_clust.sh $<
+
+EVEN_GREEDY_LIST = $(EVEN_DGC_LIST) $(EVEN_AGC_LIST) $(EVEN_OPEN_LIST) $(EVEN_CLOSED_LIST) $(EVEN_VDGC_LIST) $(EVEN_VAGC_LIST) $(EVEN_SWARM_LIST)
 
 
 
@@ -624,6 +674,58 @@ $(STAGGERED_FN_LIST) : $$(subst .fn.list,.dist, $$@) $$(subst unique.fn.list,nam
 	bash code/run_fn.sh $(DIST) $(NAMES)
 
 STAGGERED_NEIGHBOR_LIST = $(STAGGERED_AN_LIST) $(STAGGERED_NN_LIST) $(STAGGERED_FN_LIST)
+
+
+STAGGERED_DEGAP_FASTA = $(subst fasta,ng.fasta,$(STAGGERED_BOOTSTRAP_FASTA))
+$(STAGGERED_DEGAP_FASTA) : $$(subst ng.fasta,fasta, $$@)
+	mothur "#degap.seqs(fasta=$<)"
+
+STAGGERED_DGC_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.dgc.list))
+.SECONDEXPANSION:
+$(STAGGERED_DGC_LIST) : $$(subst dgc.list,ng.fasta, $$@) code/run_dgc.sh code/dgc.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst dgc.list,ng.dgc.list,$@))
+	bash code/run_dgc.sh $<
+	mv $(NG_LIST) $@
+
+STAGGERED_AGC_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.agc.list))
+.SECONDEXPANSION:
+$(STAGGERED_AGC_LIST) : $$(subst agc.list,ng.fasta, $$@) code/run_agc.sh code/agc.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst agc.list,ng.agc.list,$@))
+	bash code/run_agc.sh $<
+	mv $(NG_LIST) $@
+
+STAGGERED_CLOSED_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.closed.list))
+.SECONDEXPANSION:
+$(STAGGERED_CLOSED_LIST) : $$(subst closed.list,ng.fasta, $$@) code/run_closed.sh code/closedref.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst closed.list,ng.closed.list,$@))
+	bash code/run_closed.sh $<
+	mv $(NG_LIST) $@
+
+STAGGERED_OPEN_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.open.list))
+.SECONDEXPANSION:
+$(STAGGERED_OPEN_LIST) : $$(subst open.list,ng.fasta, $$@) code/run_open.sh code/openref.params.txt code/biom_to_list.R
+	$(eval NG_LIST=$(subst open.list,ng.open.list,$@))
+	bash code/run_open.sh $<
+	mv $(NG_LIST) $@
+
+STAGGERED_SWARM_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.swarm.list))
+.SECONDEXPANSION:
+$(STAGGERED_SWARM_LIST) : $$(subst swarm.list,unique.fasta, $$@) $$(subst swarm.list,names, $$@) code/cluster_swarm.R
+	$(eval FASTA=$(word 1,$^))
+	$(eval NAMES=$(word 2,$^))
+	R -e 'source("code/cluster_swarm.R"); get_mothur_list("$(FASTA)", "$(NAMES)")'
+
+STAGGERED_VDGC_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.vdgc.list))
+.SECONDEXPANSION:
+$(STAGGERED_VDGC_LIST) : $$(subst vdgc.list,ng.fasta, $$@) code/run_vdgc_clust.sh code/uc_to_list.R
+	bash code/run_vdgc_clust.sh $<
+
+STAGGERED_VAGC_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.vagc.list))
+.SECONDEXPANSION:
+$(STAGGERED_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
+	bash code/run_vagc_clust.sh $<
+
+STAGGERED_GREEDY_LIST = $(STAGGERED_DGC_LIST) $(STAGGERED_AGC_LIST) $(STAGGERED_OPEN_LIST) $(STAGGERED_CLOSED_LIST) $(STAGGERED_VDGC_LIST) $(STAGGERED_VAGC_LIST) $(STAGGERED_SWARM_LIST)
 
 
 
