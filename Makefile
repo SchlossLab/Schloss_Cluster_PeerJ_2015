@@ -408,7 +408,7 @@ $(MISEQ_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh co
 
 MISEQ_OTUCLUST_LIST = $(addprefix data/miseq/miseq_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
 .SECONDEXPANSION:
-$(MISEQ_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+$(MISEQ_OTUCLUST_LIST) : $$(subst otuclust.list,ng.fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
 	bash code/run_otuclust.sh $<
 
 MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_VDGC_LIST) $(MISEQ_VAGC_LIST) $(MISEQ_OTUCLUST_LIST)
@@ -638,7 +638,7 @@ $(EVEN_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh cod
 
 EVEN_OTUCLUST_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
 .SECONDEXPANSION:
-$(EVEN_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+$(EVEN_OTUCLUST_LIST) : $$(subst otuclust.list,ng.fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
 	bash code/run_otuclust.sh $<
 
 EVEN_GREEDY_LIST = $(EVEN_DGC_LIST) $(EVEN_AGC_LIST) $(EVEN_OPEN_LIST) $(EVEN_CLOSED_LIST) $(EVEN_VDGC_LIST) $(EVEN_VAGC_LIST) $(EVEN_SWARM_LIST) $(EVEN_OTUCLUST_LIST)
@@ -830,7 +830,7 @@ $(STAGGERED_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.s
 
 STAGGERED_OTUCLUST_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
 .SECONDEXPANSION:
-$(STAGGERED_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+$(STAGGERED_OTUCLUST_LIST) : $$(subst otuclust.list,ng.fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
 	bash code/run_otuclust.sh $<
 
 

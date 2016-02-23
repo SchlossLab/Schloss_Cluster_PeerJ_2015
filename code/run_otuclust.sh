@@ -9,7 +9,7 @@ FASTA=$1
 OTUCLUST_CLUST=$(echo $FASTA | sed 's/fasta/otuclust.clust/')
 OTUCLUST_REP=$(echo $FASTA | sed 's/fasta/otuclust.rep/')
 
-otuclust -f fasta $FASTA --out-clust $OTUCLUST_CLUST --out-rep OTUCLUST_REP -s 0.97 -m 1
+otuclust -f fasta $FASTA --out-clust $OTUCLUST_CLUST --out-rep $OTUCLUST_REP -s 0.97 -m 1
 
 R -e "source('code/otuclust_to_list.R'); otuclust_to_list('$OTUCLUST_CLUST')"
 rm $OTUCLUST_CLUST $OTUCLUST_REP
