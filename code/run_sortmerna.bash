@@ -8,6 +8,7 @@
 
 FASTA=$1
 SORTMERNA=$(echo $FASTA | sed 's/fasta/sortmerna/')
+rm -rf $SORTMERNA/
 
 parallel_pick_otus_sortmerna.py -i $FASTA -o $SORTMERNA -r data/references/97_otus.fasta -T --jobs_to_start 1 --threads 10 --sortmerna_db data/references/97_otus.idx
 
