@@ -9,7 +9,7 @@
 FASTA=$1
 SUMACLUST_CLUST=$(echo $FASTA | sed 's/fasta/sumaclust.clust/')
 
-code/sumaclust_v1.0.20/sumaclust -t 0.97 data/he/he_0.2_01.fasta -O $SUMACLUST_CLUST >/dev/null
+code/sumaclust_v1.0.20/sumaclust -t 0.97 $FASTA -O $SUMACLUST_CLUST >/dev/null
 
 R -e "source('code/sumaclust_to_list.R'); sumaclust_to_list('$SUMACLUST_CLUST')"
 rm $SUMACLUST_CLUST
