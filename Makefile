@@ -966,6 +966,10 @@ $(REFS)97_otus.taxonomy : ~/venv/lib/python2.7/site-packages/qiime_default_refer
 	sed 's/$$/;/' < $(REFS)97_otus.taxonomy_temp > $(REFS)97_otus.taxonomy
 	rm $(REFS)97_otus.taxonomy_temp
 
+$(REFS)97_otus.idx : ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+	code/sortmerna-2.1/indexdb_rna --ref data/references/97_otus.fasta,data/references/97_otus.idx -v
+
+
 data/gg_13_8/gg_13_8_97.v19.align : $(REFS)/97_otus.fasta $(REFS)silva.bact_archaea.align
 	mothur "#align.seqs(fasta=$(REFS)/97_otus.fasta, reference=$(REFS)silva.bact_archaea.align, processors=2, outputdir=data/gg_13_8);pcr.seqs(fasta=data/gg_13_8/97_otus.align, start=1044, end=43116, keepdots=F, processors=8);filter.seqs(vertical=T)"
 	rm data/gg_13_8/97_otus.align.report data/gg_13_8/97_otus.flip.accnos data/gg_13_8/97_otus.pcr.align data/gg_13_8/97_otus.filter
