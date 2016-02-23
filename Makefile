@@ -113,7 +113,7 @@ $(HE_SUMACLUST_LIST) : $$(subst sumaclust.list,fasta, $$@) code/run_sumaclust.sh
 	bash code/run_sumaclust.sh $<
 
 
-HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_VDGC_LIST) $(HE_VAGC_LIST) $(HE_OTUCLUST_LIST) $(HE_SUMACLUST_LIST)
+HE_GREEDY_LIST = $(HE_SWARM_LIST) $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_VDGC_LIST) $(HE_VAGC_LIST) $(HE_OTUCLUST_LIST) $(HE_SUMACLUST_LIST)
 
 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))

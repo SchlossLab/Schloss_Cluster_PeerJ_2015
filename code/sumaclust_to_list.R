@@ -4,7 +4,7 @@
 
 sumaclust_to_list <- function(sumaclust_file_name){
 	sumaclust_data <- scan(sumaclust_file_name, what="", sep="\n", quiet=TRUE)
-	sumaclust_data <- gsub("^[^\t]\t", "", sumaclust_data)
+	sumaclust_data <- gsub("^[^\t]*\t", "", sumaclust_data)
 	sumaclust_data <- gsub('\t', ',', sumaclust_data)
 	n_otus <- length(sumaclust_data)
 	list_data <- paste(c("userLabel", n_otus, sumaclust_data), collapse='\t')
