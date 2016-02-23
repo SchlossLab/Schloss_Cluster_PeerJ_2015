@@ -102,8 +102,13 @@ HE_VAGC_LIST = $(addprefix data/he/he_, $(foreach F,$(FRACTION), $(foreach R,$(R
 $(HE_VAGC_LIST) : $$(subst vagc.list,fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
 	bash code/run_vagc_clust.sh $<
 
+HE_OTUCLUST_LIST = $(addprefix data/he/he_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
+.SECONDEXPANSION:
+$(HE_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+	bash code/run_otuclust.sh $<
 
-HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_VDGC_LIST) $(HE_VAGC_LIST)
+
+HE_GREEDY_LIST = $(HE_DGC_LIST) $(HE_AGC_LIST) $(HE_OPEN_LIST) $(HE_CLOSED_LIST) $(HE_VDGC_LIST) $(HE_VAGC_LIST) $(HE_OTUCLUST_LIST)
 
 
 HE_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(HE_NEIGHBOR_LIST))
@@ -160,9 +165,8 @@ data/he/he.vagc.ref_mcc : code/reference_mcc.R $(HE_VAGC_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.vagc.list', 'he_1.0.*.vagc.list', 'he.*names', 'data/he/he.vagc.ref_mcc')"
 
 
+HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.vagc.pool_sensspec data/he/he.otuclust.pool_sensspec
 
-
-HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.open.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.vagc.pool_sensspec
 data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
 
@@ -189,6 +193,9 @@ data/he/he.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,senssp
 
 data/he/he.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_VAGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*vagc.sensspec', 'data/he/he.vagc.pool_sensspec')"
+
+data/he/he.otuclust.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_OTUCLUST_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*otuclust.sensspec', 'data/he/he.otuclust.pool_sensspec')"
 
 
 HE_RAREFACTION = data/he/he.an.rarefaction data/he/he.nn.rarefaction data/he/he.fn.rarefaction data/he/he.agc.rarefaction data/he/he.dgc.rarefaction data/he/he.closed.rarefaction data/he/he.open.rarefaction data/he/he.swarm.rarefaction data/he/he.vdgc.rarefaction data/he/he.vagc.rarefaction
@@ -399,7 +406,12 @@ MISEQ_VAGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(fo
 $(MISEQ_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
 	bash code/run_vagc_clust.sh $<
 
-MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_VDGC_LIST) $(MISEQ_VAGC_LIST)
+MISEQ_OTUCLUST_LIST = $(addprefix data/miseq/miseq_1.0, $(foreach R,$(REP),  _$R.uclust.list))
+.SECONDEXPANSION:
+$(MISEQ_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+	bash code/run_otuclust.sh $<
+
+MISEQ_GREEDY_LIST = $(MISEQ_DGC_LIST) $(MISEQ_AGC_LIST) $(MISEQ_OPEN_LIST) $(MISEQ_CLOSED_LIST) $(MISEQ_VDGC_LIST) $(MISEQ_VAGC_LIST) $(MISEQ_OTUCLUST_LIST)
 
 
 MISEQ_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(MISEQ_NEIGHBOR_LIST))
@@ -452,7 +464,8 @@ data/miseq/miseq.vagc.ref_mcc : code/reference_mcc.R $(MISEQ_VAGC_LIST) $(MISEQ_
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*vagc.list', 'miseq_1.0.*vagc.list', 'miseq.*names', 'data/miseq/miseq.vagc.ref_mcc')"
 
 
-MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec
+MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec data/miseq/miseq.otuclust.pool_sensspec
+
 data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
 
@@ -479,6 +492,9 @@ data/miseq/miseq.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,
 
 data/miseq/miseq.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_VAGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*vagc.sensspec', 'data/miseq/miseq.vagc.pool_sensspec')"
+
+data/miseq/miseq.otuclust.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_OTUCLUST_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*otuclust.sensspec', 'data/miseq/miseq.otuclust.pool_sensspec')"
 
 
 MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction data/miseq/miseq.vdgc.rarefaction data/miseq/miseq.vagc.rarefaction
@@ -620,7 +636,12 @@ EVEN_VAGC_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.vagc.l
 $(EVEN_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
 	bash code/run_vagc_clust.sh $<
 
-EVEN_GREEDY_LIST = $(EVEN_DGC_LIST) $(EVEN_AGC_LIST) $(EVEN_OPEN_LIST) $(EVEN_CLOSED_LIST) $(EVEN_VDGC_LIST) $(EVEN_VAGC_LIST) $(EVEN_SWARM_LIST)
+EVEN_OTUCLUST_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
+.SECONDEXPANSION:
+$(EVEN_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+	bash code/run_otuclust.sh $<
+
+EVEN_GREEDY_LIST = $(EVEN_DGC_LIST) $(EVEN_AGC_LIST) $(EVEN_OPEN_LIST) $(EVEN_CLOSED_LIST) $(EVEN_VDGC_LIST) $(EVEN_VAGC_LIST) $(EVEN_SWARM_LIST) $(EVEN_OTUCLUST_LIST)
 
 EVEN_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(EVEN_NEIGHBOR_LIST))
 .SECONDEXPANSION:
@@ -672,7 +693,8 @@ data/even/even.vagc.ref_mcc : code/reference_mcc.R $(EVEN_VAGC_LIST) $(EVEN_NAME
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*vagc.list', 'even_1.0.*vagc.list', 'even.*names', 'data/even/even.vagc.ref_mcc')"
 
 
-EVEN_POOL_SENSSPEC = data/even/even.an.pool_sensspec data/even/even.fn.pool_sensspec data/even/even.nn.pool_sensspec data/even/even.dgc.pool_sensspec data/even/even.agc.pool_sensspec data/even/even.open.pool_sensspec data/even/even.closed.pool_sensspec data/even/even.vdgc.pool_sensspec data/even/even.vagc.pool_sensspec
+EVEN_POOL_SENSSPEC = data/even/even.an.pool_sensspec data/even/even.fn.pool_sensspec data/even/even.nn.pool_sensspec data/even/even.dgc.pool_sensspec data/even/even.agc.pool_sensspec data/even/even.open.pool_sensspec data/even/even.closed.pool_sensspec data/even/even.vdgc.pool_sensspec data/even/even.vagc.pool_sensspec data/even/even.otuclust.pool_sensspec
+
 data/even/even.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*an.sensspec', 'data/even/even.an.pool_sensspec')"
 
@@ -700,6 +722,8 @@ data/even/even.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,se
 data/even/even.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_VAGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*vagc.sensspec', 'data/even/even.vagc.pool_sensspec')"
 
+data/even/even.otuclust.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_OTUCLUST_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*otuclust.sensspec', 'data/even/even.otuclust.pool_sensspec')"
 
 
 
@@ -804,7 +828,14 @@ STAGGERED_VAGC_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(RE
 $(STAGGERED_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
 	bash code/run_vagc_clust.sh $<
 
-STAGGERED_GREEDY_LIST = $(STAGGERED_DGC_LIST) $(STAGGERED_AGC_LIST) $(STAGGERED_OPEN_LIST) $(STAGGERED_CLOSED_LIST) $(STAGGERED_VDGC_LIST) $(STAGGERED_VAGC_LIST) $(STAGGERED_SWARM_LIST)
+STAGGERED_OTUCLUST_LIST = $(addprefix data/staggered/staggered_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
+.SECONDEXPANSION:
+$(STAGGERED_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
+	bash code/run_otuclust.sh $<
+
+
+
+STAGGERED_GREEDY_LIST = $(STAGGERED_DGC_LIST) $(STAGGERED_AGC_LIST) $(STAGGERED_OPEN_LIST) $(STAGGERED_CLOSED_LIST) $(STAGGERED_VDGC_LIST) $(STAGGERED_VAGC_LIST) $(STAGGERED_SWARM_LIST) $(STAGGERED_OTUCLUST_LIST)
 
 
 STAGGERED_NEIGHBOR_SENSSPEC = $(subst list,sensspec, $(STAGGERED_NEIGHBOR_LIST))
@@ -826,6 +857,7 @@ data/staggered/staggered.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(S
 	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("staggered")'
 
 STAGGERED_REF_MCC = data/staggered/staggered.fn.ref_mcc data/staggered/staggered.nn.ref_mcc data/staggered/staggered.an.ref_mcc data/staggered/staggered.agc.ref_mcc data/staggered/staggered.dgc.ref_mcc data/staggered/staggered.closed.ref_mcc data/staggered/staggered.open.ref_mcc data/staggered/staggered.swarm.ref_mcc data/staggered/staggered.vdgc.ref_mcc data/staggered/staggered.vagc.ref_mcc
+
 data/staggered/staggered.an.ref_mcc : code/reference_mcc.R $(STAGGERED_AN_LIST) $(STAGGERED_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*unique.an.list', 'staggered_1.0.*unique.an.list', 'staggered.*names', 'data/staggered/staggered.an.ref_mcc')"
 
@@ -857,7 +889,8 @@ data/staggered/staggered.vagc.ref_mcc : code/reference_mcc.R $(STAGGERED_VAGC_LI
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*vagc.list', 'staggered_1.0.*vagc.list', 'staggered.*names', 'data/staggered/staggered.vagc.ref_mcc')"
 
 
-STAGGERED_POOL_SENSSPEC = data/staggered/staggered.an.pool_sensspec data/staggered/staggered.fn.pool_sensspec data/staggered/staggered.nn.pool_sensspec data/staggered/staggered.dgc.pool_sensspec data/staggered/staggered.agc.pool_sensspec data/staggered/staggered.open.pool_sensspec data/staggered/staggered.closed.pool_sensspec data/staggered/staggered.vdgc.pool_sensspec data/staggered/staggered.vagc.pool_sensspec
+STAGGERED_POOL_SENSSPEC = data/staggered/staggered.an.pool_sensspec data/staggered/staggered.fn.pool_sensspec data/staggered/staggered.nn.pool_sensspec data/staggered/staggered.dgc.pool_sensspec data/staggered/staggered.agc.pool_sensspec data/staggered/staggered.open.pool_sensspec data/staggered/staggered.closed.pool_sensspec data/staggered/staggered.vdgc.pool_sensspec data/staggered/staggered.vagc.pool_sensspec  data/staggered/staggered.otuclust.pool_sensspec
+
 data/staggered/staggered.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*an.sensspec', 'data/staggered/staggered.an.pool_sensspec')"
 
@@ -884,6 +917,9 @@ data/staggered/staggered.vdgc.pool_sensspec : code/merge_sensspec_files.R $$(sub
 
 data/staggered/staggered.vagc.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_VAGC_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*vagc.sensspec', 'data/staggered/staggered.vagc.pool_sensspec')"
+
+data/staggered/staggered.otuclust.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_OTUCLUST_LIST))
+	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*otuclust.sensspec', 'data/staggered/staggered.otuclust.pool_sensspec')"
 
 
 

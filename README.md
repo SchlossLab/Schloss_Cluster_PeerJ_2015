@@ -65,6 +65,7 @@ The following need to be installed and in the path...
 * QIIME (v.1.9.1)
 * UCLUST (v.6.1.544)
 * VSEARCH (v.1.5.0)
+* micca (OTUClust)
 * R
 	+ jsonlite
     + knitr
