@@ -2,7 +2,6 @@
 # otu on the same line separated by tabs
 
 otuclust_to_list <- function(otuclust_file_name){
-	otuclust_file_name <- "he_0.2_01.otuclust.clust"
 	otuclust_data <- scan(otuclust_file_name, what="", sep="\n", quiet=TRUE)
 	otuclust_data <- gsub('\t', ',', otuclust_data)
 	n_otus <- length(otuclust_data)

@@ -406,7 +406,7 @@ MISEQ_VAGC_LIST = $(addprefix data/miseq/miseq_, $(foreach F,$(M_FRACTION), $(fo
 $(MISEQ_VAGC_LIST) : $$(subst vagc.list,ng.fasta, $$@) code/run_vagc_clust.sh code/uc_to_list.R
 	bash code/run_vagc_clust.sh $<
 
-MISEQ_OTUCLUST_LIST = $(addprefix data/miseq/miseq_1.0, $(foreach R,$(REP),  _$R.uclust.list))
+MISEQ_OTUCLUST_LIST = $(addprefix data/miseq/miseq_1.0, $(foreach R,$(REP),  _$R.otuclust.list))
 .SECONDEXPANSION:
 $(MISEQ_OTUCLUST_LIST) : $$(subst otuclust.list,fasta, $$@) code/run_otuclust.sh code/otuclust_to_list.R
 	bash code/run_otuclust.sh $<
