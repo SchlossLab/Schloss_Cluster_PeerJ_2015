@@ -75,8 +75,5 @@ The following need to be installed and in the path...
 
 These should be installed the specified folders
 * vsearch (v.1.5.0 installed in code/vsearch)
-
-These should be installed in the PATH variable
-* QIIME
-* uclust61
-* mothur
+* sumaclust (v.1.0.20 installed in code/sumaclust_v1.0.20)
+* swarm (v.2.1.1 installed in code/swarm)
