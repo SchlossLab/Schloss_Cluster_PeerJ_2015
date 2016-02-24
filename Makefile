@@ -1178,3 +1178,15 @@ write.paper : papers/peerj_2015/Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
 	R -e "render('papers/peerj_2015/Schloss_Cluster_PeerJ_2015.Rmd', clean=FALSE)"
 	mv papers/peerj_2015/Schloss_Cluster_PeerJ_2015.utf8.md papers/peerj_2015/Schloss_Cluster_PeerJ_2015.md
 	rm papers/peerj_2015/Schloss_Cluster_PeerJ_2015.knit.md
+
+
+
+
+get.commentary_data :
+	touch test
+
+
+write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd get.commentary_data
+	R -e "render('papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd', clean=FALSE)"
+	mv papers/msystems_2016/Schloss_Commentary_mSystems_2016.utf8.md papers/msystems_2016/Schloss_Commentary_mSystems_2016.md
+	rm papers/msystems_2016/Schloss_Commentary_mSystems_2016.knit.md
