@@ -998,7 +998,7 @@ $(REFS)97_otus.taxonomy : ~/venv/lib/python2.7/site-packages/qiime_default_refer
 	rm $(REFS)97_otus.taxonomy_temp
 
 $(REFS)97_otus.idx : ~/venv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
-	code/sortmerna-2.1/indexdb_rna --ref data/references/97_otus.fasta,data/references/97_otus.idx -v
+	~/venv/bin/indexdb_rna --ref data/references/97_otus.fasta,data/references/97_otus.idx -v
 
 
 data/gg_13_8/gg_13_8_97.v19.align : $(REFS)/97_otus.fasta $(REFS)silva.bact_archaea.align
@@ -1059,20 +1059,21 @@ $(REF_BOOTSTRAP_FASTA) : code/generate_samples.R data/rand_ref/original.fasta
 	$(eval R=$(lastword $(subst _, ,$(BASE))))
 	R -e "source('code/generate_samples.R'); generate_indiv_samples('data/references/97_otus.fasta', 'data/rand_ref/rand_ref', 1.0, '$R')"
 
-
-
-
 data/rand_ref/miseq.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.fasta
 	mothur "#degap.seqs(fasta=$<, outputdir=data/rand_ref)"
 	mv data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.ng.fasta $@
 
 RAND_REF_UCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.uclosed.uc)) data/rand_ref/original.uclosed.uc
-$(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh code/closedref.params.txt data/rand_ref/miseq.fasta
+$(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh data/rand_ref/miseq.fasta
 	bash code/run_rand_uref.sh $<
 
 RAND_REF_VCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.vclosed.vc)) data/rand_ref/original.vclosed.vc
 $(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh data/rand_ref/miseq.fasta
 	bash code/run_rand_vref.sh $<
+
+RAND_REF_SCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.sclosed.sc)) data/rand_ref/original.sclosed.sc
+$(RAND_REF_SCLUSTER) : $$(subst sclosed.sc,fasta, $$@) code/run_rand_sref.sh data/rand_ref/miseq.fasta
+	bash code/run_rand_sref.sh $<
 
 data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary data/rand_ref/hits.uclosed.counts : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('u')"
@@ -1080,12 +1081,20 @@ data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary data/ra
 data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary data/rand_ref/hits.vclosed.counts : code/summarize_rand_ref.R $(RAND_REF_VCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('v')"
 
+data/rand_ref/hits.sclosed.summary data/rand_ref/overlap.sclosed.summary data/rand_ref/hits.sclosed.counts : code/summarize_rand_ref.R $(RAND_REF_SCLUSTER)
+	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('s')"
+
 
 data/rand_ref/closed_ref.usearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_UCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
 	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('u')"
 
 data/rand_ref/closed_ref.vsearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_VCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
 	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('v')"
+
+data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_REF_SCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('s')"
+
+
 
 data/rand_ref/closed_ref.redundancy.analysis : code/closed_ref_analysis.R data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping data/references/97_otus.taxonomy
 	R -e "source('code/closed_ref_analysis.R'); run_redundancy_analysis()"
@@ -1169,3 +1178,15 @@ write.paper : papers/peerj_2015/Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
 	R -e "render('papers/peerj_2015/Schloss_Cluster_PeerJ_2015.Rmd', clean=FALSE)"
 	mv papers/peerj_2015/Schloss_Cluster_PeerJ_2015.utf8.md papers/peerj_2015/Schloss_Cluster_PeerJ_2015.md
 	rm papers/peerj_2015/Schloss_Cluster_PeerJ_2015.knit.md
+
+
+
+
+get.commentary_data :
+	touch test
+
+
+write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd get.commentary_data
+	R -e "render('papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd', clean=FALSE)"
+	mv papers/msystems_2016/Schloss_Commentary_mSystems_2016.utf8.md papers/msystems_2016/Schloss_Commentary_mSystems_2016.md
+	rm papers/msystems_2016/Schloss_Commentary_mSystems_2016.knit.md
