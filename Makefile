@@ -700,9 +700,9 @@ EVEN_SORTMERNA_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.s
 $(EVEN_SORTMERNA_LIST) : $$(subst sortmerna.list,ng.fasta, $$@) code/run_sortmerna.sh code/sortmerna_to_list.R  code/sortmerna.params.txt
 	bash code/run_sortmerna.sh $<
 
-EVEN_CVSEARCHLIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.cvsearch.list))
+EVEN_CVSEARCH_LIST = $(addprefix data/even/even_1.0, $(foreach R,$(REP),  _$R.cvsearch.list))
 .SECONDEXPANSION:
-$(EVEN_CVSEARCHLIST) : $$(subst cvsearch.list,ng.fasta, $$@) code/run_cvsearch.sh code/cvsearch_to_list.R
+$(EVEN_CVSEARCH_LIST) : $$(subst cvsearch.list,ng.fasta, $$@) code/run_cvsearch.sh code/cvsearch_to_list.R
 	bash code/run_cvsearch.sh $<
 
 

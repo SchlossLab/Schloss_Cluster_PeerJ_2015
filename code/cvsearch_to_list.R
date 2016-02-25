@@ -1,6 +1,4 @@
 cvsearch_to_list <- function(unique_file_name, clustered_file_name){
-	unique_file_name <- "data/he/he_1.0_01.vclosed/vsearch/abundance_sorted.uc"
-	clustered_file_name <- "data/he/he_1.0_01.vclosed/vsearch/ref_clustered.uc"
 
 	uniqued <- read.table(file=unique_file_name, stringsAsFactors=FALSE)
 
@@ -33,6 +31,7 @@ cvsearch_to_list <- function(unique_file_name, clustered_file_name){
 	}
 
 	list_file_data <- paste(c("userLabel", length(otu_list), otu_list), collapse='\t')
-	list_file_name <- gsub("/vsearch/abundance_sorted.uc", ".list", unique_file_name)
+	list_file_name <- gsub("vclosed/vsearch/abundance_sorted.uc", "cvsearch.list", unique_file_name)
+	list_file_name <- gsub("ng.", "", list_file_name)
 	write(list_file_data, list_file_name)
 }
