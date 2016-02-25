@@ -8,10 +8,26 @@ summary_stats <- function(x){
 	c(min=min, max=max, median=median, mean=mean, sd=sd)
 }
 
+parse_sc_line <- function(line){
+	split_line <- unlist(strsplit(line, "\t"))
+	refrence <- split_line[1]
+	split_line <- split_line[-1]
+	n_repeats <- length(split_line)
+	rep(refrence, n_repeats)
+}
 
-get_hits <- function(cluster_file){
-	cluster_data <- read.table(file=cluster_file, stringsAsFactors=FALSE)
-	cluster_data[cluster_data$V1 == "H", 10]
+get_hits <- function(cluster_file, method){
+	hits <- as.numeric()
+
+	if(method == 's'){
+		cluster_data <- scan(file=cluster_file, what=character(), sep='\n', quiet=T)
+		listing <- lapply(cluster_data, parse_sc_line)
+		hits <- unlist(listing)
+	} else {
+		cluster_data <- read.table(file=cluster_file, stringsAsFactors=FALSE)
+		hists <- cluster_data[cluster_data$V1 == "H", 10]
+	}
+	return(hits)
 }
 
 
@@ -23,10 +39,8 @@ get_hits_summary <- function(rand_hits, orig_hits, method){
 	output_filename <- paste0("data/rand_ref/hits.", method, "closed.summary")
 	write.table(file=output_filename, x=output_data, row.names=TRUE, col.names=FALSE, quote=FALSE, sep="\t")
 
-       output_filename <- paste0("data/rand_ref/hits.", method, "closed.counts")
-       write.table(file=output_filename, c(rand_n_hits, orig_n_hits), row.names=c(1:30, "original"), col.names=FALSE, sep="\t", quote=FALSE)
-
-
+	output_filename <- paste0("data/rand_ref/hits.", method, "closed.counts")
+	write.table(file=output_filename, c(rand_n_hits, orig_n_hits), row.names=c(1:30, "original"), col.names=FALSE, sep="\t", quote=FALSE)
 }
 
 
@@ -68,7 +82,7 @@ get_overlap_summary <- function(rand_hits, orig_hits, method){
 
 	describe_overlap <- aggregate(overlap, by=list(rand_orig), summary_stats)
 	summarize_overlap <- describe_overlap$x
-	rownames(summarize_overlap) <- describe_overlap$Group.1 
+	rownames(summarize_overlap) <- describe_overlap$Group.1
 
 	output_filename <- paste0("data/rand_ref/overlap.", method, "closed.summary")
 	write.table(file=output_filename, x=summarize_overlap, row.names=TRUE, col.names=TRUE, quote=FALSE, sep="\t")
@@ -81,10 +95,9 @@ summarize_rand_ref <- function(method){
 	rand_cluster_files <- list.files(path="data/rand_ref", pattern=rand_cluster_pattern, full.names=TRUE)
 	original_cluster_file <- paste0("data/rand_ref/original.", method, "closed.", method, "c")
 
-	rand_hits <- lapply(rand_cluster_files, get_hits)
-	orig_hits <- get_hits(original_cluster_file)
+	rand_hits <- lapply(rand_cluster_files, get_hits, method)
+	orig_hits <- get_hits(original_cluster_file, method)
 
 	get_hits_summary(rand_hits, orig_hits, method)
 	get_overlap_summary(rand_hits, orig_hits, method)
 }
-
