@@ -6,7 +6,7 @@
 #he_1.0_01_otus.txt
 
 sortmerna_to_list <- function(sortmerna_folder_name){
-	stub <- gsub(".sortmerna", "_otus.txt", sortmerna_folder_name)
+	stub <- gsub(".*/(.*).sortmerna", "\\1_otus.txt", sortmerna_folder_name)
 	sortmerna_file <- paste0(sortmerna_folder_name, "/", stub)
 	sortmerna_data <- scan(sortmerna_file, what="", sep="\n", quiet=TRUE)
 	sortmerna_data <- gsub("^[^\t]*\t", "", sortmerna_data)
