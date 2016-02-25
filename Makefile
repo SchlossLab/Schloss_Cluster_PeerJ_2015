@@ -1064,7 +1064,7 @@ data/rand_ref/miseq.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filte
 	mv data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.ng.fasta $@
 
 data/rand_ref/miseq.unique.fasta : data/rand_ref/miseq.fasta
-	mothur "#degap.seqs(fasta=$<)"
+	mothur "#unique.seqs(fasta=$<)"
 
 
 
