@@ -25,7 +25,7 @@ get_hits <- function(cluster_file, method){
 		hits <- unlist(listing)
 	} else {
 		cluster_data <- read.table(file=cluster_file, stringsAsFactors=FALSE)
-		hists <- cluster_data[cluster_data$V1 == "H", 10]
+		hits <- cluster_data[cluster_data$V1 == "H", 10]
 	}
 	return(hits)
 }
@@ -66,7 +66,7 @@ get_overlap_summary <- function(rand_hits, orig_hits, method){
 	rand_orig <- rep("rand", counter-1)
 
 	A <- unique(orig_hits)
-	n_A <- length(A)	#[1] 1307
+	n_A <- length(A)
 
 	for(i in 1:length(rand_hits)){
 		B <- unique(rand_hits[[i]])
