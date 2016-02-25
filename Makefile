@@ -1063,6 +1063,11 @@ data/rand_ref/miseq.fasta : data/miseq/miseq.trim.contigs.good.unique.good.filte
 	mothur "#degap.seqs(fasta=$<, outputdir=data/rand_ref)"
 	mv data/rand_ref/miseq.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.redundant.fix.ng.fasta $@
 
+data/rand_ref/miseq.unique.fasta : data/rand_ref/miseq.fasta
+	mothur "#degap.seqs(fasta=$<)"
+
+
+
 RAND_REF_UCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.uclosed.uc)) data/rand_ref/original.uclosed.uc
 $(RAND_REF_UCLUSTER) : $$(subst uclosed.uc,fasta, $$@) code/run_rand_uref.sh data/rand_ref/miseq.fasta
 	bash code/run_rand_uref.sh $<
@@ -1072,7 +1077,7 @@ $(RAND_REF_VCLUSTER) : $$(subst vclosed.vc,fasta, $$@) code/run_rand_vref.sh dat
 	bash code/run_rand_vref.sh $<
 
 RAND_REF_SCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.sclosed.sc)) data/rand_ref/original.sclosed.sc
-$(RAND_REF_SCLUSTER) : $$(subst sclosed.sc,fasta, $$@) code/run_rand_sref.sh data/rand_ref/miseq.fasta
+$(RAND_REF_SCLUSTER) : $$(subst sclosed.sc,fasta, $$@) code/run_rand_sref.sh data/rand_ref/miseq.unique.fasta
 	bash code/run_rand_sref.sh $<
 
 data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary data/rand_ref/hits.uclosed.counts : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
