@@ -1,7 +1,6 @@
 REF=$1
-#REF=data/rand_ref/rand_ref_1.0_04.fasta
 
-FASTA=data/rand_ref/miseq.fasta
+FASTA=data/rand_ref/miseq.unique.fasta
 
 
 # For whatever reason, the reference idx files cannot be in the same linear
@@ -28,5 +27,5 @@ parallel_pick_otus_sortmerna.py -i $FASTA -o $CLOSED_PATH -r $REF -T --jobs_to_s
 
 # Cleaning up
 
-mv $CLOSED_PATH/miseq_otus.txt $CLOSED_PATH.sc
+mv $CLOSED_PATH/miseq*_otus.txt $CLOSED_PATH.sc
 rm -rf $CLOSED_PATH $IDX_FOLDER
