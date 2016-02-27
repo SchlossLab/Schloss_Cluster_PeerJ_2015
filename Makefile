@@ -1143,6 +1143,11 @@ RAND_REF_SCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.
 $(RAND_REF_SCLUSTER) : $$(subst sclosed.sc,fasta, $$@) code/run_rand_sref.sh data/rand_ref/miseq.unique.fasta
 	bash code/run_rand_sref.sh $<
 
+RAND_REF_NCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.nclosed.sc)) data/rand_ref/original.nclosed.sc
+$(RAND_REF_NCLUSTER) : $$(subst nclosed.sc,fasta, $$@) code/run_rand_nref.sh data/rand_ref/miseq.unique.fasta
+	bash code/run_rand_nref.sh $<
+
+
 data/rand_ref/hits.uclosed.summary data/rand_ref/overlap.uclosed.summary data/rand_ref/hits.uclosed.counts : code/summarize_rand_ref.R $(RAND_REF_UCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('u')"
 
@@ -1151,6 +1156,10 @@ data/rand_ref/hits.vclosed.summary data/rand_ref/overlap.vclosed.summary data/ra
 
 data/rand_ref/hits.sclosed.summary data/rand_ref/overlap.sclosed.summary data/rand_ref/hits.sclosed.counts : code/summarize_rand_ref.R $(RAND_REF_SCLUSTER)
 	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('s')"
+
+data/rand_ref/hits.nclosed.summary data/rand_ref/overlap.nclosed.summary data/rand_ref/hits.nclosed.counts : code/summarize_rand_ref.R $(RAND_REF_NCLUSTER)
+	R -e "source('code/summarize_rand_ref.R'); summarize_rand_ref('n')"
+
 
 
 data/rand_ref/closed_ref.usearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_UCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
@@ -1161,6 +1170,12 @@ data/rand_ref/closed_ref.vsearch.sensspec : code/closed_ref_analysis.R $(RAND_RE
 
 #data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_REF_SCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
 #	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('s')"
+
+#data/rand_ref/closed_ref.ninja.sensspec : code/closed_ref_analysis.R $(RAND_REF_NCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
+#	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('n')"
+
+
+
 
 
 
@@ -1173,7 +1188,6 @@ data/process/he.mcc_ref.summary : code/summarize_mcc_ref.R $(HE_REF_MCC)
 
 data/process/miseq.mcc_ref.summary : code/summarize_mcc_ref.R $(MISEQ_REF_MCC)
 	R -e "source('code/summarize_mcc_ref.R'); summarize_mcc_ref('miseq')"
-
 
 data/process/he.rarefaction.summary : code/summarize_rarefaction.R $(HE_RAREFACTION)
 	R -e "source('code/summarize_rarefaction.R'); summarize_rarefaction('he')"
