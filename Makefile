@@ -1143,7 +1143,7 @@ RAND_REF_SCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.
 $(RAND_REF_SCLUSTER) : $$(subst sclosed.sc,fasta, $$@) code/run_rand_sref.sh data/rand_ref/miseq.unique.fasta
 	bash code/run_rand_sref.sh $<
 
-RAND_REF_NCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.nclosed.sc)) data/rand_ref/original.nclosed.sc
+RAND_REF_NCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.nclosed.nc)) data/rand_ref/original.nclosed.sc
 $(RAND_REF_NCLUSTER) : $$(subst nclosed.sc,fasta, $$@) code/run_rand_nref.sh data/rand_ref/miseq.unique.fasta
 	bash code/run_rand_nref.sh $<
 
