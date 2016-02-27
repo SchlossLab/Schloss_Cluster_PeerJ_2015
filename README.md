@@ -67,7 +67,7 @@ The following need to be installed and in the path...
 * VSEARCH (v.1.5.0)
 * micca (OTUClust)
 * R
-	+ jsonlite
+    + jsonlite
     + knitr
     + Rcpp
 
@@ -77,3 +77,4 @@ These should be installed the specified folders
 * vsearch (v.1.5.0 installed in code/vsearch)
 * sumaclust (v.1.0.20 installed in code/sumaclust_v1.0.20)
 * swarm (v.2.1.1 installed in code/swarm)
+* NINJA-OPS (v.1.3.2 installed in code/NINJA-OPS [comment out lines 410 and 411 of ninja_parse_filtered.c])
