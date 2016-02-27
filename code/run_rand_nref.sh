@@ -1,5 +1,4 @@
 REF=$1
-REF=data/rand_ref/rand_ref_1.0_01.fasta
 FASTA=data/rand_ref/miseq.unique.fasta
 
 
@@ -27,7 +26,7 @@ code/NINJA-OPS/bin/ninja_filter_linux $FASTA $NINJA_FOLDER/ninja D 1 LOG
 
 bowtie2-align-s --no-head -x $DB_FOLDER/$DB_NAME -S $NINJA_FOLDER/alignments.txt --np 0 --mp 1,1 --rdg 0,1 --rfg 0,1 --score-min L,0,-0.03 --norc -f $NINJA_FOLDER/ninja_filt.fa -p 4 --very-sensitive
 
-code/NINJA-OPS/bin/ninja_parse_filtered_linux $NINJA_FOLDER/ninja $NINJA_FOLDER/alignments.txt $DB_FOLDER/$DB_NAME.db $DB_FOLDER/$DB_NAME.taxonomy --legacy
+code/NINJA-OPS/bin/ninja_parse_filtered_linux $NINJA_FOLDER/ninja $NINJA_FOLDER/alignments.txt $DB_FOLDER/$DB_NAME.db $DB_FOLDER/$DB_NAME.taxonomy --legacy LOG
 
 mv $NINJA_FOLDER/ninja_pass.log $NINJA_FOLDER.nc
 
