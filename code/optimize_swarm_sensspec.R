@@ -1,5 +1,5 @@
 
-optimize_swarm <- function(dataset){
+optimize_swarm <- function(dataset, fraction = c('0.2', '0.4', '0.6', '0.8', '1.0')){
 	root <- paste0('data/', dataset, '/', dataset, '_')
 	fraction <- c('0.2', '0.4', '0.6', '0.8', '1.0')
 	rep <- c(paste(0, 1:9, sep=""), 10:30)
