@@ -1163,16 +1163,16 @@ data/rand_ref/hits.nclosed.summary data/rand_ref/overlap.nclosed.summary data/ra
 
 
 data/rand_ref/closed_ref.usearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_UCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
-	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('u')"
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('usearch')"
 
 data/rand_ref/closed_ref.vsearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_VCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
-	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('v')"
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('vsearch')"
 
 data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_REF_SCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
-	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('s')"
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('sortmerna')"
 
 data/rand_ref/closed_ref.ninja.sensspec : code/closed_ref_analysis.R $(RAND_REF_NCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
-	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('n')"
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('ninja')"
 
 
 

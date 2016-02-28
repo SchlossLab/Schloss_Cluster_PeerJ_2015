@@ -87,10 +87,11 @@ get_sens_spec_data <- function(search_file, true_mapping, duplicate_lookup){
 	mcc <- (tp * tn - fp * fn) / sqrt((tp + fp)*(tp + fn)*(tn+fp)*(tn+fn))
 
 	return(c(sensitivity=sensitivity, specificity=specificity, mcc=mcc, accuracy=accuracy))
-
 }
 
 run_sens_spec_analysis <- function(method){
+
+	tag <- substr(method, 1, 1)
 
 	names_file <- read.table(file="data/gg_13_8/gg_13_8_97.v4_ref.names", stringsAsFactors=F)
 	redundant_ref_map <- split_duplicates(names_file$V2)
@@ -98,10 +99,10 @@ run_sens_spec_analysis <- function(method){
 	true_mapping <- read.table(file="data/rand_ref/miseq.ref.mapping", row.names=1, header=T, stringsAsFactors=F)
 	true_mapping$uniqued <- unique_mapping(true_mapping$references, redundant_ref_map)
 
-	files <- list.files(path="./data/rand_ref", paste0("*.", method, "closed.", method, "c"), full.names=TRUE)
+	files <- list.files(path="./data/rand_ref", paste0("*.", tag, "closed.", tag, "c"), full.names=TRUE)
 	results <- t(sapply(files, get_sens_spec_data, true_mapping, redundant_ref_map))
 
-	write.table(results, paste0('data/rand_ref/closed_ref.', method, 'search.sensspec'), quote=F, sep='\t')
+	write.table(results, paste0('data/rand_ref/closed_ref.', method, '.sensspec'), quote=F, sep='\t')
 }
 
 
