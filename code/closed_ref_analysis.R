@@ -1,3 +1,13 @@
+parse_sc_line <- function(line){
+	split_line <- unlist(strsplit(line, "\t"))
+	refrence <- split_line[1]
+	split_line <- split_line[-1]
+	n_repeats <- length(split_line)
+	references <- rep(refrence, n_repeats)
+	names(references) <- split_line
+	return(references)
+}
+
 split_line <- function(line){
 	sub_vector_names <- unlist(strsplit(line, ','))
 	sub_vector <- rep(sub_vector_names[1], length(sub_vector_names))
@@ -21,11 +31,28 @@ get_sens_spec_data <- function(search_file, true_mapping, duplicate_lookup){
 	true_map <- small_dists$uniqued
 	names(true_map) <- gsub('-', '_', rownames(small_dists))
 
-	clusters <- read.table(file=search_file, stringsAsFactors=F)
-	clusters <- clusters[clusters$V1=='H',c(9,10)]
-	obs_map <- as.character(clusters$V10)
-	names(obs_map) <- gsub("-\\d*;size=.*;", "", clusters$V9)
-	names(obs_map) <- gsub('-', "_", names(obs_map))
+	tag <- gsub(".*(.c)$", "\\1", search_file)
+
+	obs_map <- character()
+
+	if(tag == "uc" || tag == "vc"){
+		clusters <- read.table(file=search_file, stringsAsFactors=F)
+		clusters <- clusters[clusters$V1=='H',c(9,10)]
+		obs_map <- as.character(clusters$V10)
+		names(obs_map) <- gsub("-\\d*;size=.*;", "", clusters$V9)
+		names(obs_map) <- gsub('-', "_", names(obs_map))
+	} else if(tag == "nc") {
+		clusters <- read.table(file=search_file, stringsAsFactors=F)
+		obs_map <- as.character(clusters$V2)
+		names(obs_map) <- clusters$V1
+		names(obs_map) <- gsub('-', "_", names(obs_map))
+	} else if(tag == "sc") {
+		clusters <- scan(file=search_file, what=character(), sep='\n', quiet=T)
+		listing <- lapply(clusters, parse_sc_line)
+		obs_map <- unlist(listing)
+		names(obs_map) <- gsub('-', "_", names(obs_map))
+	}
+
 	obs_map_unique <- duplicate_lookup[obs_map]
 	names(obs_map_unique) <- names(obs_map)
 

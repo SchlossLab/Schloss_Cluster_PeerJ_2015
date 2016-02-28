@@ -1168,11 +1168,11 @@ data/rand_ref/closed_ref.usearch.sensspec : code/closed_ref_analysis.R $(RAND_RE
 data/rand_ref/closed_ref.vsearch.sensspec : code/closed_ref_analysis.R $(RAND_REF_VCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
 	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('v')"
 
-#data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_REF_SCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
-#	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('s')"
+data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_REF_SCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('s')"
 
-#data/rand_ref/closed_ref.ninja.sensspec : code/closed_ref_analysis.R $(RAND_REF_NCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
-#	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('n')"
+data/rand_ref/closed_ref.ninja.sensspec : code/closed_ref_analysis.R $(RAND_REF_NCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
+	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('n')"
 
 
 
