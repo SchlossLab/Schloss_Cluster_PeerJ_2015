@@ -745,7 +745,7 @@ $(EVEN_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename $$@)
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/even)"
 
 data/even/even.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(EVEN_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(EVEN_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(EVEN_SWARM_LIST))))
-	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("even", fraction=1.0)'
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("even", fraction="1.0")'
 
 EVEN_REF_MCC = data/even/even.fn.ref_mcc data/even/even.nn.ref_mcc data/even/even.an.ref_mcc data/even/even.agc.ref_mcc data/even/even.dgc.ref_mcc data/even/even.closed.ref_mcc data/even/even.open.ref_mcc data/even/even.swarm.ref_mcc data/even/even.vdgc.ref_mcc data/even/even.vagc.ref_mcc
 data/even/even.an.ref_mcc : code/reference_mcc.R $(EVEN_AN_LIST) $(EVEN_NAMES)
@@ -970,7 +970,7 @@ $(STAGGERED_GREEDY_SENSSPEC) : $$(addsuffix .unique.dist,$$(basename $$(basename
 	mothur "#sens.spec(column=$<, list=$(LIST), name=$(NAMES), label=userLabel, cutoff=0.03, outputdir=data/staggered)"
 
 data/staggered/staggered.swarm.opt.sensspec : code/optimize_swarm_sensspec.R $(STAGGERED_SWARM_LIST) $$(addsuffix .unique.dist,$$(basename $$(basename $$(STAGGERED_SWARM_LIST)))) $$(addsuffix .names,$$(basename $$(basename $$(STAGGERED_SWARM_LIST))))
-	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("staggered", fraction=1.0)'
+	R -e 'source("code/optimize_swarm_sensspec.R"); optimize_swarm("staggered", fraction="1.0")'
 
 STAGGERED_REF_MCC = data/staggered/staggered.fn.ref_mcc data/staggered/staggered.nn.ref_mcc data/staggered/staggered.an.ref_mcc data/staggered/staggered.agc.ref_mcc data/staggered/staggered.dgc.ref_mcc data/staggered/staggered.closed.ref_mcc data/staggered/staggered.open.ref_mcc data/staggered/staggered.swarm.ref_mcc data/staggered/staggered.vdgc.ref_mcc data/staggered/staggered.vagc.ref_mcc
 
