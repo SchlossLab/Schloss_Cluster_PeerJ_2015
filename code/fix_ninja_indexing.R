@@ -15,7 +15,8 @@ fix_ninja_indexing <- function(cluster_folder, db_folder){
 	ordered_coords[ordered_coords == 0] <- NA #these sequences didn't map
 
 	# get the startign coordinate (V1) for each reference sequence (V2)
-	coord_map_file <- paste0(db_folder, "/original.ninja_db.db")
+	db_stub <- gsub("code/rand_ref/", "", db_folder)
+	coord_map_file <- paste0(db_folder, "/", db_stub, ".ninja_db.db")
 	coord_map <- read.table(coord_map_file, sep=',')
 
 	# map the coordinate for each sequence to a reference sequence
