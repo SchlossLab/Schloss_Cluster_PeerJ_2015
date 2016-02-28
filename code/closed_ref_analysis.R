@@ -46,11 +46,13 @@ get_sens_spec_data <- function(search_file, true_mapping, duplicate_lookup){
 		obs_map <- as.character(clusters$V2)
 		names(obs_map) <- clusters$V1
 		names(obs_map) <- gsub('-', "_", names(obs_map))
+		names(obs_map) <- gsub('_[^_]*$', "", names(obs_map))
 	} else if(tag == "sc") {
 		clusters <- scan(file=search_file, what=character(), sep='\n', quiet=T)
 		listing <- lapply(clusters, parse_sc_line)
 		obs_map <- unlist(listing)
 		names(obs_map) <- gsub('-', "_", names(obs_map))
+		names(obs_map) <- gsub('_[^_]*$', "", names(obs_map))
 	}
 
 	obs_map_unique <- duplicate_lookup[obs_map]
@@ -100,7 +102,6 @@ run_sens_spec_analysis <- function(method){
 	results <- t(sapply(files, get_sens_spec_data, true_mapping, redundant_ref_map))
 
 	write.table(results, paste0('data/rand_ref/closed_ref.', method, 'search.sensspec'), quote=F, sep='\t')
-
 }
 
 
