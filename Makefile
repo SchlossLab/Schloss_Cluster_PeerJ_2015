@@ -1273,11 +1273,18 @@ write.paper : papers/peerj_2015/Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
 
 
 
-get.commentary_data :
-	touch test
+get.commentary_data : data/process/even.mcc.summary\
+ 					data/process/he.mcc.summary\
+					data/process/miseq.mcc.summary\
+ 					data/process/staggered.mcc.summary\
 
+results/figures/all_method_comparison.pdf : code/build_all_methods_compare_plot.R\
+					get.commentary_data
+	R -e "source('$<')"
 
-write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd get.commentary_data
+write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd\
+					get.commentary_data\
+					results/figures/all_method_comparison.pdf
 	R -e "render('papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd', clean=FALSE)"
 	mv papers/msystems_2016/Schloss_Commentary_mSystems_2016.utf8.md papers/msystems_2016/Schloss_Commentary_mSystems_2016.md
 	rm papers/msystems_2016/Schloss_Commentary_mSystems_2016.knit.md
