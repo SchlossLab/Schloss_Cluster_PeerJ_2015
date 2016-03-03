@@ -185,7 +185,7 @@ data/he/he.vagc.ref_mcc : code/reference_mcc.R $(HE_VAGC_LIST) $(HE_NAMES)
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/he/', 'he.*.vagc.list', 'he_1.0.*.vagc.list', 'he.*names', 'data/he/he.vagc.ref_mcc')"
 
 
-HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.vagc.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.sumaclust.pool_sensspec data/he/he.otuclust.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.ninja.pool_sensspec data/he/he.sortmerna.pool_sensspec data/he/he.cvsearch.pool_sensspec  data/he/he.open.pool_sensspec
+HE_POOL_SENSSPEC = data/he/he.an.pool_sensspec data/he/he.fn.pool_sensspec data/he/he.nn.pool_sensspec data/he/he.agc.pool_sensspec data/he/he.dgc.pool_sensspec data/he/he.vagc.pool_sensspec data/he/he.vdgc.pool_sensspec data/he/he.sumaclust.pool_sensspec data/he/he.otuclust.pool_sensspec data/he/he.closed.pool_sensspec data/he/he.ninja.pool_sensspec data/he/he.sortmerna.pool_sensspec data/he/he.cvsearch.pool_sensspec data/he/he.open.pool_sensspec data/he/he.swarm.pool_sensspec
 
 data/he/he.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*an.sensspec', 'data/he/he.an.pool_sensspec')"
@@ -228,6 +228,9 @@ data/he/he.cvsearch.pool_sensspec : code/merge_sensspec_files.R $$(subst list,se
 
 data/he/he.ninja.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(HE_NINJA_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/he', 'he_.*ninja.sensspec', 'data/he/he.ninja.pool_sensspec')"
+
+data/he/he.swarm.pool_sensspec : data/he/he.swarm.opt.sensspec code/merge_sensspec_files.R
+	R -e "source('code/extract_opt_swarm.R');extract_opt_swarm('data/he/he.swarm.opt.sensspec')"
 
 
 HE_RAREFACTION = data/he/he.an.rarefaction data/he/he.nn.rarefaction data/he/he.fn.rarefaction data/he/he.agc.rarefaction data/he/he.dgc.rarefaction data/he/he.closed.rarefaction data/he/he.open.rarefaction data/he/he.swarm.rarefaction data/he/he.vdgc.rarefaction data/he/he.vagc.rarefaction
@@ -1197,7 +1200,7 @@ data/process/miseq.rarefaction.summary : code/summarize_rarefaction.R $(MISEQ_RA
 
 
 
-data/process/he.mcc.summary : code/summarize_mcc.R $(HE_POOL_SENSSPEC) data/he/he.swarm.opt.sensspec
+data/process/he.mcc.summary : code/summarize_mcc.R $(HE_POOL_SENSSPEC)
 	R -e "source('code/summarize_mcc.R'); summarize_mcc('he')"
 
 data/process/miseq.mcc.summary : code/summarize_mcc.R $(MISEQ_POOL_SENSSPEC) data/miseq/miseq.swarm.opt.sensspec
