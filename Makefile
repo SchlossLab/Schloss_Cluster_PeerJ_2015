@@ -520,7 +520,7 @@ data/miseq/miseq.vagc.ref_mcc : code/reference_mcc.R $(MISEQ_VAGC_LIST) $(MISEQ_
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/miseq/', 'miseq.*vagc.list', 'miseq_1.0.*vagc.list', 'miseq.*names', 'data/miseq/miseq.vagc.ref_mcc')"
 
 
-MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec data/miseq/miseq.otuclust.pool_sensspec data/miseq/miseq.sumaclust.pool_sensspec data/miseq/miseq.sortmerna.pool_sensspec data/miseq/miseq.cvsearch.pool_sensspec data/miseq/miseq.ninja.pool_sensspec
+MISEQ_POOL_SENSSPEC = data/miseq/miseq.an.pool_sensspec data/miseq/miseq.fn.pool_sensspec data/miseq/miseq.nn.pool_sensspec data/miseq/miseq.dgc.pool_sensspec data/miseq/miseq.agc.pool_sensspec data/miseq/miseq.open.pool_sensspec data/miseq/miseq.closed.pool_sensspec data/miseq/miseq.vdgc.pool_sensspec data/miseq/miseq.vagc.pool_sensspec data/miseq/miseq.otuclust.pool_sensspec data/miseq/miseq.sumaclust.pool_sensspec data/miseq/miseq.sortmerna.pool_sensspec data/miseq/miseq.cvsearch.pool_sensspec data/miseq/miseq.ninja.pool_sensspec data/miseq/miseq.swarm.pool_sensspec
 
 data/miseq/miseq.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*an.sensspec', 'data/miseq/miseq.an.pool_sensspec')"
@@ -563,6 +563,9 @@ data/miseq/miseq.cvsearch.pool_sensspec : code/merge_sensspec_files.R $$(subst l
 
 data/miseq/miseq.ninja.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(MISEQ_NINJA_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/miseq', 'miseq_.*ninja.sensspec', 'data/miseq/miseq.ninja.pool_sensspec')"
+
+data/miseq/miseq.swarm.pool_sensspec : data/miseq/miseq.swarm.opt.sensspec code/merge_sensspec_files.R
+	R -e "source('code/extract_opt_swarm.R');extract_opt_swarm('data/miseq/miseq.swarm.opt.sensspec')"
 
 
 MISEQ_RAREFACTION = data/miseq/miseq.an.rarefaction data/miseq/miseq.nn.rarefaction data/miseq/miseq.fn.rarefaction data/miseq/miseq.agc.rarefaction data/miseq/miseq.dgc.rarefaction data/miseq/miseq.closed.rarefaction data/miseq/miseq.open.rarefaction data/miseq/miseq.swarm.rarefaction data/miseq/miseq.vdgc.rarefaction data/miseq/miseq.vagc.rarefaction
@@ -782,7 +785,7 @@ data/even/even.vagc.ref_mcc : code/reference_mcc.R $(EVEN_VAGC_LIST) $(EVEN_NAME
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/even/', 'even.*vagc.list', 'even_1.0.*vagc.list', 'even.*names', 'data/even/even.vagc.ref_mcc')"
 
 
-EVEN_POOL_SENSSPEC = data/even/even.an.pool_sensspec data/even/even.fn.pool_sensspec data/even/even.nn.pool_sensspec data/even/even.dgc.pool_sensspec data/even/even.agc.pool_sensspec data/even/even.open.pool_sensspec data/even/even.closed.pool_sensspec data/even/even.vdgc.pool_sensspec data/even/even.vagc.pool_sensspec data/even/even.otuclust.pool_sensspec  data/even/even.sumaclust.pool_sensspec data/even/even.sortmerna.pool_sensspec data/even/even.cvsearch.pool_sensspec data/even/even.ninja.pool_sensspec
+EVEN_POOL_SENSSPEC = data/even/even.an.pool_sensspec data/even/even.fn.pool_sensspec data/even/even.nn.pool_sensspec data/even/even.dgc.pool_sensspec data/even/even.agc.pool_sensspec data/even/even.open.pool_sensspec data/even/even.closed.pool_sensspec data/even/even.vdgc.pool_sensspec data/even/even.vagc.pool_sensspec data/even/even.otuclust.pool_sensspec  data/even/even.sumaclust.pool_sensspec data/even/even.sortmerna.pool_sensspec data/even/even.cvsearch.pool_sensspec data/even/even.ninja.pool_sensspec data/even/even.swarm.pool_sensspec
 
 data/even/even.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*an.sensspec', 'data/even/even.an.pool_sensspec')"
@@ -825,6 +828,10 @@ data/even/even.cvsearch.pool_sensspec : code/merge_sensspec_files.R $$(subst lis
 
 data/even/even.ninja.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(EVEN_NINJA_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/even', 'even_.*ninja.sensspec', 'data/even/even.ninja.pool_sensspec')"
+
+data/even/even.swarm.pool_sensspec : code/merge_sensspec_files.R data/even/even.swarm.opt.sensspec
+	R -e "source('code/extract_opt_swarm.R');extract_opt_swarm('data/even/even.swarm.opt.sensspec')"
+
 
 
 
@@ -1008,7 +1015,7 @@ data/staggered/staggered.vagc.ref_mcc : code/reference_mcc.R $(STAGGERED_VAGC_LI
 	R -e "source('code/reference_mcc.R');run_reference_mcc('data/staggered/', 'staggered.*vagc.list', 'staggered_1.0.*vagc.list', 'staggered.*names', 'data/staggered/staggered.vagc.ref_mcc')"
 
 
-STAGGERED_POOL_SENSSPEC = data/staggered/staggered.an.pool_sensspec data/staggered/staggered.fn.pool_sensspec data/staggered/staggered.nn.pool_sensspec data/staggered/staggered.dgc.pool_sensspec data/staggered/staggered.agc.pool_sensspec data/staggered/staggered.open.pool_sensspec data/staggered/staggered.closed.pool_sensspec data/staggered/staggered.vdgc.pool_sensspec data/staggered/staggered.vagc.pool_sensspec  data/staggered/staggered.otuclust.pool_sensspec data/staggered/staggered.sumaclust.pool_sensspec data/staggered/staggered.sortmerna.pool_sensspec data/staggered/staggered.cvsearch.pool_sensspec  data/staggered/staggered.ninja.pool_sensspec
+STAGGERED_POOL_SENSSPEC = data/staggered/staggered.an.pool_sensspec data/staggered/staggered.fn.pool_sensspec data/staggered/staggered.nn.pool_sensspec data/staggered/staggered.dgc.pool_sensspec data/staggered/staggered.agc.pool_sensspec data/staggered/staggered.open.pool_sensspec data/staggered/staggered.closed.pool_sensspec data/staggered/staggered.vdgc.pool_sensspec data/staggered/staggered.vagc.pool_sensspec  data/staggered/staggered.otuclust.pool_sensspec data/staggered/staggered.sumaclust.pool_sensspec data/staggered/staggered.sortmerna.pool_sensspec data/staggered/staggered.cvsearch.pool_sensspec  data/staggered/staggered.ninja.pool_sensspec data/staggered/staggered.swarm.pool_sensspec
 
 data/staggered/staggered.an.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_AN_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*an.sensspec', 'data/staggered/staggered.an.pool_sensspec')"
@@ -1052,6 +1059,8 @@ data/staggered/staggered.cvsearch.pool_sensspec : code/merge_sensspec_files.R $$
 data/staggered/staggered.ninja.pool_sensspec : code/merge_sensspec_files.R $$(subst list,sensspec, $$(STAGGERED_NINJA_LIST))
 	R -e "source('code/merge_sensspec_files.R');merge_sens_spec('data/staggered', 'staggered_.*ninja.sensspec', 'data/staggered/staggered.ninja.pool_sensspec')"
 
+data/staggered/staggered.swarm.pool_sensspec : code/merge_sensspec_files.R data/staggered/staggered.swarm.opt.sensspec
+	R -e "source('code/extract_opt_swarm.R');extract_opt_swarm('data/staggered/staggered.swarm.opt.sensspec')"
 
 
 
