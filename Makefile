@@ -1186,6 +1186,17 @@ data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_
 data/rand_ref/closed_ref.ninja.sensspec : code/closed_ref_analysis.R $(RAND_REF_NCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
 	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('ninja')"
 
+data/process/closed_ref_sensspec.summary : code/summarize_rand_ref.R\
+									data/rand_ref/closed_ref.usearch.sensspec\
+									data/rand_ref/closed_ref.vsearch.sensspec\
+									data/rand_ref/closed_ref.sortmerna.sensspec\
+									data/rand_ref/closed_ref.ninja.sensspec\
+									data/rand_ref/hits.nclosed.summary\
+									data/rand_ref/hits.sclosed.summary\
+									data/rand_ref/hits.uclosed.summary\
+									data/rand_ref/hits.vclosed.summary
+	R -e "source('$<')"
+
 
 
 
@@ -1282,11 +1293,19 @@ write.paper : papers/peerj_2015/Schloss_Cluster_PeerJ_2015.Rmd get.paper_data
 
 
 
-get.commentary_data :
-	touch test
+get.commentary_data : data/process/even.mcc.summary\
+ 					data/process/he.mcc.summary\
+					data/process/miseq.mcc.summary\
+ 					data/process/staggered.mcc.summary\
+					data/process/closed_ref_sensspec.summary
 
+results/figures/all_method_comparison.pdf : code/build_all_methods_compare_plot.R\
+					get.commentary_data
+	R -e "source('$<')"
 
-write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd get.commentary_data
+write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd\
+					get.commentary_data\
+					results/figures/all_method_comparison.pdf
 	R -e "render('papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd', clean=FALSE)"
 	mv papers/msystems_2016/Schloss_Commentary_mSystems_2016.utf8.md papers/msystems_2016/Schloss_Commentary_mSystems_2016.md
 	rm papers/msystems_2016/Schloss_Commentary_mSystems_2016.knit.md

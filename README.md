@@ -70,6 +70,8 @@ The following need to be installed and in the path...
     + jsonlite
     + knitr
     + Rcpp
+    + plyr
+    + ggplot2
 
 
 
