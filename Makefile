@@ -1277,6 +1277,10 @@ get.commentary_data : data/process/even.mcc.summary\
  					data/process/he.mcc.summary\
 					data/process/miseq.mcc.summary\
  					data/process/staggered.mcc.summary\
+					data/rand_ref/closed_ref.usearch.sensspec\
+					data/rand_ref/closed_ref.vsearch.sensspec\
+					data/rand_ref/closed_ref.sortmerna.sensspec\
+					data/rand_ref/closed_ref.ninja.sensspec
 
 results/figures/all_method_comparison.pdf : code/build_all_methods_compare_plot.R\
 					get.commentary_data
