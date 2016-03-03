@@ -8,14 +8,7 @@ summarize_mcc <- function(dataset){
 	write(x="mean\tlci\tuci\tfraction\tmethod", file=output_file_name)
 
 	for(m in methods){
-		file_name <- ""
-
-		if(m != 'swarm')
-			file_name <- paste0("data/", dataset, "/", dataset, ".", m, ".pool_sensspec")
-		} else {
-			file_name <- paste0("data/", dataset, "/", dataset, ".swarm.opt.sensspec")
-		}
-
+		file_name <- paste0("data/", dataset, "/", dataset, ".", m, ".pool_sensspec")
 		mcc_data <-read.table(file=file_name, header=T)
 		mcc_stats_table <- aggregate(mcc_data$mcc, by=list(mcc_data$fraction), function(x)c(mean=mean(x), quantile(x, probs=c(0.025, 0.975))))
 
