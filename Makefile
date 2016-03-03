@@ -1177,6 +1177,17 @@ data/rand_ref/closed_ref.sortmerna.sensspec : code/closed_ref_analysis.R $(RAND_
 data/rand_ref/closed_ref.ninja.sensspec : code/closed_ref_analysis.R $(RAND_REF_NCLUSTER) data/gg_13_8/gg_13_8_97.v4_ref.names data/rand_ref/miseq.ref.mapping
 	R -e "source('code/closed_ref_analysis.R'); run_sens_spec_analysis('ninja')"
 
+data/process/closed_ref_sensspec.summary : code/summarize_rand_ref.R\
+									data/rand_ref/closed_ref.usearch.sensspec\
+									data/rand_ref/closed_ref.vsearch.sensspec\
+									data/rand_ref/closed_ref.sortmerna.sensspec\
+									data/rand_ref/closed_ref.ninja.sensspec\
+									data/rand_ref/hits.nclosed.summary\
+									data/rand_ref/hits.sclosed.summary\
+									data/rand_ref/hits.uclosed.summary\
+									data/rand_ref/hits.vclosed.summary
+	R -e "source('$<')"
+
 
 
 
@@ -1277,10 +1288,7 @@ get.commentary_data : data/process/even.mcc.summary\
  					data/process/he.mcc.summary\
 					data/process/miseq.mcc.summary\
  					data/process/staggered.mcc.summary\
-					data/rand_ref/closed_ref.usearch.sensspec\
-					data/rand_ref/closed_ref.vsearch.sensspec\
-					data/rand_ref/closed_ref.sortmerna.sensspec\
-					data/rand_ref/closed_ref.ninja.sensspec
+					data/process/closed_ref_sensspec.summary
 
 results/figures/all_method_comparison.pdf : code/build_all_methods_compare_plot.R\
 					get.commentary_data
