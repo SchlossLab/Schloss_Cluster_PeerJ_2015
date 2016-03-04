@@ -45,12 +45,13 @@ reference_labels <- names(ordering)[order(ordering, decreasing=TRUE)]
 
 pooled_data$method <- factor(pooled_data$method, levels = c(de_novo_labels,reference_labels))
 
-pretty_methods <- c(an = "AN", sumaclust = "Sumaclust", vdgc="V-DGC",
-										vagc="V-AGC", dgc = "U-DGC",
-										agc = "U-AGC", fn  = "FN", otuclust = "OTUCLUST",
-										swarm = "Swarm",     nn = "NN", cvsearch="V-Closed",
-										sortmerna = "SortMeRNA", open = "Open",
-										closed = "U-Closed", ninja = "NINJA-OPS")
+pretty_methods <- c(an = "Average\nNeighbor", sumaclust = "Sumaclust",
+					vdgc="DGC with\nVSEARCH", vagc="AGC with\nVSEARCH",
+					dgc = "DGC with\nUSEARCH", agc = "AGC with\nUSEARCH",
+					fn  = "Furthest\nNeighbor", otuclust = "OTUCLUST",
+					swarm = "Swarm", nn = "Nearest\nNeighbor", cvsearch="VSEARCH",
+					sortmerna = "SortMeRNA", open = "Open",
+					closed = "USEARCH", ninja = "NINJA-OPS")
 
 ggplot(pooled_data, aes(method, mean, col=dataset, shape=dataset)) +
 
