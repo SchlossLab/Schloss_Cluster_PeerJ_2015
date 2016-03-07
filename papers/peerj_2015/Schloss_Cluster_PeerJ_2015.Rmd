@@ -4,7 +4,7 @@ bibliography: references.bib
 output:
   pdf_document:
     includes:
-      in_header: ../header.tex
+      in_header: header.tex
 csl: peerj.csl
 fontsize: 11pt
 geometry: margin=1.0in
