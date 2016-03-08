@@ -1,5 +1,5 @@
 ---
-title: "**Application of database-independent methods to assess the quality of OTU picking methods**"
+title: "**Application of database-independent approach to assess the quality of OTU picking methods**"
 bibliography: references.bib
 output:
   pdf_document:
