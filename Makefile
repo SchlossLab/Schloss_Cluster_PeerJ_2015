@@ -1156,7 +1156,7 @@ $(RAND_REF_SCLUSTER) : $$(subst sclosed.sc,fasta, $$@) code/run_rand_sref.sh dat
 	bash code/run_rand_sref.sh $<
 
 RAND_REF_NCLUSTER = $(addprefix data/rand_ref/rand_ref_, $(foreach R,$(REP),  1.0_$R.nclosed.nc)) data/rand_ref/original.nclosed.nc
-$(RAND_REF_NCLUSTER) : $$(subst nclosed.nc,fasta, $$@) code/run_rand_nref.sh data/rand_ref/miseq.unique.fasta code/fix_ninja_indexing.R
+$(RAND_REF_NCLUSTER) : $$(subst nclosed.nc,fasta, $$@) code/run_rand_nref.sh data/rand_ref/miseq.unique.fasta
 	bash code/run_rand_nref.sh $<
 
 

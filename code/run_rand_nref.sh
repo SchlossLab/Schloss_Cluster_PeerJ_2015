@@ -11,12 +11,13 @@ mkdir -p $DB_FOLDER
 
 cp data/references/97_otus.taxonomy $DB_FOLDER/$DB_NAME.taxonomy
 
-code/NINJA-OPS/bin/ninja_prep_linux $REF $DB_FOLDER/out_preDB.fa $DB_FOLDER/$DB_NAME.db
-bowtie2-build $DB_FOLDER/out_preDB.fa $DB_FOLDER/$DB_NAME
+#code/NINJA-OPS/bin/ninja_prep_linux $REF $DB_FOLDER/out_preDB $DB_FOLDER/$DB_NAME
+code/NINJA-OPS/bin/ninja_prep_linux $REF $DB_FOLDER/$DB_NAME
+bowtie2-build $DB_FOLDER/$DB_NAME.fa $DB_FOLDER/$DB_NAME
 
 
 # The clustering...
-NINJA_FOLDER=$(echo $REF | sed 's/fasta/ninja/')
+NINJA_FOLDER=$(echo $REF | sed 's/fasta/nclosed/')
 
 rm -rf $NINJA_FOLDER
 mkdir $NINJA_FOLDER
@@ -27,10 +28,9 @@ bowtie2-align-s --no-head -x $DB_FOLDER/$DB_NAME -S $NINJA_FOLDER/alignments.txt
 
 code/NINJA-OPS/bin/ninja_parse_filtered_linux $NINJA_FOLDER/ninja $NINJA_FOLDER/alignments.txt $DB_FOLDER/$DB_NAME.db $DB_FOLDER/$DB_NAME.taxonomy --legacy LOG
 
-# something is weird about the indices that NINJA-OPS is returning in the log
-# file. taxonomically they're way off and I can't get them to match with what is
-# in the alignments file. going to have to go this alone...
-R -e "source('code/fix_ninja_indexing.R');fix_ninja_indexing('$NINJA_FOLDER', '$DB_FOLDER')"
+
+mv $NINJA_FOLDER/ninja_otumap.txt $NINJA_FOLDER.nc
+
 
 # Cleaning up
 rm -rf $DB_FOLDER $NINJA_FOLDER

@@ -19,13 +19,10 @@ parse_sc_line <- function(line){
 get_hits <- function(cluster_file, method){
 	hits <- as.numeric()
 
-	if(method == 's'){
+	if(method == 's' || method == 'n'){
 		cluster_data <- scan(file=cluster_file, what=character(), sep='\n', quiet=T)
 		listing <- lapply(cluster_data, parse_sc_line)
 		hits <- unlist(listing)
-	} else if(method == 'n'){
-		cluster_data <- read.table(file=cluster_file, stringsAsFactors=FALSE)
-		hits <- cluster_data$V2		
 	} else {
 		cluster_data <- read.table(file=cluster_file, stringsAsFactors=FALSE)
 		hits <- cluster_data[cluster_data$V1 == "H", 10]
