@@ -3,6 +3,7 @@ title: "**Application of database-independent approach to assess the quality of 
 bibliography: references.bib
 output:
   pdf_document:
+    keep_tex: true
     includes:
       in_header: header.tex
 csl: msystems.csl
