@@ -1309,3 +1309,23 @@ write.commentary : papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd\
 	R -e "render('papers/msystems_2016/Schloss_Commentary_mSystems_2016.Rmd', clean=FALSE)"
 	mv papers/msystems_2016/Schloss_Commentary_mSystems_2016.utf8.md papers/msystems_2016/Schloss_Commentary_mSystems_2016.md
 	rm papers/msystems_2016/Schloss_Commentary_mSystems_2016.knit.md
+
+
+papers/msystems_2016/Schloss_Commentary_mSystems_2016_track_changes.pdf: \
+					papers/msystems_2016/Schloss_Commentary_mSystems_2016.md\
+					papers/msystems_2016/references.bib\
+					papers/msystems_2016/msystems.csl\
+					papers/msystems_2016/header.tex
+
+	OPTS= --bibliography=papers/msystems_2016/references.bib --csl=papers/msystems_2016/msystems.csl  --filter=pandoc-citeproc --include-in-header=papers/msystems_2016/header.tex
+	git show b81452c1cec7:$< > orig.md
+	pandoc orig.md -o orig.tex $(OPTS)
+	pandoc $< -o revised.tex $(OPTS)
+	latexdiff orig.tex revised.tex > diff.tex
+	pdflatex diff
+	mv diff.pdf $@
+	rm {revised,orig,diff}.tex
+
+papers/msystems_2016/Schloss_Commentary_mSystems_2016_response.pdf: \
+					papers/msystems_2016/ResponseToReviewers.md
+	pandoc $< -o $@
