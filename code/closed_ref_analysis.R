@@ -41,13 +41,7 @@ get_sens_spec_data <- function(search_file, true_mapping, duplicate_lookup){
 		obs_map <- as.character(clusters$V10)
 		names(obs_map) <- gsub("-\\d*;size=.*;", "", clusters$V9)
 		names(obs_map) <- gsub('-', "_", names(obs_map))
-	} else if(tag == "nc") {
-		clusters <- read.table(file=search_file, stringsAsFactors=F)
-		obs_map <- as.character(clusters$V2)
-		names(obs_map) <- clusters$V1
-		names(obs_map) <- gsub('-', "_", names(obs_map))
-		names(obs_map) <- gsub('_[^_]*$', "", names(obs_map))
-	} else if(tag == "sc") {
+	} else if(tag == "sc" || tag == "nc") {
 		clusters <- scan(file=search_file, what=character(), sep='\n', quiet=T)
 		listing <- lapply(clusters, parse_sc_line)
 		obs_map <- unlist(listing)
